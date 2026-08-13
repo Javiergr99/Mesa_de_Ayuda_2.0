@@ -1,29 +1,53 @@
-import { LockKeyhole, UserCheck } from "lucide-react";
+import { LockKeyhole, UserRound } from "lucide-react";
 
-export function SystemAssignmentSummary({ userName }: { userName: string }) {
+function AssignmentField({
+  label,
+  value,
+  icon,
+}: {
+  label: string;
+  value: string;
+  icon: "user" | "lock";
+}) {
+  const Icon = icon === "user" ? UserRound : LockKeyhole;
+
+  return (
+    <div className="rounded-xl border border-[var(--ui-border)] bg-[var(--ui-surface)] px-4 py-3">
+      <div className="flex items-center gap-2 text-xs font-semibold text-[var(--ui-text-secondary)]">
+        <Icon className="h-4 w-4 text-[var(--ui-primary)]" aria-hidden="true" />
+        <span>{label}</span>
+      </div>
+
+      <p
+        className="mt-2 truncate text-sm font-semibold text-[var(--ui-text-primary)]"
+        title={value || undefined}
+      >
+        {value || "â€”"}
+      </p>
+    </div>
+  );
+}
+
+export function SystemAssignmentSummary({
+  userName,
+}: {
+  userName: string;
+}) {
+  const displayName = userName.trim();
+
   return (
     <div className="grid gap-3 md:grid-cols-2">
-      <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3.5">
-        <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
-          <UserCheck className="h-4 w-4 text-blue-600" />
-          Atendido por
-        </div>
-        <p className="mt-1.5 text-sm font-semibold text-slate-800">{userName}</p>
-        <p className="mt-1 text-xs leading-5 text-slate-500">
-          Si no se envía atendido_por, la API asigna automáticamente al usuario autenticado.
-        </p>
-      </div>
+      <AssignmentField
+        label="Atendido por"
+        value={displayName}
+        icon="user"
+      />
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3.5">
-        <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
-          <LockKeyhole className="h-4 w-4 text-blue-600" />
-          Creado por
-        </div>
-        <p className="mt-1.5 text-sm font-semibold text-slate-800">{userName}</p>
-        <p className="mt-1 text-xs leading-5 text-slate-500">
-          creado_por se obtiene del claim sub del JWT y no puede modificarse desde el formulario.
-        </p>
-      </div>
+      <AssignmentField
+        label="Creado por"
+        value={displayName}
+        icon="lock"
+      />
     </div>
   );
 }

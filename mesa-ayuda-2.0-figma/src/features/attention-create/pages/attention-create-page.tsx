@@ -10,7 +10,6 @@ import {
 } from "react-hook-form";
 import {
   ArrowLeft,
-  Info,
   Save,
 } from "lucide-react";
 import { Link } from "react-router";
@@ -222,7 +221,6 @@ export function AttentionCreatePage() {
           </>
         }
         title="Registrar Nueva Atención"
-        description="Capture la información definida por el contrato vigente de API Mesa de Ayuda."
         actions={
           <Button
             asChild
@@ -235,8 +233,6 @@ export function AttentionCreatePage() {
           </Button>
         }
       />
-
-      <AttentionSystemNotice />
 
       <form
         id="attention-form"
@@ -287,25 +283,6 @@ export function AttentionCreatePage() {
         userName={userName}
         onCreateAnother={createAnother}
       />
-    </div>
-  );
-}
-
-function AttentionSystemNotice() {
-  return (
-    <div className="mb-4 flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50/60 p-4 text-sm text-blue-800">
-      <Info className="mt-0.5 h-4 w-4 shrink-0" />
-      <p>
-        Los campos de captura son
-        opcionales según el contrato
-        actual. Los campos de sistema{" "}
-        <strong>creado_por</strong> y{" "}
-        <strong>atendido_por</strong> se
-        resuelven con el usuario
-        autenticado cuando corresponde,
-        por lo que no se capturan como
-        UUID manuales.
-      </p>
     </div>
   );
 }

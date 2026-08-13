@@ -247,14 +247,6 @@ export function AttentionClassificationSection({
           userName={userName}
         />
       </div>
-
-      <p className="mt-3 text-xs leading-5 text-slate-500">
-        Entidades, estatus, tipos de caso y
-        tipos de registro se concentran en
-        catálogos reutilizables mientras la
-        API no publique endpoints de
-        catálogos.
-      </p>
     </SectionCard>
   );
 }
