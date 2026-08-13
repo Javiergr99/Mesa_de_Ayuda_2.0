@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, LazyMotion, domAnimation } from "motion/react";
+import * as m from "motion/react-m";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/shared/lib/cn";
@@ -28,20 +29,21 @@ export function Drawer({
   className,
 }: DrawerProps) {
   return (
-    <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
+    <LazyMotion features={domAnimation}>
+      <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <AnimatePresence>
         {open ? (
           <DialogPrimitive.Portal forceMount>
             <DialogPrimitive.Overlay asChild>
-              <motion.div
-                className="fixed bottom-0 left-[var(--sidebar-width)] right-0 top-[var(--header-height)] z-50 bg-slate-950/16"
+              <m.div
+                className="fixed bottom-0 left-[var(--sidebar-current-width)] right-0 top-[var(--header-height)] z-50 bg-slate-950/16 transition-[left] duration-200 ease-out motion-reduce:transition-none"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               />
             </DialogPrimitive.Overlay>
             <DialogPrimitive.Content asChild>
-              <motion.aside
+              <m.aside
                 className={cn(
                   "fixed bottom-0 right-0 top-[var(--header-height)] z-[60] flex flex-col border-l border-slate-200 bg-white shadow-[-16px_0_42px_rgb(15_23_42/0.14)]",
                   widthClassName,
@@ -71,11 +73,12 @@ export function Drawer({
                 </header>
                 <div className="min-h-0 flex-1 overflow-y-auto app-scrollbar">{children}</div>
                 {footer ? <footer className="shrink-0 border-t border-slate-200 bg-white px-6 py-4">{footer}</footer> : null}
-              </motion.aside>
+              </m.aside>
             </DialogPrimitive.Content>
           </DialogPrimitive.Portal>
         ) : null}
       </AnimatePresence>
-    </DialogPrimitive.Root>
+      </DialogPrimitive.Root>
+    </LazyMotion>
   );
 }

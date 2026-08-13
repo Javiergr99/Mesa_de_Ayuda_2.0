@@ -1,11 +1,16 @@
-# Arquitectura
+# Arquitectura — Portal Auth
 
-## Separación de responsabilidades
+## Alcance
 
-Este repositorio contiene solamente el portal de autenticación y accesos. No incluye Dashboard, Atenciones, Seguimiento, Organizador ni los demás módulos operativos.
+Este frontend contiene exclusivamente autenticación, MFA, sesión, perfil y
+selección de accesos. Los módulos operativos viven en
+`mesa-ayuda-2.0-figma`.
+
+## Estructura
 
 ```text
 src/
+├── api/
 ├── app/
 │   ├── providers/
 │   ├── router/
@@ -14,53 +19,75 @@ src/
 │   ├── layout/
 │   └── ui/
 ├── features/
+│   ├── access/
+│   │   ├── api/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── model/
+│   │   └── pages/
 │   ├── auth/
 │   │   ├── api/
 │   │   ├── components/
+│   │   ├── hooks/
 │   │   ├── model/
 │   │   ├── pages/
-│   │   └── schemas/
-│   └── access/
-│       ├── api/
-│       ├── components/
-│       ├── data/
-│       ├── model/
-│       └── pages/
+│   │   ├── schemas/
+│   │   └── services/
+│   └── profile/
 └── shared/
     ├── config/
     ├── constants/
+    ├── hooks/
     ├── lib/
-    └── types/
+    └── theme/
 ```
 
-## Principios aplicados
+## Principios
 
-- Organización por funcionalidad para evitar carpetas globales difíciles de mantener.
-- Componentes atómicos para botones, campos, alertas, OTP, badges, tarjetas, diálogos y estados de carga.
-- Repositorios intercambiables para usar datos simulados o servicios HTTP reales.
-- Rutas protegidas según el estado de autenticación.
-- Estado de sesión mínimo y aislado en `sessionStorage` solamente para la demostración local.
-- Navegación hacia aplicaciones externas mediante variables de entorno.
-- Diseño consistente con la identidad visual del frontend principal de Mesa de Ayuda 2.0.
+- Organización por funcionalidad.
+- Componentes atómicos y reutilizables.
+- TanStack Query para server-state.
+- Zustand para estado de autenticación estrictamente efímero.
+- Access token en memoria.
+- Refresh token en cookie HttpOnly.
+- MFA temporal en memoria.
+- Guards para estados públicos, MFA pendiente y sesión autenticada.
+- Code splitting por rutas.
+- SSO mediante código temporal, nunca mediante JWT en URL.
 
 ## Flujo
 
 ```text
-Credenciales
-   ↓
-Token temporal
-   ↓
-Configuración o verificación MFA
-   ↓
-Sesión autenticada mediante cookie HttpOnly
-   ↓
-Consulta de permisos
-   ↓
-Selección del área autorizada
-   ↓
-Redirección a la aplicación correspondiente
+CURP + password
+      ↓
+temp_token MFA (memoria)
+      ↓
+setup/verificación TOTP
+      ↓
+access_token (memoria)
+refresh_token (HttpOnly)
+      ↓
+GET /users/me
+      ↓
+/accesos
+      ↓
+redirect-code
 ```
+
+## Recarga
+
+La aplicación no intenta conservar el access token durante F5. En una nueva
+carga, el marcador no sensible de sesión permite intentar `/users/me`; si el
+Bearer ya no existe o expiró, el cliente coordina un único refresh mediante la
+cookie HttpOnly y reintenta la operación.
+
+## Rutas diferidas
+
+Las páginas se importan dinámicamente mediante `React.lazy`. Guards, error
+boundary y providers permanecen en el arranque para decidir acceso antes de
+renderizar las pantallas diferidas.
 
 ## Escalabilidad
 
-Para incorporar nuevas áreas solo se debe agregar una definición compatible con `AccessItem`. Las tarjetas, badges, modal de permisos y estados visuales se reutilizan sin duplicar la implementación.
+Agregar un nuevo acceso no requiere duplicar la sesión. El backend entrega
+grupos/módulos/acciones y el frontend transforma esa información en `AccessItem`.

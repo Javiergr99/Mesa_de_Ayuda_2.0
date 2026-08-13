@@ -1,25 +1,30 @@
 @import "tailwindcss";
+@import "./design-tokens.css";
 
 @theme {
-  --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
-  --color-brand-50: #eff6ff;
-  --color-brand-100: #dbeafe;
-  --color-brand-500: #3b82f6;
-  --color-brand-600: #2563eb;
-  --color-brand-700: #1d4ed8;
-  --color-sidebar: #0f1a31;
-  --color-canvas: #f4f7fb;
+  --font-sans: var(--ui-font-family);
+  --color-brand-50: var(--ui-primary-soft);
+  --color-brand-100: color-mix(in srgb, var(--ui-primary) 16%, white);
+  --color-brand-500: color-mix(in srgb, var(--ui-primary) 82%, white);
+  --color-brand-600: var(--ui-primary);
+  --color-brand-700: var(--ui-primary-hover);
+  --color-sidebar: var(--ui-sidebar);
+  --color-canvas: var(--ui-canvas);
 }
 
 :root {
-  font-family: var(--font-sans);
-  color: #111827;
-  background: #f4f7fb;
+  font-family: var(--ui-font-family);
+  color: var(--ui-text-primary);
+  background: var(--ui-canvas);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   --header-height: 64px;
-  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 56px;
+  --sidebar-expanded-width: 224px;
+  --sidebar-current-width: var(--sidebar-collapsed-width);
+  --app-content-max-width: 1180px;
+  --app-content-gap: 20px;
 }
 
 * {
@@ -36,6 +41,20 @@ body,
   overflow: hidden;
 }
 
+body {
+  font-weight: var(--ui-body-weight);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong {
+  font-weight: var(--ui-heading-weight);
+}
+
 button,
 input,
 select,
@@ -49,8 +68,38 @@ button:not(:disabled),
 }
 
 ::selection {
-  color: #172554;
-  background: #bfdbfe;
+  color: color-mix(in srgb, var(--ui-primary) 35%, black);
+  background: color-mix(in srgb, var(--ui-primary) 20%, white);
+}
+
+.app-content-shell {
+  width: min(100%, var(--app-content-max-width));
+  margin-inline: auto;
+  padding: 18px clamp(14px, 2vw, 28px) 32px;
+}
+
+.app-page {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--app-content-gap);
+}
+
+.app-content-actions {
+  width: min(100%, var(--app-content-max-width));
+  margin-inline: auto;
+  padding-inline: clamp(14px, 2vw, 28px);
+}
+
+@media (max-width: 767px) {
+  :root {
+    --sidebar-collapsed-width: 52px;
+    --app-content-gap: 16px;
+  }
+
+  .app-content-shell {
+    padding-top: 14px;
+  }
 }
 
 .app-scrollbar {
@@ -79,7 +128,7 @@ button:not(:disabled),
 }
 
 .focus-ring:focus-visible {
-  box-shadow: 0 0 0 3px rgb(37 99 235 / 0.22);
+  box-shadow: 0 0 0 3px var(--ui-focus-ring);
 }
 
 @keyframes shimmer {
@@ -89,4 +138,110 @@ button:not(:disabled),
 
 .animate-shimmer {
   animation: shimmer 1.7s linear infinite;
+}
+
+@keyframes profile-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes profile-menu-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-3px) scale(0.985);
+  }
+}
+
+.profile-menu-content[data-state="open"] {
+  animation: profile-menu-in 140ms ease-out;
+}
+
+.profile-menu-content[data-state="closed"] {
+  animation: profile-menu-out 100ms ease-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-menu-content[data-state="open"],
+  .profile-menu-content[data-state="closed"] {
+    animation: none;
+  }
+}
+
+.profile-data-grid > * {
+  border-bottom: 1px solid var(--ui-border);
+}
+
+.profile-data-grid > *:last-child {
+  border-bottom: 0;
+}
+
+@media (min-width: 640px) {
+  .profile-data-grid > * {
+    border-right: 1px solid var(--ui-border);
+  }
+
+  .profile-data-grid > *:nth-child(2n),
+  .profile-data-grid > *.sm\:col-span-2 {
+    border-right: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .profile-data-grid > *:nth-child(2n) {
+    border-right: 1px solid var(--ui-border);
+  }
+
+  .profile-data-grid > *:nth-child(3n),
+  .profile-data-grid > *.lg\:col-span-3 {
+    border-right: 0;
+  }
+}
+
+.profile-permission-item {
+  border-bottom: 1px solid var(--ui-border);
+}
+
+.profile-permission-item:last-child {
+  border-bottom: 0;
+}
+
+@media (min-width: 640px) {
+  .profile-permission-item {
+    border-right: 1px solid var(--ui-border);
+  }
+
+  .profile-permission-item:nth-child(2n) {
+    border-right: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .profile-permission-item:nth-child(2n) {
+    border-right: 1px solid var(--ui-border);
+  }
+
+  .profile-permission-item:nth-child(3n) {
+    border-right: 0;
+  }
+}
+
+/* Configuración visual: distribución aprobada en Figma, acotada al main. */
+.appearance-settings-page {
+  --settings-preview-min-width: 360px;
+}
+
+@media (min-width: 1280px) {
+  .appearance-settings-page {
+    gap: 16px;
+  }
 }

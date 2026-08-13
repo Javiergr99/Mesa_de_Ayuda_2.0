@@ -2,7 +2,16 @@ import { useEffect, useMemo, useRef } from "react";
 
 import { cn } from "@/shared/lib/cn";
 
-const OTP_LENGTH = 6;
+const OTP_POSITIONS = [
+  "otp-digit-1",
+  "otp-digit-2",
+  "otp-digit-3",
+  "otp-digit-4",
+  "otp-digit-5",
+  "otp-digit-6",
+] as const;
+
+const OTP_LENGTH = OTP_POSITIONS.length;
 
 export function OtpInput({
   value,
@@ -42,13 +51,13 @@ export function OtpInput({
   return (
     <div>
       <div className="flex justify-between gap-2 sm:gap-3" role="group" aria-label="Código de verificación de seis dígitos">
-        {digits.map((digit, index) => (
+        {OTP_POSITIONS.map((position, index) => (
           <input
-            key={index}
+            key={position}
             ref={(element) => {
               refs.current[index] = element;
             }}
-            value={digit}
+            value={digits[index]}
             disabled={disabled}
             inputMode="numeric"
             autoComplete={index === 0 ? "one-time-code" : "off"}

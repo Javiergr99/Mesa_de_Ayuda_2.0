@@ -12,10 +12,10 @@ export function AccessLayout({ children }: { children: ReactNode }) {
   return (
     <ThemeScope
       theme={APP_THEMES.mesaAyuda}
-      className="min-h-screen bg-[var(--color-page-background)] pt-[var(--header-height)]"
+      className="min-h-screen overflow-x-clip bg-[var(--color-page-background)] pt-[var(--header-height)]"
     >
       <AppHeader />
-      <main className="mx-auto w-full max-w-[var(--content-max-width)] px-6 pb-10 pt-8 sm:px-8 lg:px-6">
+      <main className="mx-auto w-full max-w-[1180px] px-4 pb-10 pt-6 sm:px-6 lg:px-7">
         {children}
       </main>
     </ThemeScope>

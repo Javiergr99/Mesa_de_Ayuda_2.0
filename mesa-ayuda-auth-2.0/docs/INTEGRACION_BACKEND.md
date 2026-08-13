@@ -1,74 +1,105 @@
-# Integración con backend
+# Integración con auth_service
 
-El frontend utiliza el patrón Repository para separar la interfaz de los servicios de autenticación.
+## Configuración local
 
-## Inicio de sesión
+```env
+VITE_API_URL=http://127.0.0.1:8000
+VITE_ENABLE_MOCKS=false
+```
 
-```http
+Use el puerto donde realmente se ejecute `auth_service`.
+
+## Login
+
+`POST /auth/login` utiliza `application/x-www-form-urlencoded`:
+
+```text
+username=<CURP>
+password=<PASSWORD>
+```
+
+El formulario expone `curp`; el servicio lo normaliza y lo envía como
+`username`.
+
+## MFA
+
+### Setup inicial
+
+```text
 POST /auth/login
-Content-Type: application/json
-
-{
-  "identifier": "sofia.huerta@institucion.gob.mx",
-  "password": "********"
-}
+  -> two_factor_setup_required
+POST /auth/setup
+  -> qr_uri + manual_key
+POST /auth/enable
 ```
 
-Respuesta esperada:
+`qr_uri` y `manual_key` viven únicamente en memoria.
 
-```json
-{
-  "tempToken": "token-temporal",
-  "requiresMfaSetup": false,
-  "user": {
-    "id": "usr-001",
-    "name": "Arq. Sofía Huerta",
-    "email": "sofia.huerta@institucion.gob.mx",
-    "role": "Administrador",
-    "area": "Mesa de Control TI",
-    "scope": "Nacional",
-    "accountStatus": "active",
-    "mfaConfigured": true
-  }
-}
+### Verificación recurrente
+
+```text
+POST /auth/login
+  -> pending_2fa
+POST /auth/login/2fa
 ```
 
-## Verificación del segundo factor
+`temp_token` también vive únicamente en memoria.
+
+## Sesión definitiva
+
+Después de `/auth/enable`, `/auth/login/2fa` o `/auth/exchange-code`:
+
+- el frontend conserva el `access_token` en memoria;
+- `auth_service` establece el refresh token mediante cookie HttpOnly;
+- se consulta `GET /users/me` con Bearer.
+
+El refresh token no forma parte del almacenamiento accesible a JavaScript.
+
+## Renovación
+
+Las peticiones protegidas usan un interceptor central:
+
+1. request con access token;
+2. `401` elegible;
+3. una única promesa ejecuta `/auth/refresh`;
+4. la cookie HttpOnly viaja automáticamente;
+5. backend rota/valida la sesión;
+6. el nuevo access token reemplaza al anterior en memoria;
+7. el request original se reintenta una sola vez.
+
+Los endpoints de login/MFA/refresh/logout no entran en bucles de refresh.
+
+## Preferencia de sesión
+
+“Mantener mi sesión iniciada” no decide dónde guardar JWT. Solo determina el
+marcador no sensible de persistencia y el header:
+
+```text
+X-Remember-Session: true | false
+```
+
+El backend decide si la cookie refresh recibe duración persistente o queda
+limitada a la sesión del navegador.
+
+## Usuario y permisos
 
 ```http
-POST /auth/2fa/verify
-
-{
-  "temp_token": "token-temporal",
-  "code": "123456"
-}
+GET /users/me
+Authorization: Bearer <access_token>
 ```
 
-## Confirmación de configuración inicial
+Los accesos se construyen desde:
 
-```http
-POST /auth/2fa/confirm
-
-{
-  "temp_token": "token-temporal",
-  "code": "123456"
-}
+```text
+permisos.grupos
+└── modulos
+    └── acciones
 ```
 
-## Cierre de sesión
+Nombres estables de grupos/acciones deciden visibilidad; los UUID no son la
+regla de negocio visual.
 
-```http
-POST /auth/logout
-```
+## Errores
 
-Todas las solicitudes utilizan `credentials: include` para permitir cookies HttpOnly.
-
-## Permisos
-
-En una integración completa se recomienda sustituir el repositorio simulado por un endpoint como:
-
-```http
-GET /auth/accesses
-```
-
-La respuesta debe indicar área, módulos, permisos, nivel de acceso y URL o código de destino. La autorización efectiva siempre debe validarse nuevamente en el backend de cada aplicación; ocultar una tarjeta en el frontend no constituye un control de seguridad.
+El normalizador soporta errores directos, `detail` anidado y respuestas de
+validación FastAPI sin exponer payloads sensibles en logs.

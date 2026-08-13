@@ -1,90 +1,103 @@
-# Mesa de Ayuda 2.0 — Autenticación y Accesos
+# Mesa de Ayuda 2.0 — Portal de autenticación
 
-Frontend independiente para el inicio de sesión, la autenticación de dos factores y la selección de accesos disponibles de **Mesa de Ayuda 2.0**.
+Portal independiente para autenticación, MFA, sesión, perfil y selección de
+accesos de Mesa de Ayuda 2.0.
 
-Referencia de diseño: archivo Figma **Mesa de Ayuda 2.0**, incluyendo los estados de login, MFA y tarjetas de accesos disponibles.
+## Estado actual
 
-Este proyecto vive separado del frontend operativo principal. Su responsabilidad termina cuando el usuario autenticado selecciona un área y es redirigido a la aplicación correspondiente.
+- Login por CURP y contraseña.
+- Recuperación y creación inicial de contraseña.
+- Configuración y verificación MFA/TOTP.
+- Access token únicamente en memoria.
+- Refresh token mediante cookie HttpOnly.
+- Restauración de sesión tras F5.
+- Cierre por inactividad de 60 minutos.
+- Logout sincronizado entre pestañas.
+- Usuario y permisos desde `GET /users/me`.
+- Perfil de consulta.
+- Accesos construidos desde grupos, módulos y acciones.
+- SSO mediante `redirect-code` / `exchange-code`.
+- Code splitting por rutas.
+- Modo mock opcional.
 
-## Tecnologías
+## Seguridad de credenciales
 
-- React 19
-- TypeScript 6
-- Vite 8
-- Tailwind CSS 4
-- React Router 8
-- TanStack Query
-- React Hook Form + Zod
-- Radix UI
-- Motion
-- Zustand
-- Sonner
-- Vitest, Testing Library y Playwright
-- ESLint, Prettier y React Doctor
+```text
+password       -> nunca persistida
+TOTP           -> nunca persistido
+temp_token MFA -> memoria
+qr_uri/key     -> memoria
+access_token   -> memoria
+refresh_token  -> cookie HttpOnly
+```
 
-## Requisitos
+`sessionStorage`/`localStorage` solo pueden contener un marcador no sensible
+para recordar la preferencia de duración de sesión.
 
-- Node.js 22.22 o superior
-- npm 10.9 o superior
+Consulte [`docs/AUTENTICACION_Y_SEGURIDAD.md`](docs/AUTENTICACION_Y_SEGURIDAD.md).
 
-## Instalación
+## Backend real
 
-```bash
+```env
+VITE_API_URL=http://127.0.0.1:8000
+VITE_ENABLE_MOCKS=false
+```
+
+```powershell
 npm install
-cp .env.example .env
 npm run dev
 ```
 
-La aplicación utiliza el puerto `5174` para poder ejecutarse al mismo tiempo que el frontend principal de Mesa de Ayuda, configurado normalmente en el puerto `5173`.
-
-## Credenciales de demostración
-
-El modo simulado está activo de manera predeterminada en `.env.example`.
+Frontend:
 
 ```text
-Correo: sofia.huerta@institucion.gob.mx
-Contraseña: MesaAyuda2026!
-Código de verificación: 123456
+http://127.0.0.1:5174
 ```
 
-Estas credenciales existen únicamente para la demostración local. No deben copiarse a producción.
+## Flujo
 
-## Rutas
+```text
+POST /auth/login
+    ↓
+temp_token
+    ├── setup MFA -> /auth/setup -> /auth/enable
+    └── MFA existente -> /auth/login/2fa
+    ↓
+access token en memoria
+refresh cookie HttpOnly
+    ↓
+GET /users/me
+    ↓
+/accesos
+    ↓
+redirect-code
+```
 
-| Ruta | Función |
-|---|---|
-| `/login` | Inicio de sesión |
-| `/mfa/configurar` | Configuración inicial del segundo factor |
-| `/mfa/verificar` | Verificación recurrente del código OTP |
-| `/acceso-correcto` | Transición de autenticación completada |
-| `/accesos` | Tarjetas de áreas y permisos disponibles |
-| `/recuperar-acceso` | Base visual para recuperación de cuenta |
+## Calidad
 
-## Comandos de calidad
+Baseline validado el 13 de agosto de 2026:
 
-```bash
-npm run validate:structure
+- TypeScript: ✅
+- Unit tests: **26/26**
+- Build: ✅
+- React Doctor: **100/100**
+- Mayor chunk observado: **340.24 kB**
+- E2E real: **1 passed**
+
+```powershell
 npm run typecheck
-npm run lint
 npm run test
-npm run test:e2e
-npm run doctor
 npm run build
+npx -y react-doctor@latest . --scope full --score --yes
 ```
 
-El comando integral es:
+E2E real:
 
-```bash
-npm run quality
+```powershell
+npm run test:e2e:real
 ```
 
-## Integración con backend
+Las credenciales de la cuenta E2E se suministran únicamente como variables de
+entorno locales.
 
-Para desactivar los datos simulados:
-
-```env
-VITE_ENABLE_MOCKS=false
-VITE_API_URL=https://api.institucional.gob.mx
-```
-
-Consulta `docs/INTEGRACION_BACKEND.md` para revisar los contratos esperados.
+Documentación: [`docs/README.md`](docs/README.md).

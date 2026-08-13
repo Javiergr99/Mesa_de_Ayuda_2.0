@@ -38,7 +38,6 @@
     "lucide-react": "^0.536.0",
     "motion": "^12.23.12",
     "react": "^19.2.7",
-    "react-day-picker": "^9.9.0",
     "react-dom": "^19.2.7",
     "react-hook-form": "^7.62.0",
     "react-router": "^8.3.0",

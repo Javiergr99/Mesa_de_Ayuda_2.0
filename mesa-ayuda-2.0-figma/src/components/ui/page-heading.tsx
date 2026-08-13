@@ -12,13 +12,21 @@ export function PageHeading({
   actions?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-      <div>
-        {eyebrow ? <div className="mb-2 text-sm text-slate-500">{eyebrow}</div> : null}
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">{title}</h1>
-        {description ? <p className="mt-1 text-sm text-slate-500">{description}</p> : null}
+    <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+      <div className="min-w-0">
+        {eyebrow ? (
+          <div className="mb-1.5 text-xs text-[var(--ui-text-secondary)]">{eyebrow}</div>
+        ) : null}
+        <h1 className="text-[22px] font-bold tracking-tight text-[var(--ui-text-primary)] sm:text-2xl">
+          {title}
+        </h1>
+        {description ? (
+          <p className="mt-1 max-w-3xl text-[13px] leading-5 text-[var(--ui-text-secondary)] sm:text-sm">
+            {description}
+          </p>
+        ) : null}
       </div>
-      {actions ? <div className="flex flex-wrap items-center gap-3">{actions}</div> : null}
+      {actions ? <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div> : null}
     </div>
   );
 }

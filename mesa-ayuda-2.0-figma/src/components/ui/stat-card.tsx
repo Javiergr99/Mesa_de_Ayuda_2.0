@@ -1,5 +1,7 @@
 import type { LucideIcon } from "lucide-react";
-import { motion } from "motion/react";
+import { LazyMotion, domAnimation } from "motion/react";
+import * as m from "motion/react-m";
+
 import { Card } from "@/components/ui/card";
 import { cn } from "@/shared/lib/cn";
 
@@ -26,17 +28,21 @@ export function StatCard({
   tone?: keyof typeof toneClasses;
 }) {
   return (
-    <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.18 }}>
-      <Card className="h-full p-5 transition-colors hover:border-slate-300">
-        <div className="flex items-start justify-between gap-4">
-          <p className="text-sm font-medium text-slate-500">{title}</p>
-          <span className={cn("grid h-9 w-9 place-items-center rounded-lg", toneClasses[tone])}>
-            <Icon className="h-4.5 w-4.5" />
+    <LazyMotion features={domAnimation}>
+      <m.div className="h-full" whileHover={{ y: -1 }} transition={{ duration: 0.16 }}>
+      <Card className="h-full p-4 transition-colors hover:border-slate-300">
+        <div className="flex items-start justify-between gap-3">
+          <p className="text-xs font-semibold leading-5 text-[var(--ui-text-secondary)]">{title}</p>
+          <span className={cn("grid h-8 w-8 shrink-0 place-items-center rounded-lg", toneClasses[tone])}>
+            <Icon className="h-4 w-4" />
           </span>
         </div>
-        <p className="mt-3 text-3xl font-bold tracking-tight text-slate-900">{value}</p>
-        <p className="mt-1 text-xs text-slate-500">{detail}</p>
+        <p className="mt-2.5 text-[26px] font-bold leading-none tracking-tight text-[var(--ui-text-primary)]">
+          {value}
+        </p>
+        <p className="mt-1.5 text-[11px] leading-4 text-[var(--ui-text-secondary)]">{detail}</p>
       </Card>
-    </motion.div>
+      </m.div>
+    </LazyMotion>
   );
 }

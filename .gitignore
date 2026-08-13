@@ -1,24 +1,29 @@
-﻿# Dependencias
+# Dependencias
 **/node_modules/
 
-# Compilación
+# Builds y caches
 **/dist/
-**/.vite/
 **/build/
+**/.vite/
+**/.cache/
+**/.eslintcache
 
 # Variables de entorno
 **/.env
 **/.env.*
 !**/.env.example
 
-# Pruebas
+# Pruebas y reportes
 **/coverage/
-**/playwright-report/
 **/test-results/
+**/playwright-report/
+**/playwright-report-real/
 
-# Caché
-**/.cache/
-**/.eslintcache
+# React Doctor / recopiladores locales
+**/react-doctor*.json
+**/react-doctor*-sources.txt
+**/react-doctor-final*.txt
+documentacion-*-sources.txt
 
 # Logs
 **/*.log
@@ -35,3 +40,56 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Python / FastAPI
+**/.venv/
+**/venv/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.coverage
+**/htmlcov/
+**/.hypothesis/
+**/.tox/
+
+# Local databases
+**/*.sqlite
+**/*.sqlite3
+
+# Python runtime / logs
+**/*.pid
+
+# IDE
+**/.idea/
+
+# Python / FastAPI
+**/.venv/
+**/venv/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.coverage
+**/htmlcov/
+**/.hypothesis/
+**/.tox/
+
+# Local databases
+**/*.sqlite
+**/*.sqlite3
+
+# Python runtime / logs
+**/*.pid
+
+# IDE
+**/.idea/
+
+# Backends administrados por equipos/repositorios independientes
+/auth_service/
+/api_mesadeayuda/
+
+# Archivos temporales de auditoria local
+/backends-*.txt

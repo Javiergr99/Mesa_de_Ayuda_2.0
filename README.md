@@ -1,82 +1,71 @@
-<a id="top"></a>
+﻿<a id="top"></a>
 
 <div align="center">
   <img
     src="./docs/assets/mesa-ayuda-banner.svg"
-    alt="Mesa de Ayuda 2.0 — autenticación segura, gestión centralizada y seguimiento trazable"
+    alt="Mesa de Ayuda 2.0 â€” autenticaciÃ³n segura, gestiÃ³n centralizada y seguimiento trazable"
     width="100%"
   />
 
   <br />
 
   <p>
-    <strong>Plataforma frontend para centralizar el registro, la organización y el seguimiento de solicitudes de atención.</strong>
+    <strong>Plataforma web modular para autenticaciÃ³n centralizada, gestiÃ³n de accesos y operaciÃ³n de Mesa de Ayuda.</strong>
   </p>
 
   <p>
-    Un ecosistema modular compuesto por un portal independiente de autenticación y una aplicación operativa para la gestión de atenciones.
+    Dos frontends independientes, una sesiÃ³n segura compartida mediante auth_service y una aplicaciÃ³n operativa desacoplada de la autenticaciÃ³n.
   </p>
 
   <p>
-    <a href="./mesa-ayuda-auth-2.0"><strong>Portal de autenticación</strong></a>
-    ·
-    <a href="./mesa-ayuda-2.0-figma"><strong>Aplicación operativa</strong></a>
-    ·
-    <a href="#-inicio-rápido"><strong>Inicio rápido</strong></a>
-    ·
+    <a href="./mesa-ayuda-auth-2.0"><strong>Portal de autenticaciÃ³n</strong></a>
+    Â·
+    <a href="./mesa-ayuda-2.0-figma"><strong>AplicaciÃ³n operativa</strong></a>
+    Â·
+    <a href="#-inicio-rÃ¡pido"><strong>Inicio rÃ¡pido</strong></a>
+    Â·
     <a href="#-arquitectura"><strong>Arquitectura</strong></a>
-    ·
-    <a href="#-hoja-de-ruta"><strong>Hoja de ruta</strong></a>
+    Â·
+    <a href="#-calidad-y-pruebas"><strong>Calidad</strong></a>
   </p>
 
   <p>
     <img src="https://img.shields.io/badge/estado-en%20desarrollo-F59E0B?style=for-the-badge" alt="Estado: en desarrollo" />
     <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=0F172A" alt="React 19.2" />
-    <img src="https://img.shields.io/badge/TypeScript-6.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 6" />
-    <img src="https://img.shields.io/badge/Vite-8.1-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 8.1" />
-    <img src="https://img.shields.io/badge/Tailwind_CSS-4.3-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS 4.3" />
-  </p>
-
-  <p>
-    <img src="https://img.shields.io/badge/Node.js-%3E%3D22.22-339933?style=flat-square&logo=nodedotjs&logoColor=white" alt="Node.js 22.22 o superior" />
-    <img src="https://img.shields.io/badge/npm-%3E%3D10.9-CB3837?style=flat-square&logo=npm&logoColor=white" alt="npm 10.9 o superior" />
-    <img src="https://img.shields.io/github/last-commit/Javiergr99/Mesa_de_Ayuda_2.0?style=flat-square&logo=github&label=%C3%BAltimo%20commit" alt="Último commit" />
-    <img src="https://img.shields.io/github/repo-size/Javiergr99/Mesa_de_Ayuda_2.0?style=flat-square&logo=github&label=tama%C3%B1o" alt="Tamaño del repositorio" />
+    <img src="https://img.shields.io/badge/TypeScript-6-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 6" />
+    <img src="https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 8" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS 4" />
   </p>
 </div>
 
 ---
 
-## ✨ Descripción
+## âœ¨ DescripciÃ³n
 
-**Mesa de Ayuda 2.0** es una propuesta de modernización para administrar solicitudes de atención mediante una experiencia web clara, modular y trazable.
+**Mesa de Ayuda 2.0** moderniza el registro, la organizaciÃ³n, el seguimiento y la administraciÃ³n de accesos mediante una arquitectura frontend separada por responsabilidades.
 
-El repositorio reúne dos aplicaciones frontend independientes:
-
-| Aplicación | Carpeta | Puerto local | Responsabilidad |
+| AplicaciÃ³n | Carpeta | Puerto local | Responsabilidad |
 |---|---|---:|---|
-| **Portal de autenticación** | [`mesa-ayuda-auth-2.0`](./mesa-ayuda-auth-2.0) | `5174` | Login, recuperación de acceso, 2FA, sesión y selección de accesos disponibles. |
-| **Aplicación operativa** | [`mesa-ayuda-2.0-figma`](./mesa-ayuda-2.0-figma) | `5173` | Dashboard, organizador, atenciones, registro y seguimiento. |
+| **Portal de autenticaciÃ³n** | [`mesa-ayuda-auth-2.0`](./mesa-ayuda-auth-2.0) | `5174` | Login, recuperaciÃ³n, creaciÃ³n inicial de contraseÃ±a, MFA, sesiÃ³n, perfil y accesos disponibles. |
+| **AplicaciÃ³n operativa** | [`mesa-ayuda-2.0-figma`](./mesa-ayuda-2.0-figma) | `5173` | Dashboard, organizador, atenciones, seguimiento, perfil, administraciÃ³n de usuarios y configuraciÃ³n visual. |
 
-La separación evita mezclar el ciclo de autenticación con los módulos de operación y permite que ambos frontends evolucionen, se desplieguen y se prueben de manera independiente.
+La autenticaciÃ³n y la operaciÃ³n se despliegan y prueban de manera independiente. `auth_service` conserva la autoridad de autenticaciÃ³n y autorizaciÃ³n; la API de Mesa de Ayuda atiende el dominio operativo.
 
 > [!IMPORTANT]
-> El proyecto se encuentra en desarrollo. La experiencia visual y los flujos con datos simulados están implementados; la integración definitiva con el backend se realizará conforme al contrato de API acordado.
-
-<p align="right"><a href="#top">Volver arriba ↑</a></p>
+> La sesiÃ³n vigente **no almacena JWT en Web Storage**. El access token vive Ãºnicamente en memoria JavaScript y el refresh token permanece en una cookie `HttpOnly` administrada por `auth_service`. `sessionStorage/localStorage` solo conservan un marcador no sensible de preferencia de persistencia.
 
 ---
 
-## 🖼️ Vista previa
+## ðŸ–¼ï¸ Vista previa
 
 <table>
   <tr>
-    <td align="center"><strong>Inicio de sesión institucional</strong></td>
+    <td align="center"><strong>Inicio de sesiÃ³n institucional</strong></td>
     <td align="center"><strong>Accesos disponibles</strong></td>
   </tr>
   <tr>
     <td width="50%">
-      <img src="./docs/assets/login.png" alt="Pantalla de inicio de sesión de Mesa de Ayuda 2.0" />
+      <img src="./docs/assets/login.png" alt="Pantalla de inicio de sesiÃ³n de Mesa de Ayuda 2.0" />
     </td>
     <td width="50%">
       <img src="./docs/assets/accesos-disponibles.png" alt="Pantalla de accesos disponibles de Mesa de Ayuda 2.0" />
@@ -84,503 +73,384 @@ La separación evita mezclar el ciclo de autenticación con los módulos de oper
   </tr>
   <tr>
     <td align="center"><strong>Seguimiento de atenciones</strong></td>
-    <td align="center"><strong>Registro de una nueva atención</strong></td>
+    <td align="center"><strong>Registro de una nueva atenciÃ³n</strong></td>
   </tr>
   <tr>
     <td width="50%">
       <img src="./docs/assets/seguimiento.png" alt="Pantalla de seguimiento de atenciones" />
     </td>
     <td width="50%">
-      <img src="./docs/assets/registrar-atencion.png" alt="Formulario para registrar una nueva atención" />
+      <img src="./docs/assets/registrar-atencion.png" alt="Formulario para registrar una nueva atenciÃ³n" />
     </td>
   </tr>
 </table>
 
-> Los nombres, registros y datos visibles en las capturas son demostrativos y no representan información operativa real.
-
-<p align="right"><a href="#top">Volver arriba ↑</a></p>
+> Los nombres y datos visibles en las capturas son demostrativos.
 
 ---
 
-## 🚀 Capacidades principales
+## ðŸš€ Capacidades principales
 
-### Portal de autenticación
+### Portal de autenticaciÃ³n
 
-- Inicio de sesión con una interfaz institucional y responsiva.
-- Flujo preparado para autenticación de dos factores.
-- Configuración inicial y verificación recurrente mediante código OTP.
-- Recuperación de acceso.
-- Guards para rutas públicas, pendientes de 2FA y protegidas.
-- Pantalla de accesos disponibles según perfil y permisos.
-- Cierre y control de sesión desde un proveedor centralizado.
-- Header y footer institucionales aplicados únicamente al flujo público de autenticación.
-- Tema visual independiente para autenticación y para la zona privada.
-- Repositorios simulados intercambiables por servicios HTTP reales.
+- Login mediante CURP y contraseÃ±a.
+- CreaciÃ³n inicial y recuperaciÃ³n de contraseÃ±a.
+- ConfiguraciÃ³n y verificaciÃ³n MFA/TOTP.
+- `temp_token`, `qr_uri` y `manual_key` Ãºnicamente en memoria.
+- Access token Ãºnicamente en memoria.
+- Refresh token mediante cookie `HttpOnly`.
+- RenovaciÃ³n de sesiÃ³n y restauraciÃ³n despuÃ©s de recargar la pÃ¡gina.
+- Cierre automÃ¡tico por 60 minutos de inactividad.
+- SincronizaciÃ³n de logout entre pestaÃ±as.
+- Perfil de consulta.
+- Accesos disponibles construidos desde grupos, mÃ³dulos y acciones.
+- Puente SSO mediante `redirect-code` / `exchange-code`.
+- Modo mock opcional para desarrollo.
 
-### Aplicación operativa
+### AplicaciÃ³n operativa
 
-- Dashboard administrativo con indicadores y actividad reciente.
-- Organizador con vistas mensual, semanal y de lista.
-- Consulta de atenciones en tabla y tablero.
-- Registro de nuevas atenciones con validación y archivos adjuntos.
-- Seguimiento mediante indicadores, filtros, búsqueda y paginación.
-- Drawer de detalle con resumen, historial, archivos y actualización.
-- Navegación preparada para Minería, Usuarios y Configuración.
-- Componentes de interfaz reutilizables y arquitectura basada en funcionalidades.
-
-<p align="right"><a href="#top">Volver arriba ↑</a></p>
+- Dashboard con integraciÃ³n a la API operativa.
+- Organizador.
+- Listado y registro de atenciones.
+- Adjuntos y validaciones de formulario.
+- Seguimiento, filtros, paginaciÃ³n y drawer de detalle.
+- Perfil autenticado.
+- AdministraciÃ³n de usuarios y permisos.
+- ConfiguraciÃ³n local de apariencia e identidad.
+- Guards de autorizaciÃ³n por acciÃ³n.
+- IntegraciÃ³n con Login Universal.
+- Code splitting por rutas con `React.lazy`.
 
 ---
 
-## 🧰 Tecnologías
+## ðŸ§° TecnologÃ­as
 
-<div align="center">
-  <img
-    src="https://skillicons.dev/icons?i=react,ts,vite,tailwind,nodejs,npm,git,github,figma&theme=light"
-    alt="React, TypeScript, Vite, Tailwind CSS, Node.js, npm, Git, GitHub y Figma"
-  />
-</div>
-
-<br />
-
-| Área | Tecnologías |
+| Ãrea | TecnologÃ­as |
 |---|---|
-| **Base frontend** | React 19, React DOM, TypeScript 6 y Vite 8. |
-| **Estilos** | Tailwind CSS 4, Design Tokens, variables CSS y `class-variance-authority`. |
-| **Navegación** | React Router 8 con rutas anidadas y guards. |
-| **Datos remotos** | TanStack Query y repositorios HTTP/mock intercambiables. |
-| **Formularios** | React Hook Form, Zod y resolvers tipados. |
-| **Estado global** | Zustand para estado ligero del cliente. |
-| **Componentes** | Radix UI, Lucide React y Font Awesome Brands. |
-| **Interacción** | Motion y Sonner. |
-| **Fechas** | date-fns y React Day Picker en la aplicación operativa. |
+| **Frontend** | React 19, React DOM, TypeScript 6 y Vite 8. |
+| **Estilos** | Tailwind CSS 4, Design Tokens, variables CSS y CVA. |
+| **NavegaciÃ³n** | React Router 8. |
+| **Datos remotos** | TanStack Query; Axios en Auth y clientes HTTP tipados en la aplicaciÃ³n operativa. |
+| **Formularios** | React Hook Form y Zod. |
+| **Estado cliente** | Zustand. |
+| **UI** | Radix UI, Lucide React, Font Awesome y `qrcode.react`. |
+| **InteracciÃ³n** | Motion y Sonner. |
 | **Pruebas** | Vitest, Testing Library y Playwright. |
-| **Calidad** | ESLint, Prettier, TypeScript y React Doctor. |
-
-<p align="center">
-  <img src="https://img.shields.io/badge/TanStack_Query-5-FF4154?style=flat-square&logo=reactquery&logoColor=white" alt="TanStack Query 5" />
-  <img src="https://img.shields.io/badge/React_Hook_Form-7-EC5990?style=flat-square&logo=reacthookform&logoColor=white" alt="React Hook Form 7" />
-  <img src="https://img.shields.io/badge/Zod-4-3E67B1?style=flat-square&logo=zod&logoColor=white" alt="Zod 4" />
-  <img src="https://img.shields.io/badge/Zustand-5-443E38?style=flat-square" alt="Zustand 5" />
-  <img src="https://img.shields.io/badge/Radix_UI-components-161618?style=flat-square&logo=radixui&logoColor=white" alt="Radix UI" />
-  <img src="https://img.shields.io/badge/Vitest-4-6E9F18?style=flat-square&logo=vitest&logoColor=white" alt="Vitest 4" />
-  <img src="https://img.shields.io/badge/Playwright-E2E-2EAD33?style=flat-square&logo=playwright&logoColor=white" alt="Playwright" />
-</p>
-
-<p align="right"><a href="#top">Volver arriba ↑</a></p>
+| **Calidad** | TypeScript, ESLint, Prettier y React Doctor. |
 
 ---
 
-## 🏗️ Arquitectura
+## ðŸ—ï¸ Arquitectura
 
 ```mermaid
 flowchart LR
-    U[Usuario] --> AUTH[Portal de autenticación<br/>localhost:5174]
-    AUTH --> LOGIN[Login y recuperación]
-    AUTH --> MFA[Configuración y verificación 2FA]
+    U[Usuario] --> AUTH[Portal Auth :5174]
+    AUTH --> LOGIN[Login + MFA]
+    LOGIN --> AS[(auth_service :8000)]
+
+    AS -->|access token JSON| AUTH
+    AS -->|refresh cookie HttpOnly| AUTH
+
     AUTH --> ACCESS[Accesos disponibles]
+    ACCESS -->|redirect-code| APP[Mesa de Ayuda :5173]
+    APP -->|exchange-code| AS
+    AS -->|access token + refresh cookie| APP
 
-    LOGIN -. contrato HTTP .-> API[(API de autenticación)]
-    MFA -. cookies HttpOnly .-> API
+    APP --> CORE[(API Mesa de Ayuda :8002)]
 
-    ACCESS -->|Selección de acceso| APP[Aplicación operativa<br/>localhost:5173]
-    APP --> DASH[Dashboard]
-    APP --> ORG[Organizador]
-    APP --> ATT[Atenciones]
-    APP --> TRACK[Seguimiento]
-    APP -. integración HTTP .-> CORE[(API Mesa de Ayuda)]
-
-    classDef auth fill:#611232,color:#fff,stroke:#4F0E29;
-    classDef app fill:#2563EB,color:#fff,stroke:#1D4ED8;
-    classDef api fill:#0F172A,color:#fff,stroke:#334155;
-    class AUTH,LOGIN,MFA,ACCESS auth;
-    class APP,DASH,ORG,ATT,TRACK app;
-    class API,CORE api;
+    AUTH -. access token en memoria .-> AS
+    APP -. Bearer en APIs protegidas .-> AS
+    APP -. Bearer .-> CORE
 ```
 
-### Organización del repositorio
+### Modelo de sesiÃ³n
+
+```text
+Credenciales
+    â†“
+temp_token MFA (memoria)
+    â†“
+TOTP
+    â†“
+access_token (memoria)
+refresh_token (cookie HttpOnly)
+    â†“
+GET /users/me
+    â†“
+redirect-code de un solo uso
+    â†“
+exchange-code en la aplicaciÃ³n destino
+```
+
+Los JWT nunca se incorporan a la URL ni se escriben en `localStorage` o `sessionStorage`.
+
+### OrganizaciÃ³n
 
 ```text
 Mesa_de_Ayuda_2.0/
-├── README.md
-├── docs/
-│   └── assets/
-│       ├── mesa-ayuda-banner.svg
-│       ├── login.png
-│       ├── accesos-disponibles.png
-│       ├── seguimiento.png
-│       └── registrar-atencion.png
-│
-├── mesa-ayuda-auth-2.0/
-│   ├── public/
-│   ├── docs/
-│   ├── scripts/
-│   ├── src/
-│   │   ├── app/
-│   │   ├── components/
-│   │   ├── features/
-│   │   │   ├── auth/
-│   │   │   └── access/
-│   │   └── shared/
-│   └── tests/
-│
-└── mesa-ayuda-2.0-figma/
-    ├── docs/
-    ├── scripts/
-    ├── src/
-    │   ├── app/
-    │   ├── components/
-    │   ├── features/
-    │   │   ├── dashboard/
-    │   │   ├── organizer/
-    │   │   ├── attentions/
-    │   │   ├── attention-create/
-    │   │   ├── tracking/
-    │   │   └── placeholders/
-    │   └── shared/
-    └── tests/
+â”œâ”€â”€ .github/
+â”‚   â””â”€â”€ workflows/
+â”‚       â””â”€â”€ react-doctor.yml
+â”œâ”€â”€ docs/
+â”œâ”€â”€ mesa-ayuda-auth-2.0/
+â”‚   â”œâ”€â”€ docs/
+â”‚   â”œâ”€â”€ public/
+â”‚   â”œâ”€â”€ scripts/
+â”‚   â”œâ”€â”€ src/
+â”‚   â””â”€â”€ tests/
+â””â”€â”€ mesa-ayuda-2.0-figma/
+    â”œâ”€â”€ docs/
+    â”œâ”€â”€ scripts/
+    â”œâ”€â”€ src/
+    â””â”€â”€ tests/
 ```
 
-### Principios aplicados
-
-- **Separación de responsabilidades:** autenticación y operación viven en aplicaciones diferentes.
-- **Arquitectura por funcionalidad:** cada módulo agrupa páginas, componentes, modelos y servicios relacionados.
-- **Tipado estricto:** contratos, formularios y estados se modelan con TypeScript.
-- **Dependencias hacia abstracciones:** los repositorios mock y HTTP implementan responsabilidades equivalentes.
-- **Componentes reutilizables:** los elementos visuales compartidos se concentran en `components/ui`.
-- **Diseño semántico:** los componentes consumen tokens como `--color-primary` en lugar de colores directos.
-
-<p align="right"><a href="#top">Volver arriba ↑</a></p>
+Cada frontend organiza su dominio mediante `app`, `components`, `features`, `shared` y `tests`.
 
 ---
 
-## 🎨 Sistema de diseño
+## ðŸŽ¨ Sistema de diseÃ±o
 
-El portal de autenticación incluye un sistema centralizado de **Design Tokens** para modificar colores, tipografía, radios, sombras, espaciados y estados sin editar cada componente individualmente.
+Ambos frontends utilizan tokens semÃ¡nticos y componentes reutilizables. El portal Auth separa sus tokens principales en:
 
 ```text
-mesa-ayuda-auth-2.0/src/app/styles/
-├── tokens.css       # Escalas y valores base
-├── themes.css       # Tema de autenticación y tema privado
-├── typography.css   # Estilos tipográficos semánticos
-└── index.css        # Punto de entrada global
+src/app/styles/
+â”œâ”€â”€ tokens.css
+â”œâ”€â”€ themes.css
+â”œâ”€â”€ typography.css
+â””â”€â”€ index.css
 ```
 
-Los layouts determinan el tema activo:
-
-```tsx
-<div data-theme="auth">...</div>
-<div data-theme="mesa-ayuda">...</div>
-```
-
-Ejemplo de cambio global:
-
-```css
-[data-theme="auth"] {
-  --color-primary: #611232;
-  --color-primary-hover: #4f0e29;
-  --font-weight-page-title: var(--font-weight-bold);
-}
-```
-
-Al modificar estos valores se actualizan de manera consistente botones, enlaces, estados de foco y títulos que utilizan los tokens semánticos.
-
-<p align="right"><a href="#top">Volver arriba ↑</a></p>
+La aplicaciÃ³n operativa mantiene sus tokens institucionales y el mÃ³dulo de configuraciÃ³n visual sin mezclar reglas de negocio con valores de presentaciÃ³n.
 
 ---
 
-## ⚡ Inicio rápido
+## âš¡ Inicio rÃ¡pido
 
 ### Requisitos
 
-- **Node.js `22.22` o superior**.
-- **npm `10.9` o superior**.
-- Git.
+- Node.js `22.22` o superior.
+- npm `10.9` o superior.
+- Los servicios backend necesarios para flujos reales.
 
-### 1. Clonar el repositorio
+### InstalaciÃ³n
 
 ```powershell
 git clone https://github.com/Javiergr99/Mesa_de_Ayuda_2.0.git
 cd Mesa_de_Ayuda_2.0
+
+cd .\mesa-ayuda-auth-2.0
+npm install
+
+cd ..\mesa-ayuda-2.0-figma
+npm install
 ```
 
-### 2. Instalar el portal de autenticación
+Configure cada frontend a partir de su `.env.example`. No mezcle `localhost` y `127.0.0.1` dentro del mismo flujo de autenticaciÃ³n/cookies.
+
+### EjecuciÃ³n
+
+**Auth:**
 
 ```powershell
 cd .\mesa-ayuda-auth-2.0
-npm install
-Copy-Item .env.example .env.local
-```
-
-### 3. Instalar la aplicación operativa
-
-```powershell
-cd ..\mesa-ayuda-2.0-figma
-npm install
-Copy-Item .env.example .env.local
-```
-
-### 4. Ejecutar ambos frontends
-
-Abre dos terminales.
-
-**Terminal 1 — autenticación:**
-
-```powershell
-cd "C:\ruta\Mesa_de_Ayuda_2.0\mesa-ayuda-auth-2.0"
 npm run dev
 ```
 
-**Terminal 2 — aplicación operativa:**
+**AplicaciÃ³n operativa:**
 
 ```powershell
-cd "C:\ruta\Mesa_de_Ayuda_2.0\mesa-ayuda-2.0-figma"
+cd .\mesa-ayuda-2.0-figma
 npm run dev
 ```
 
-| Servicio | Dirección |
+| Servicio | DirecciÃ³n local |
 |---|---|
-| Portal de autenticación | `http://127.0.0.1:5174` |
-| Aplicación operativa | `http://127.0.0.1:5173` |
-| Backend esperado | `http://127.0.0.1:8000` |
-
-<details>
-  <summary><strong>Credenciales locales de demostración</strong></summary>
-
-  <br />
-
-  Estas credenciales funcionan únicamente cuando el repositorio simulado está habilitado.
-
-  ```text
-  Correo: sofia.huerta@institucion.gob.mx
-  Contraseña: MesaAyuda2026!
-  Código 2FA: 123456
-  ```
-
-  No representan cuentas ni secretos de producción.
-</details>
-
-<p align="right"><a href="#top">Volver arriba ↑</a></p>
+| Auth frontend | `http://127.0.0.1:5174` |
+| Mesa de Ayuda frontend | `http://127.0.0.1:5173` |
+| `auth_service` | `http://127.0.0.1:8000` |
+| API Mesa de Ayuda | `http://127.0.0.1:8002` |
 
 ---
 
-## ⚙️ Variables de entorno
+## âš™ï¸ ConfiguraciÃ³n de entorno
 
-### Portal de autenticación
+### Auth
 
-Archivo: `mesa-ayuda-auth-2.0/.env.local`
+Variables principales:
 
-| Variable | Propósito | Valor local sugerido |
-|---|---|---|
-| `VITE_API_URL` | URL base de la API de autenticación. | `http://127.0.0.1:8000` |
-| `VITE_ENABLE_MOCKS` | Activa los repositorios simulados. | `true` |
-| `VITE_MESA_AYUDA_URL` | Destino del acceso principal. | `http://127.0.0.1:5173/app/dashboard` |
-| `VITE_ORGANIZADOR_URL` | Destino del organizador. | `http://127.0.0.1:5173/app/organizador` |
-| `VITE_MINERIA_URL` | Destino de minería. | `http://127.0.0.1:5173/app/mineria` |
-| `VITE_ADMIN_URL` | Destino administrativo. | `http://127.0.0.1:5173/app/usuarios` |
-| `VITE_POR_TUS_DERECHOS_URL` | Enlace público utilizado por el header institucional. | Definir según ambiente. |
-| `VITE_GOBMX_SEARCH_URL` | Buscador institucional. | `https://www.gob.mx/busqueda` |
+```env
+VITE_API_URL=http://127.0.0.1:8000
+VITE_ENABLE_MOCKS=false
+VITE_MESA_AYUDA_URL=http://127.0.0.1:5173/app/dashboard
+VITE_FORMATO_NNA_URL=http://127.0.0.1:5173/app/formato-nna
+VITE_ADMIN_URL=http://127.0.0.1:5173/app/usuarios
+```
 
-### Aplicación operativa
+### AplicaciÃ³n operativa
 
-Archivo: `mesa-ayuda-2.0-figma/.env.local`
+Variables principales:
 
-| Variable | Propósito | Valor local sugerido |
-|---|---|---|
-| `VITE_API_URL` | URL base de la API operativa. | `http://127.0.0.1:8000` |
-| `VITE_USE_MOCKS` | Activa los datos simulados de la aplicación. | `true` |
+```env
+VITE_API_URL=http://127.0.0.1:8000
+VITE_AUTH_APP_URL=http://127.0.0.1:5174/login
+VITE_MESA_AYUDA_API_URL=/mesa-api
+VITE_MESA_AYUDA_API_PROXY_TARGET=http://127.0.0.1:8002
+```
+
+Los `.env.example` de cada proyecto son la referencia para variables adicionales.
 
 > [!CAUTION]
-> No subas archivos `.env`, tokens, contraseñas, secretos, certificados o credenciales reales al repositorio.
-
-<p align="right"><a href="#top">Volver arriba ↑</a></p>
+> Nunca versionar contraseÃ±as, secretos TOTP, JWT, cookies, claves privadas ni archivos `.env` reales.
 
 ---
 
-## 🧭 Rutas principales
+## ðŸ§­ Rutas principales
 
-### Autenticación
+### Auth
 
-| Ruta | Descripción |
+| Ruta | Uso |
 |---|---|
-| `/login` | Inicio de sesión. |
-| `/recuperar-acceso` | Recuperación de cuenta. |
-| `/mfa/configurar` | Configuración inicial del segundo factor. |
-| `/mfa/verificar` | Verificación del código OTP. |
-| `/acceso-correcto` | Confirmación y transición de autenticación. |
-| `/accesos` | Selección de módulos y permisos disponibles. |
+| `/login` | Inicio de sesiÃ³n. |
+| `/recuperar-acceso` | RecuperaciÃ³n de acceso. |
+| `/restablecer-contrasena?token=...` | Restablecimiento. |
+| `/crear-password?token=...` | CreaciÃ³n inicial de contraseÃ±a. |
+| `/crear-contrasena?token=...` | Alias temporal compatible. |
+| `/mfa/configurar` | ConfiguraciÃ³n inicial de MFA. |
+| `/mfa/verificar` | VerificaciÃ³n recurrente. |
+| `/acceso-correcto` | TransiciÃ³n posterior a MFA. |
+| `/accesos` | Aplicaciones autorizadas. |
+| `/perfil` | Perfil de consulta. |
+| `/cerrar-sesion` | Puente de logout. |
 
-### Aplicación operativa
+### AplicaciÃ³n operativa
 
-| Ruta | Descripción |
+| Ruta | Uso |
 |---|---|
-| `/app/dashboard` | Resumen operativo. |
-| `/app/organizador` | Calendario y actividades. |
-| `/app/atenciones` | Consulta de atenciones. |
-| `/app/atenciones/nueva` | Registro de una atención. |
-| `/app/seguimiento` | Seguimiento, filtros y actualización. |
-| `/app/mineria` | Ruta preparada para el módulo de minería. |
-| `/app/usuarios` | Ruta preparada para administración de usuarios. |
-| `/app/configuracion` | Ruta preparada para configuración. |
-
-<p align="right"><a href="#top">Volver arriba ↑</a></p>
+| `/app/dashboard` | Dashboard. |
+| `/app/organizador` | Organizador. |
+| `/app/atenciones` | Listado de atenciones. |
+| `/app/atenciones/nueva` | Registro de atenciÃ³n. |
+| `/app/formato-nna` | Entrada autorizada que reutiliza el formulario. |
+| `/app/seguimiento` | Seguimiento. |
+| `/app/perfil` | Perfil. |
+| `/app/usuarios` | AdministraciÃ³n de usuarios. |
+| `/app/usuarios/nuevo` | Alta de usuario. |
+| `/app/usuarios/:userId/editar` | EdiciÃ³n. |
+| `/app/configuracion/apariencia` | ConfiguraciÃ³n visual. |
+| `/app/mineria` | MÃ³dulo pendiente. |
 
 ---
 
-## ✅ Calidad y pruebas
+## âœ… Calidad y pruebas
 
-Cada aplicación incluye scripts para validar tipos, estilo, pruebas y construcción.
+Baseline validado el **13 de agosto de 2026**:
+
+| ValidaciÃ³n | Operativo | Auth |
+|---|---:|---:|
+| TypeScript | âœ… | âœ… |
+| Unit tests | **42/42** | **26/26** |
+| Build Vite | âœ… | âœ… |
+| React Doctor | **100/100** | **100/100** |
+| Chunk principal mÃ¡ximo observado | **469.44 kB** | **340.24 kB** |
+| Warning `>500 kB` | eliminado | eliminado |
+| E2E real Auth â†’ Mesa â†’ F5 â†’ logout | cubierto por la suite cross-app | **1 passed** |
+
+Comandos habituales:
 
 ```powershell
 npm run typecheck
 npm run lint
-npm run format:check
 npm run test
-npm run test:e2e
+npm run build
 npm run doctor
-npm run build
 ```
 
-Validación integral:
+Auth dispone ademÃ¡s de:
 
 ```powershell
-npm run quality
+npm run test:e2e:real
 ```
 
-Antes de integrar cambios se recomienda ejecutar, como mínimo:
-
-```powershell
-npm run typecheck
-npm run lint
-npm run test
-npm run build
-```
-
-### Convención de commits sugerida
-
-```text
-feat(auth): integrar endpoint de inicio de sesión
-fix(access): corregir permisos visibles por perfil
-refactor(ui): centralizar estilos en design tokens
-test(tracking): agregar pruebas para filtros
-chore: actualizar dependencias del frontend
-```
-
-<p align="right"><a href="#top">Volver arriba ↑</a></p>
+El E2E real usa una cuenta dedicada de pruebas y secretos suministrados exclusivamente mediante variables de entorno locales.
 
 ---
 
-## 🔐 Autenticación y seguridad
+## ðŸ” Seguridad
 
-La arquitectura está preparada para integrarse con un backend que administre la sesión mediante cookies seguras.
-
-Principios definidos para la integración:
-
-- Axios con `withCredentials: true`.
-- Cookies de sesión `HttpOnly`, `Secure` y con política `SameSite` definida por ambiente.
-- Tokens temporales únicamente durante los pasos de 2FA.
-- Códigos de error estables e independientes del texto mostrado al usuario.
-- Rutas protegidas y estados intermedios de autenticación.
-- Redirecciones entre aplicaciones mediante códigos de un solo uso o destinos permitidos por backend.
-- Limpieza del estado local al cerrar o expirar la sesión.
-
-Actualmente, el modo local puede ejecutarse con repositorios simulados. Antes de producción deben desactivarse los mocks y validarse CORS, cookies, CSRF, renovación, cierre de sesión y expiración con la API real.
-
-<p align="right"><a href="#top">Volver arriba ↑</a></p>
+- Bearer continÃºa siendo el mecanismo de autorizaciÃ³n de las APIs protegidas.
+- El **access token vive exclusivamente en memoria**.
+- El **refresh token vive exclusivamente en cookie `HttpOnly`**.
+- La preferencia â€œmantener sesiÃ³nâ€ se conserva como un marcador no sensible; no almacena JWT.
+- El `temp_token` del desafÃ­o MFA vive Ãºnicamente en memoria.
+- `qr_uri`, `manual_key`, cÃ³digos TOTP y contraseÃ±as no se persisten.
+- El refresh rota en backend y se utiliza para restaurar una sesiÃ³n despuÃ©s de F5.
+- El logout remoto elimina/revoca la sesiÃ³n y la aplicaciÃ³n limpia su estado aunque el request de cierre falle.
+- `BroadcastChannel` sincroniza cierres entre pestaÃ±as.
+- Las sesiones autenticadas se cierran tras 60 minutos de inactividad.
+- El frontend oculta acciones no autorizadas, pero el backend conserva la autoridad final.
 
 ---
 
-## 🗺️ Hoja de ruta
+## ðŸ—ºï¸ Hoja de ruta
 
-### Completado en frontend
+### Completado
 
-- [x] Arquitectura independiente para autenticación y aplicación operativa.
-- [x] Login institucional responsivo.
-- [x] Pantallas de configuración y verificación 2FA.
-- [x] Guards de navegación.
-- [x] Pantalla de accesos disponibles.
-- [x] Dashboard administrativo.
-- [x] Organizador mensual, semanal y en lista.
-- [x] Consulta y registro de atenciones.
-- [x] Seguimiento con filtros, tabla y drawer.
-- [x] Pruebas unitarias y E2E iniciales.
-- [x] Design Tokens en el portal de autenticación.
+- [x] Frontends independientes para Auth y operaciÃ³n.
+- [x] Login, recuperaciÃ³n y creaciÃ³n inicial de contraseÃ±a.
+- [x] MFA/TOTP.
+- [x] Refresh mediante cookie HttpOnly.
+- [x] SSO `redirect-code` / `exchange-code`.
+- [x] RestauraciÃ³n de sesiÃ³n tras F5.
+- [x] Dashboard y API operativa.
+- [x] Atenciones y seguimiento.
+- [x] AdministraciÃ³n de usuarios y permisos.
+- [x] Perfil en ambos frontends.
+- [x] ConfiguraciÃ³n visual local.
+- [x] Code splitting por rutas.
+- [x] React Doctor 100/100 en ambos frontends.
+- [x] E2E real de autenticaciÃ³n, SSO, refresh y logout.
+- [x] IntegraciÃ³n de React Doctor en CI.
 
-### En integración o desarrollo
+### Pendiente / evolutivo
 
-- [ ] Conectar el contrato definitivo de autenticación.
-- [ ] Reemplazar repositorios simulados por servicios Axios.
-- [ ] Integrar sesión real mediante cookies HttpOnly.
-- [ ] Conectar roles, permisos y accesos dinámicos.
-- [ ] Integrar endpoints de atenciones y seguimiento.
-- [ ] Implementar Minería.
-- [ ] Implementar Usuarios y Configuración.
-- [ ] Añadir automatización CI/CD.
-- [ ] Ejecutar auditorías de accesibilidad y rendimiento.
-- [ ] Preparar despliegue por ambientes.
-
-<p align="right"><a href="#top">Volver arriba ↑</a></p>
+- [ ] Implementar MinerÃ­a.
+- [ ] Persistencia institucional/global de apariencia cuando exista contrato backend.
+- [ ] Capacidades administrativas que todavÃ­a no publique `auth_service` (auditorÃ­a, operaciones especializadas, etc.).
+- [ ] Preparar despliegue por ambientes y observabilidad.
+- [ ] AuditorÃ­as dedicadas de accesibilidad y rendimiento de experiencia real (Lighthouse/Web Vitals).
 
 ---
 
-## 🤝 Colaboración
+## ðŸ¤ ColaboraciÃ³n
 
-1. Crea una rama a partir de `main`.
-2. Mantén los cambios dentro del módulo correspondiente.
-3. Evita colores y estilos directos cuando exista un token semántico.
-4. Agrega o actualiza pruebas cuando cambie el comportamiento.
-5. Ejecuta los comandos de calidad antes del commit.
-6. Describe con claridad el alcance y las validaciones realizadas.
+Antes de integrar cambios:
 
-Ejemplo:
-
-```powershell
-git checkout -b feat/auth-backend-integration
-git add .
-git commit -m "feat(auth): integrar contrato de autenticación"
-git push -u origin feat/auth-backend-integration
-```
-
-> [!NOTE]
-> El proyecto se mantiene como iniciativa en desarrollo. Las reglas de distribución, contribución externa y licencia deberán formalizarse antes de publicar versiones productivas.
-
-<p align="right"><a href="#top">Volver arriba ↑</a></p>
+1. Mantenga el cambio dentro del mÃ³dulo correspondiente.
+2. Actualice pruebas cuando cambie comportamiento.
+3. No debilite contratos de autenticaciÃ³n o permisos para resolver problemas visuales.
+4. Ejecute typecheck, tests, build y React Doctor.
+5. Para cambios de autenticaciÃ³n/SSO, ejecute tambiÃ©n el E2E real.
 
 ---
 
-## 🎯 Referencia de diseño
+## ðŸŽ¯ DiseÃ±o
 
-La interfaz parte del sistema visual definido para **Mesa de Ayuda 2.0** en Figma:
+Referencia principal de Figma:
 
-- Diseño modular y minimalista.
-- Jerarquías claras para operación administrativa.
-- Navegación consistente mediante header y sidebar.
-- Componentes reutilizables.
-- Estados visibles de prioridad, estatus y permisos.
-- Temas diferenciados entre autenticación institucional y aplicación privada.
-
-**Archivo de Figma:** [Mesa de Ayuda 2.0](https://www.figma.com/design/QajWuVBDoFpZ4bSQqI4ZML/Mesa-de-Ayuda-2.0?node-id=0-1)
-
-<p align="right"><a href="#top">Volver arriba ↑</a></p>
+**Mesa de Ayuda 2.0**
+`QajWuVBDoFpZ4bSQqI4ZML`
 
 ---
 
-## 👨‍💻 Autor
+## ðŸ‘¨â€ðŸ’» Autor
 
 <div align="center">
   <strong>Javier Garcia</strong><br />
-  Programador Jr · Diseño y desarrollo frontend<br /><br />
-  <a href="https://github.com/Javiergr99">
-    <img src="https://img.shields.io/badge/GitHub-Javiergr99-181717?style=for-the-badge&logo=github" alt="Perfil de GitHub de Javiergr99" />
-  </a>
+  Programador Jr Â· DiseÃ±o y desarrollo frontend
 </div>
 
----
-
 <div align="center">
-  <sub>
-    Construido con React, TypeScript y una arquitectura diseñada para crecer sin perder consistencia.
-  </sub>
-  <br /><br />
-  <a href="#top"><strong>Volver al inicio ↑</strong></a>
+  <br />
+  <a href="#top"><strong>Volver al inicio â†‘</strong></a>
 </div>

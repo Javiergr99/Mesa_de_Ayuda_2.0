@@ -1,21 +1,269 @@
-import { createBrowserRouter, Navigate } from "react-router";
+import {
+  lazy,
+  Suspense,
+  type ReactNode,
+} from "react";
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+} from "react-router";
 
-import { PendingMfaRoute, ProtectedRoute, PublicOnlyRoute } from "@/app/router/route-guards";
-import { AccessPage } from "@/features/access/pages/access-page";
-import { AuthSuccessPage } from "@/features/auth/pages/auth-success-page";
-import { LoginPage } from "@/features/auth/pages/login-page";
-import { MfaSetupPage } from "@/features/auth/pages/mfa-setup-page";
-import { MfaVerifyPage } from "@/features/auth/pages/mfa-verify-page";
-import { NotFoundPage } from "@/features/auth/pages/not-found-page";
-import { RecoverAccessPage } from "@/features/auth/pages/recover-access-page";
+import {
+  PendingMfaRoute,
+  ProtectedRoute,
+  PublicOnlyRoute,
+} from "@/app/router/route-guards";
+import { RootRouteErrorBoundary } from "@/app/router/root-route-error-boundary";
+
+const AccessPage = lazy(() =>
+  import(
+    "@/features/access/pages/access-page"
+  ).then((module) => ({
+    default: module.AccessPage,
+  })),
+);
+
+const AuthSuccessPage = lazy(() =>
+  import(
+    "@/features/auth/pages/auth-success-page"
+  ).then((module) => ({
+    default: module.AuthSuccessPage,
+  })),
+);
+
+const CreatePasswordPage = lazy(() =>
+  import(
+    "@/features/auth/pages/create-password-page"
+  ).then((module) => ({
+    default: module.CreatePasswordPage,
+  })),
+);
+
+const LoginPage = lazy(() =>
+  import(
+    "@/features/auth/pages/login-page"
+  ).then((module) => ({
+    default: module.LoginPage,
+  })),
+);
+
+const LogoutBridgePage = lazy(() =>
+  import(
+    "@/features/auth/pages/logout-bridge-page"
+  ).then((module) => ({
+    default: module.LogoutBridgePage,
+  })),
+);
+
+const MfaSetupPage = lazy(() =>
+  import(
+    "@/features/auth/pages/mfa-setup-page"
+  ).then((module) => ({
+    default: module.MfaSetupPage,
+  })),
+);
+
+const MfaVerifyPage = lazy(() =>
+  import(
+    "@/features/auth/pages/mfa-verify-page"
+  ).then((module) => ({
+    default: module.MfaVerifyPage,
+  })),
+);
+
+const NotFoundPage = lazy(() =>
+  import(
+    "@/features/auth/pages/not-found-page"
+  ).then((module) => ({
+    default: module.NotFoundPage,
+  })),
+);
+
+const RecoverAccessPage = lazy(() =>
+  import(
+    "@/features/auth/pages/recover-access-page"
+  ).then((module) => ({
+    default: module.RecoverAccessPage,
+  })),
+);
+
+const ResetPasswordPage = lazy(() =>
+  import(
+    "@/features/auth/pages/reset-password-page"
+  ).then((module) => ({
+    default: module.ResetPasswordPage,
+  })),
+);
+
+const ProfilePage = lazy(() =>
+  import(
+    "@/features/profile/pages/profile-page"
+  ).then((module) => ({
+    default: module.ProfilePage,
+  })),
+);
+
+function RouteChunkFallback() {
+  return (
+    <div
+      className="grid min-h-screen place-items-center bg-[var(--color-page-background)] px-6"
+      role="status"
+      aria-live="polite"
+    >
+      <div className="text-center">
+        <span
+          className="mx-auto block h-7 w-7 animate-spin rounded-full border-[3px] border-[var(--color-border)] border-t-[var(--color-primary)]"
+          aria-hidden="true"
+        />
+        <p className="mt-3 text-sm font-medium-token text-[var(--color-text-secondary)]">
+          Cargando pantalla…
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function DeferredRoute({ children }: { children: ReactNode }) {
+  return (
+    <Suspense fallback={<RouteChunkFallback />}>
+      {children}
+    </Suspense>
+  );
+}
 
 export const router = createBrowserRouter([
-  { path: "/", element: <Navigate to="/login" replace /> },
-  { path: "/login", element: <PublicOnlyRoute><LoginPage /></PublicOnlyRoute> },
-  { path: "/recuperar-acceso", element: <PublicOnlyRoute><RecoverAccessPage /></PublicOnlyRoute> },
-  { path: "/mfa/verificar", element: <PendingMfaRoute><MfaVerifyPage /></PendingMfaRoute> },
-  { path: "/mfa/configurar", element: <PendingMfaRoute><MfaSetupPage /></PendingMfaRoute> },
-  { path: "/acceso-correcto", element: <ProtectedRoute><AuthSuccessPage /></ProtectedRoute> },
-  { path: "/accesos", element: <ProtectedRoute><AccessPage /></ProtectedRoute> },
-  { path: "*", Component: NotFoundPage },
+  {
+    path: "/",
+    element: <Outlet />,
+    errorElement: <RootRouteErrorBoundary />,
+    children: [
+      {
+        index: true,
+        element: (
+          <Navigate
+            to="/login"
+            replace
+          />
+        ),
+      },
+      {
+        path: "login",
+        element: (
+          <PublicOnlyRoute>
+            <DeferredRoute>
+              <LoginPage />
+            </DeferredRoute>
+          </PublicOnlyRoute>
+        ),
+      },
+      {
+        path: "cerrar-sesion",
+        element: (
+          <DeferredRoute>
+            <LogoutBridgePage />
+          </DeferredRoute>
+        ),
+      },
+      {
+        path: "recuperar-acceso",
+        element: (
+          <PublicOnlyRoute>
+            <DeferredRoute>
+              <RecoverAccessPage />
+            </DeferredRoute>
+          </PublicOnlyRoute>
+        ),
+      },
+      {
+        path: "restablecer-contrasena",
+        element: (
+          <PublicOnlyRoute>
+            <DeferredRoute>
+              <ResetPasswordPage />
+            </DeferredRoute>
+          </PublicOnlyRoute>
+        ),
+      },
+
+      // Activación inicial de cuenta.
+      // Esta ruta es pública y no debe depender de una sesión previa.
+      {
+        path: "crear-password",
+        element: (
+          <DeferredRoute>
+            <CreatePasswordPage />
+          </DeferredRoute>
+        ),
+      },
+
+      // Alias temporal para no romper pruebas o enlaces locales anteriores.
+      {
+        path: "crear-contrasena",
+        element: (
+          <DeferredRoute>
+            <CreatePasswordPage />
+          </DeferredRoute>
+        ),
+      },
+      {
+        path: "mfa/verificar",
+        element: (
+          <PendingMfaRoute>
+            <DeferredRoute>
+              <MfaVerifyPage />
+            </DeferredRoute>
+          </PendingMfaRoute>
+        ),
+      },
+      {
+        path: "mfa/configurar",
+        element: (
+          <PendingMfaRoute>
+            <DeferredRoute>
+              <MfaSetupPage />
+            </DeferredRoute>
+          </PendingMfaRoute>
+        ),
+      },
+      {
+        path: "acceso-correcto",
+        element: (
+          <ProtectedRoute>
+            <DeferredRoute>
+              <AuthSuccessPage />
+            </DeferredRoute>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "accesos",
+        element: (
+          <ProtectedRoute>
+            <DeferredRoute>
+              <AccessPage />
+            </DeferredRoute>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "perfil",
+        element: (
+          <ProtectedRoute>
+            <DeferredRoute>
+              <ProfilePage />
+            </DeferredRoute>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "*",
+        element: (
+          <DeferredRoute>
+            <NotFoundPage />
+          </DeferredRoute>
+        ),
+      },
+    ],
+  },
 ]);

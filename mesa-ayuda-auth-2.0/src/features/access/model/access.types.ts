@@ -1,23 +1,42 @@
 import type { LucideIcon } from "lucide-react";
 
-export type AccessLevel = "full" | "limited" | "restricted" | "maintenance";
+import type {
 
+  AppAction,
+  AppGroup,
+} from "@/features/auth/api/auth.contracts";
+
+export type AccessTarget = AppGroup | "ADMINISTRACION_SISTEMA";
+export type AccessLevel = "full" | "limited" | "read_only" | "restricted";
 export type AccessTone = "blue" | "violet" | "emerald" | "amber";
 
-export type AccessItem = {
+export type AvailableAccess = {
   id: string;
-  title: string;
+  target_app: AccessTarget;
+  name: string;
   description: string;
-  modules: string[];
-  permissions: string[];
-  level: AccessLevel;
-  tone: AccessTone;
-  badgeLabel?: string;
-  buttonLabel?: string;
-  icon: LucideIcon;
-  destination: string;
+  access_level: AccessLevel;
+  permissions: AppAction[];
+  order: number;
+  target_url: string;
 };
 
-export type AccessRepository = {
-  getAccesses(): Promise<AccessItem[]>;
+export type AccessItem = AvailableAccess & {
+  title: string;
+  tone: AccessTone;
+  icon: LucideIcon;
+  modules: string[];
+  visiblePermissions: Array<{
+    code: AppAction;
+    label: string;
+  }>;
+  badgeLabel: string;
+  buttonLabel: string;
+};
+
+export type AccessVisualMetadata = {
+  title: string;
+  tone: AccessTone;
+  icon: LucideIcon;
+  modules: string[];
 };

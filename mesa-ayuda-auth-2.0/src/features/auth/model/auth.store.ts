@@ -1,47 +1,111 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
 
-import type { AuthUser, LoginResult } from "@/features/auth/model/auth.types";
+import type {
+  LoginResponse,
+  UserWithPermissionsRead,
+} from "@/features/auth/api/auth.contracts";
 
-const AUTH_STORAGE_KEY = "mesa-ayuda-auth-demo";
+export type SessionStatus =
+  | "checking"
+  | "authenticated"
+  | "anonymous";
 
-type AuthState = {
-  user: AuthUser | null;
-  tempToken: string | null;
-  requiresMfaSetup: boolean;
-  setPendingLogin: (result: LoginResult) => void;
-  completeAuthentication: (user: AuthUser) => void;
-  logout: () => void;
+export type PendingAuthenticationFlow =
+  | "setup"
+  | "verify";
+
+export type PendingAuthentication = {
+  tempToken: string;
+  expiresAt: number;
+  flow: PendingAuthenticationFlow;
+  rememberSession: boolean;
 };
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      user: null,
-      tempToken: null,
-      requiresMfaSetup: false,
-      setPendingLogin: (result) =>
-        set({
-          user: null,
-          tempToken: result.tempToken,
-          requiresMfaSetup: result.requiresMfaSetup,
-        }),
-      completeAuthentication: (user) =>
-        set({
-          user,
-          tempToken: null,
-          requiresMfaSetup: false,
-        }),
-      logout: () => set({ user: null, tempToken: null, requiresMfaSetup: false }),
-    }),
-    {
-      name: AUTH_STORAGE_KEY,
-      storage: createJSONStorage(() => sessionStorage),
-      partialize: (state) => ({
-        user: state.user,
-        tempToken: state.tempToken,
-        requiresMfaSetup: state.requiresMfaSetup,
+type AuthState = {
+  user: UserWithPermissionsRead | null;
+  sessionStatus: SessionStatus;
+  pendingAuthentication:
+    | PendingAuthentication
+    | null;
+  setPendingAuthentication: (
+    response: LoginResponse,
+    rememberSession?: boolean,
+  ) => void;
+  setAuthenticatedUser: (
+    user: UserWithPermissionsRead,
+  ) => void;
+  setSessionAnonymous: () => void;
+  clearPendingAuthentication: () => void;
+  clearAuthentication: () => void;
+};
+
+/**
+ * El desafío MFA es una credencial temporal y vive únicamente en memoria.
+ *
+ * Si la página se recarga durante el paso MFA, el usuario vuelve al login y
+ * debe iniciar una nueva transacción. Esta decisión evita exponer temp_token a
+ * sessionStorage/localStorage ante un posible XSS.
+ */
+export const useAuthStore =
+  create<AuthState>()((set) => ({
+    user: null,
+    sessionStatus: "checking",
+    pendingAuthentication: null,
+
+    setPendingAuthentication: (
+      response,
+      rememberSession = false,
+    ) =>
+      set({
+        user: null,
+        sessionStatus: "anonymous",
+        pendingAuthentication: {
+          tempToken: response.temp_token,
+          expiresAt:
+            Date.now() +
+            response.temp_token_expires_in *
+              1_000,
+          flow:
+            response.status ===
+            "two_factor_setup_required"
+              ? "setup"
+              : "verify",
+          rememberSession,
+        },
       }),
-    },
-  ),
-);
+
+    setAuthenticatedUser: (user) =>
+      set({
+        user,
+        sessionStatus: "authenticated",
+        pendingAuthentication: null,
+      }),
+
+    setSessionAnonymous: () =>
+      set({
+        user: null,
+        sessionStatus: "anonymous",
+      }),
+
+    clearPendingAuthentication: () =>
+      set({
+        pendingAuthentication: null,
+      }),
+
+    clearAuthentication: () =>
+      set({
+        user: null,
+        sessionStatus: "anonymous",
+        pendingAuthentication: null,
+      }),
+  }));
+
+export function isPendingAuthenticationExpired(
+  pending: PendingAuthentication | null,
+) {
+  if (!pending) {
+    return true;
+  }
+
+  return pending.expiresAt <= Date.now();
+}

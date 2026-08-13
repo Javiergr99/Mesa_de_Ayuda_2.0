@@ -1,35 +1,42 @@
-export type AttentionStatus = "Pendiente" | "En proceso" | "En espera" | "Finalizada" | "Cancelada";
-export type AttentionPriority = "Baja" | "Media" | "Alta" | "Urgente";
-export type RegistryCode = "RMH" | "RMP" | "RDVF" | "RNOA";
+import type { BitacoraApiRecord } from "@/features/attentions/api/attentions.contracts";
+
+export type AttentionStatus =
+  | "Pendiente"
+  | "En proceso"
+  | "Atendida"
+  | "Cancelada"
+  | "Sin estatus";
+
+export type AttentionFile = {
+  id: string;
+  name: string;
+  size: string;
+  date: string;
+  isEmail: boolean;
+};
 
 export type Attention = {
   id: string;
-  folio: string;
+  reference: string;
   createdAt: string;
+  updatedAt: string;
+  date: string;
+  time: string;
   requester: string;
   email: string;
-  username: string;
   phone: string;
-  extension: string;
-  profile: string;
-  type: string;
-  registry: RegistryCode;
-  priority: AttentionPriority;
-  status: AttentionStatus;
-  state: string;
-  municipality: string;
-  scope: string;
-  area: string;
-  responsible: string;
+  instance: string;
   description: string;
-  updatedAt: string;
-  nextReview: string;
-  files: Array<{ id: string; name: string; size: string; date: string }>;
-  history: Array<{
-    id: string;
-    user: string;
-    action: string;
-    date: string;
-    description?: string;
-  }>;
+  attendedBy: string;
+  createdBy: string;
+  entityId: number | null;
+  entity: string;
+  statusId: number | null;
+  status: AttentionStatus;
+  caseTypeId: number | null;
+  caseType: string;
+  registryTypeId: number | null;
+  registry: string;
+  files: AttentionFile[];
+  raw: BitacoraApiRecord;
 };

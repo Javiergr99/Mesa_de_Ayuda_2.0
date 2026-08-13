@@ -7,21 +7,24 @@ import { TooltipProvider } from "@radix-ui/react-tooltip";
 
 import { router } from "@/app/router/router";
 import { queryClient } from "@/app/providers/query-client";
+import { AppearanceRuntimeProvider } from "@/features/appearance-settings/components/appearance-runtime-provider";
+import { AuthSessionProvider } from "@/features/auth/components/auth-session-provider";
 import "@/app/styles/index.css";
 
 const rootElement = document.getElementById("root");
-
-if (!rootElement) {
-  throw new Error("No se encontró el elemento raíz de la aplicación.");
-}
+if (!rootElement) throw new Error("No se encontró el elemento raíz de la aplicación.");
 
 createRoot(rootElement).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider delayDuration={250}>
-        <RouterProvider router={router} />
-        <Toaster position="top-right" richColors closeButton />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <AppearanceRuntimeProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthSessionProvider>
+        <TooltipProvider delayDuration={250}>
+          <RouterProvider router={router} />
+          <Toaster position="top-right" richColors closeButton />
+        </TooltipProvider>
+        </AuthSessionProvider>
+      </QueryClientProvider>
+    </AppearanceRuntimeProvider>
   </StrictMode>,
 );

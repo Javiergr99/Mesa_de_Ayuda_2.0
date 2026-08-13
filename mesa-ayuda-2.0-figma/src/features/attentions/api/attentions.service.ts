@@ -1,55 +1,49 @@
-import { delay } from "@/shared/lib/delay";
-import { attentionsMock } from "@/features/attentions/data/attentions.mock";
-import type { Attention, AttentionStatus } from "@/features/attentions/model/attention.types";
+import type {
+  BitacoraCreatePayload,
+  BitacoraListParams,
+  BitacoraUpdatePayload,
+} from "@/features/attentions/api/attentions.contracts";
+import { httpAttentionsRepository } from "@/features/attentions/api/http-attentions.repository";
+import {
+  mapArchivoToAttentionFile,
+  mapBitacoraToAttention,
+} from "@/features/attentions/model/attention.mapper";
 
-// Repositorio temporal de desarrollo. Se sustituirá por el cliente HTTP sin modificar los hooks.
-let attentionsDatabase = structuredClone(attentionsMock);
+const repository = httpAttentionsRepository;
 
-export async function getAttentions(): Promise<Attention[]> {
-  await delay(250);
-  return structuredClone(attentionsDatabase);
-}
+export const attentionsService = {
+  async list(params: BitacoraListParams = {}) {
+    const response = await repository.list(params);
+    return {
+      ...response,
+      items: response.items.map(mapBitacoraToAttention),
+    };
+  },
 
-export async function updateAttention(input: {
-  id: string;
-  status: AttentionStatus;
-  priority: Attention["priority"];
-  responsible: string;
-  description: string;
-  updateDescription: string;
-}): Promise<Attention> {
-  await delay(700);
+  async create(payload: BitacoraCreatePayload) {
+    const created = await repository.create(payload);
+    return mapBitacoraToAttention(created);
+  },
 
-  const attentionIndex = attentionsDatabase.findIndex((attention) => attention.id === input.id);
-  if (attentionIndex < 0) {
-    throw new Error("No se encontró la atención solicitada.");
-  }
+  async update(id: string, payload: BitacoraUpdatePayload) {
+    const updated = await repository.update(id, payload);
+    return mapBitacoraToAttention(updated);
+  },
 
-  const current = attentionsDatabase[attentionIndex];
-  if (!current) {
-    throw new Error("No se encontró la atención solicitada.");
-  }
+  remove(id: string) {
+    return repository.remove(id);
+  },
 
-  // Cada cambio operativo genera una entrada de trazabilidad antes de actualizar la caché.
-  const updated: Attention = {
-    ...current,
-    status: input.status,
-    priority: input.priority,
-    responsible: input.responsible,
-    description: input.description,
-    updatedAt: "Ahora",
-    history: [
-      {
-        id: crypto.randomUUID(),
-        user: "Arq. Sofía Huerta",
-        action: `Actualizó la atención: ${current.status} → ${input.status}`,
-        date: "Ahora",
-        description: input.updateDescription,
-      },
-      ...current.history,
-    ],
-  };
+  async listFiles(id: string) {
+    const files = await repository.listFiles(id);
+    return files.map(mapArchivoToAttentionFile);
+  },
 
-  attentionsDatabase = attentionsDatabase.map((attention) => (attention.id === input.id ? updated : attention));
-  return structuredClone(updated);
-}
+  uploadFile(id: string, file: File) {
+    return repository.uploadFile(id, file);
+  },
+
+  replaceFile(id: string, fileId: string, file: File) {
+    return repository.replaceFile(id, fileId, file);
+  },
+};

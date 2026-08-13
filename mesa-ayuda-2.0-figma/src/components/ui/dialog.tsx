@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, LazyMotion, domAnimation } from "motion/react";
+import * as m from "motion/react-m";
 
 import { Button } from "@/components/ui/button";
 
@@ -25,12 +26,13 @@ export function Dialog({
   widthClassName = "max-w-xl",
 }: DialogProps) {
   return (
-    <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
+    <LazyMotion features={domAnimation}>
+      <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <AnimatePresence>
         {open ? (
           <DialogPrimitive.Portal forceMount>
             <DialogPrimitive.Overlay asChild>
-              <motion.div
+              <m.div
                 className="fixed inset-0 z-[90] bg-slate-950/30 backdrop-blur-[1px]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -38,7 +40,7 @@ export function Dialog({
               />
             </DialogPrimitive.Overlay>
             <DialogPrimitive.Content asChild>
-              <motion.div
+              <m.div
                 role="dialog"
                 aria-modal="true"
                 className={`fixed left-1/2 top-1/2 z-[100] w-[calc(100%-2rem)] ${widthClassName} -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl`}
@@ -64,11 +66,12 @@ export function Dialog({
                 </div>
                 <div className="max-h-[70vh] overflow-y-auto px-6 py-5 app-scrollbar">{children}</div>
                 {footer ? <div className="flex justify-end gap-3 border-t border-slate-100 px-6 py-4">{footer}</div> : null}
-              </motion.div>
+              </m.div>
             </DialogPrimitive.Content>
           </DialogPrimitive.Portal>
         ) : null}
       </AnimatePresence>
-    </DialogPrimitive.Root>
+      </DialogPrimitive.Root>
+    </LazyMotion>
   );
 }

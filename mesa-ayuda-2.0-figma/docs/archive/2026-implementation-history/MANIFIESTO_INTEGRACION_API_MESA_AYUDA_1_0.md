@@ -1,0 +1,48 @@
+# Manifiesto del parche
+
+Archivos incluidos: 44
+
+- `vite.config.ts`
+- `README.md`
+- `.env.example`
+- `docs/INTEGRACION_API_MESA_AYUDA_CONTRATO_1_0.md`
+- `src/vite-env.d.ts`
+- `src/shared/config/navigation.ts`
+- `src/shared/files/attention-attachment.rules.ts`
+- `src/shared/api/mesa-ayuda-api-error.ts`
+- `src/shared/api/mesa-ayuda-api-client.ts`
+- `src/shared/permissions/mesa-ayuda-actions.ts`
+- `src/app/router/router.tsx`
+- `src/features/tracking/components/tracking-drawer.tsx`
+- `src/features/tracking/pages/tracking-page.tsx`
+- `src/features/auth/components/action-access-guard.tsx`
+- `src/features/auth/components/auth-session-provider.tsx`
+- `src/features/auth/api/auth-client.ts`
+- `src/features/auth/services/jwt-actions.ts`
+- `src/features/auth/model/auth.selectors.ts`
+- `src/features/attentions/components/attention-badges.tsx`
+- `src/features/attentions/components/attention-readonly-drawer.tsx`
+- `src/features/attentions/api/attentions.queries.ts`
+- `src/features/attentions/api/attentions.service.ts`
+- `src/features/attentions/api/attentions.contracts.ts`
+- `src/features/attentions/api/http-attentions.repository.ts`
+- `src/features/attentions/api/attentions.repository.ts`
+- `src/features/attentions/data/attentions.mock.ts`
+- `src/features/attentions/model/attention.catalogs.ts`
+- `src/features/attentions/model/attention.types.ts`
+- `src/features/attentions/model/attention.mapper.ts`
+- `src/features/attentions/pages/attentions-page.tsx`
+- `src/features/dashboard/api/http-dashboard.repository.ts`
+- `src/features/dashboard/api/dashboard.contracts.ts`
+- `src/features/dashboard/api/dashboard.queries.ts`
+- `src/features/dashboard/api/dashboard.repository.ts`
+- `src/features/dashboard/model/dashboard-filters.ts`
+- `src/features/dashboard/pages/dashboard-page.tsx`
+- `src/features/attention-create/pages/attention-create-page.tsx`
+- `src/components/layout/app-shell.tsx`
+- `src/components/ui/file-dropzone.tsx`
+- `tests/unit/attention-mapper.test.ts`
+- `tests/unit/app-sidebar.test.tsx`
+- `tests/unit/jwt-actions.test.ts`
+- `tests/unit/attention-attachment-rules.test.ts`
+- `tests/unit/auth-selectors.test.ts`

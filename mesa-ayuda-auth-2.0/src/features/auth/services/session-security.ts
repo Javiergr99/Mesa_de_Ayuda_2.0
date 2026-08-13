@@ -1,31 +1,51 @@
-import { authRepository } from "@/features/auth/api/auth.repository";
+import { queryClient } from "@/app/providers/query-client";
+import { authService } from "@/features/auth/api/auth.service";
 import { useAuthStore } from "@/features/auth/model/auth.store";
+import {
+  AUTH_SESSION_CHANNEL,
+  AUTH_SESSION_EXPIRED_EVENT,
+} from "@/features/auth/services/auth-events";
+import { authTokenStorage } from "@/features/auth/services/token-storage";
 
-const CHANNEL_NAME = "mesa-ayuda-auth-session";
+export type LogoutReason = "manual" | "inactivity" | "session-expired";
+
+function loginUrlForReason(reason: LogoutReason) {
+  if (reason === "inactivity") return "/login?reason=inactivity";
+  if (reason === "session-expired") return "/login?reason=session-expired";
+  return "/login";
+}
+
+function broadcastLogout(reason: LogoutReason) {
+  if (!("BroadcastChannel" in window)) return;
+
+  const channel = new BroadcastChannel(AUTH_SESSION_CHANNEL);
+  channel.postMessage({ type: "logout", reason });
+  channel.close();
+}
+
+export function clearLocalAuthentication() {
+  authTokenStorage.clear();
+  useAuthStore.getState().clearAuthentication();
+  queryClient.clear();
+}
 
 /**
- * Cierra la sesión tanto en el servicio remoto como en el estado visual.
- * El cierre local se ejecuta aunque el backend no responda para no conservar
- * una interfaz autenticada con una sesión posiblemente inválida.
+ * Solicita la revocación del refresh token y limpia el estado local aun cuando
+ * el backend no responda. Esto evita conservar tokens o una interfaz privada
+ * después de una sesión vencida.
  */
-export async function performLogout(reason?: "inactivity"): Promise<void> {
+export async function performLogout(
+  reason: LogoutReason = "manual",
+): Promise<void> {
   try {
-    await authRepository.logout();
+    await authService.logout();
   } catch {
-    // El cierre local es prioritario; el error remoto no debe impedirlo.
+    // La limpieza local y la redirección son prioritarias.
   } finally {
-    useAuthStore.getState().logout();
-
-    if ("BroadcastChannel" in window) {
-      const channel = new BroadcastChannel(CHANNEL_NAME);
-      channel.postMessage({ type: "logout" });
-      channel.close();
-    }
-
-    if (reason === "inactivity") {
-      window.location.replace("/login?reason=inactivity");
-    }
+    clearLocalAuthentication();
+    broadcastLogout(reason);
+    window.location.replace(loginUrlForReason(reason));
   }
 }
 
-export const sessionChannelName = CHANNEL_NAME;
+export { AUTH_SESSION_CHANNEL, AUTH_SESSION_EXPIRED_EVENT };

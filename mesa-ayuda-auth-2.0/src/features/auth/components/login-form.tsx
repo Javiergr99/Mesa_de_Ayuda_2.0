@@ -1,48 +1,71 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { Mail, ShieldCheck } from "lucide-react";
+import { Fingerprint, ShieldCheck } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 
+import { getApiErrorMessage, getFirstFieldError } from "@/api/api-error";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { CheckboxField } from "@/components/ui/checkbox-field";
 import { PasswordField } from "@/components/ui/password-field";
 import { Spinner } from "@/components/ui/spinner";
 import { TextField } from "@/components/ui/text-field";
-import { authRepository } from "@/features/auth/api/auth.repository";
+import { useLogin } from "@/features/auth/hooks/use-login";
 import { useAuthStore } from "@/features/auth/model/auth.store";
 import { loginSchema, type LoginFormValues } from "@/features/auth/schemas/login.schema";
 
+function normalizeCurp(value: string): string {
+  return value.replace(/\s+/g, "").toUpperCase().slice(0, 18);
+}
+
 export function LoginForm() {
   const navigate = useNavigate();
-  const setPendingLogin = useAuthStore((state) => state.setPendingLogin);
+  const setPendingAuthentication = useAuthStore((state) => state.setPendingAuthentication);
   const [generalError, setGeneralError] = useState<string | null>(null);
+  const loginMutation = useLogin();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      identifier: "",
+      curp: "",
       password: "",
-      remember: false,
+      rememberSession: false,
     },
   });
 
-  const loginMutation = useMutation({
-    mutationFn: authRepository.login,
-    onSuccess: (result) => {
-      setPendingLogin(result);
-      void navigate(result.requiresMfaSetup ? "/mfa/configurar" : "/mfa/verificar");
-    },
-    onError: (error) => {
-      setGeneralError(error instanceof Error ? error.message : "No fue posible iniciar sesión.");
-    },
-  });
+  const curpField = form.register("curp");
 
-  const onSubmit = form.handleSubmit((values) => {
+  const onSubmit = form.handleSubmit(async (values) => {
     setGeneralError(null);
-    loginMutation.mutate(values);
+    form.clearErrors();
+
+    try {
+      const response = await loginMutation.mutateAsync({
+        curp: normalizeCurp(values.curp),
+        password: values.password,
+        remember_session: values.rememberSession,
+      });
+
+      setPendingAuthentication(response, values.rememberSession);
+      void navigate(
+        response.status === "two_factor_setup_required"
+          ? "/mfa/configurar"
+          : "/mfa/verificar",
+        { replace: true },
+      );
+    } catch (error) {
+      const curpError =
+        getFirstFieldError(error, "curp") ?? getFirstFieldError(error, "username");
+      const passwordError = getFirstFieldError(error, "password");
+
+      if (curpError) form.setError("curp", { message: curpError });
+      if (passwordError) form.setError("password", { message: passwordError });
+
+      setGeneralError(
+        getApiErrorMessage(error, "No fue posible iniciar sesión."),
+      );
+    }
   });
 
   return (
@@ -54,14 +77,23 @@ export function LoginForm() {
       ) : null}
 
       <TextField
-        label="Correo electrónico"
-        type="email"
+        label="CURP"
+        type="text"
         autoComplete="username"
-        placeholder="nombre@institucion.gob.mx"
-        leadingIcon={<Mail className="h-[18px] w-[18px]" />}
-        error={form.formState.errors.identifier?.message}
+        autoCapitalize="characters"
+        spellCheck={false}
+        maxLength={18}
+        placeholder="Ingresa tu CURP"
+        leadingIcon={<Fingerprint className="h-[18px] w-[18px]" />}
+        error={form.formState.errors.curp?.message}
         disabled={loginMutation.isPending}
-        {...form.register("identifier")}
+        className="uppercase"
+        {...curpField}
+        onChange={(event) => {
+          const normalized = normalizeCurp(event.currentTarget.value);
+          event.currentTarget.value = normalized;
+          void curpField.onChange(event);
+        }}
       />
 
       <PasswordField
@@ -75,10 +107,12 @@ export function LoginForm() {
 
       <div className="flex items-center justify-between gap-3 pt-1">
         <CheckboxField
-          id="remember"
+          id="remember-session"
           label="Mantener mi sesión iniciada"
-          checked={form.watch("remember")}
-          onCheckedChange={(checked) => form.setValue("remember", checked)}
+          checked={form.watch("rememberSession")}
+          onCheckedChange={(checked) =>
+            form.setValue("rememberSession", checked, { shouldDirty: true })
+          }
         />
 
         <Link
@@ -89,7 +123,13 @@ export function LoginForm() {
         </Link>
       </div>
 
-      <Button type="submit" size="lg" fullWidth disabled={loginMutation.isPending} className="mt-2">
+      <Button
+        type="submit"
+        size="lg"
+        fullWidth
+        disabled={loginMutation.isPending}
+        className="mt-2"
+      >
         {loginMutation.isPending ? (
           <>
             <Spinner /> Verificando…

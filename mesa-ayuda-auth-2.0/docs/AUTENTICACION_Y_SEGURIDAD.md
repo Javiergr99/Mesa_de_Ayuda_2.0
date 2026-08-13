@@ -1,29 +1,105 @@
 # Autenticación y seguridad
 
-## Reglas para producción
+## Modelo vigente
 
-1. El token de acceso y el token de actualización no deben guardarse en `localStorage` ni exponerse al código del navegador.
-2. La sesión debe establecerse mediante cookies `HttpOnly`, `Secure` y `SameSite` apropiadas.
-3. El código OTP y la clave secreta del autenticador nunca deben persistirse en el frontend.
-4. El backend debe aplicar límites de intentos, bloqueo temporal, expiración de tokens y auditoría.
-5. La verificación MFA debe tolerar la ventana temporal definida por el backend; el frontend solo envía el código capturado.
-6. El cierre de sesión debe invalidar la sesión en el servidor, limpiar el estado local y redirigir al login.
-7. El portal debe implementar cierre por inactividad de acuerdo con el contrato institucional.
+El portal aplica un modelo híbrido:
 
-## Estado local incluido
+- **access token:** JWT en memoria JavaScript;
+- **refresh token:** cookie `HttpOnly` administrada por `auth_service`;
+- **Bearer:** continúa protegiendo las APIs que validan permisos desde el access JWT;
+- **preferencia de persistencia:** marcador no sensible en `sessionStorage` o `localStorage`;
+- **desafío MFA:** `temp_token` únicamente en memoria.
 
-La implementación simulada conserva únicamente el usuario de demostración y el token temporal de prueba en `sessionStorage`. Este comportamiento facilita el prototipado y debe sustituirse por el contrato real antes del despliegue.
+Este diseño evita convertir las APIs protegidas en autenticación por cookie
+ambiental y mantiene el contrato de autorización Bearer.
 
-## Accesibilidad
+## Login y MFA
 
-- Labels visibles en campos.
-- Focus perceptible.
-- OTP navegable mediante teclado.
-- Mensajes de error asociados al control.
-- Estados que no dependen únicamente del color.
-- Áreas de interacción adecuadas.
-- Diálogos administrados mediante Radix UI.
+```text
+POST /auth/login
+    ↓
+temp_token
+    ├── POST /auth/setup -> QR -> POST /auth/enable
+    └── POST /auth/login/2fa
+    ↓
+access token + refresh cookie
+```
 
-## Inactividad y sincronización entre pestañas
+### Nunca persistir
 
-El componente `SessionSecurityProvider` programa el cierre automático después de 60 minutos sin actividad. Antes de limpiar el estado visual intenta cerrar la sesión en el backend. El cierre se comunica a las demás pestañas mediante `BroadcastChannel`, sin utilizar `localStorage` para compartir credenciales o tokens.
+- contraseña;
+- código TOTP;
+- `temp_token`;
+- `qr_uri`;
+- `manual_key`;
+- access token;
+- refresh token;
+- respuestas completas de endpoints sensibles.
+
+El `temp_token` se pierde intencionalmente si el usuario recarga durante MFA;
+el guard lo devuelve al login para iniciar una transacción nueva.
+
+## Access token
+
+El access token:
+
+- se guarda únicamente en una variable en memoria;
+- se añade como `Authorization: Bearer`;
+- desaparece al recargar/cerrar el contexto;
+- se reemplaza después de un refresh exitoso.
+
+No existe fallback a Web Storage.
+
+## Refresh token
+
+El frontend nunca lee el refresh token.
+
+`auth_service`:
+
+- lo establece como cookie `HttpOnly`;
+- lo lee en `/auth/refresh` y `/auth/logout`;
+- rota/revoca la sesión en backend;
+- decide si la cookie es de sesión o persistente mediante la preferencia enviada en `X-Remember-Session`.
+
+Las peticiones de sesión usan credenciales incluidas (`withCredentials` /
+`credentials: include`).
+
+## Restauración tras F5
+
+1. el access token desaparece;
+2. el marcador no sensible indica que existe una sesión potencial;
+3. `/users/me` inicia la comprobación;
+4. si el request protegido devuelve `401`, un refresh único utiliza la cookie HttpOnly;
+5. el nuevo access token vuelve a memoria;
+6. la petición original se reintenta;
+7. el usuario vuelve a estado autenticado.
+
+Las renovaciones concurrentes comparten una única promesa de refresh.
+
+## Logout
+
+El logout:
+
+- solicita `/auth/logout`;
+- limpia access token, marcador, estado Zustand y caché;
+- continúa limpiando el frontend aunque el request remoto falle;
+- sincroniza el cierre mediante `BroadcastChannel`.
+
+## Inactividad
+
+Una sesión autenticada se cierra automáticamente después de **60 minutos** sin
+actividad relevante.
+
+## Autorización
+
+La interfaz puede ocultar rutas, tarjetas o acciones según permisos, pero cada
+API debe volver a validar identidad y autorización. El frontend nunca se
+considera autoridad final.
+
+## Desarrollo local
+
+Mantenga el mismo hostname en todos los participantes del flujo. No mezcle
+`localhost` con `127.0.0.1`, porque las cookies son sensibles al host.
+
+La configuración de `Secure`, `SameSite`, dominio y duración de la cookie
+pertenece al backend y debe ajustarse por ambiente.

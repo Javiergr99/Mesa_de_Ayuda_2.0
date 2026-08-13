@@ -4,7 +4,10 @@ test("completa el flujo de autenticación simulado", async ({ page }) => {
   await page.goto("/login");
   await expect(page.getByRole("heading", { name: "Iniciar sesión" })).toBeVisible();
 
+  await page.getByLabel("CURP").fill("HUSO900101MDFRRF01");
+  await page.getByLabel("Contraseña").fill("MesaAyuda2026!");
   await page.getByRole("button", { name: "Continuar" }).click();
+
   await expect(page.getByRole("heading", { name: "Verifica tu identidad" })).toBeVisible();
 
   const code = "123456";
@@ -14,5 +17,7 @@ test("completa el flujo de autenticación simulado", async ({ page }) => {
 
   await page.getByRole("button", { name: "Verificar identidad" }).click();
   await expect(page.getByRole("heading", { name: "Identidad verificada" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Accesos disponibles" })).toBeVisible({ timeout: 5_000 });
+  await expect(page.getByRole("heading", { name: "Accesos disponibles" })).toBeVisible({
+    timeout: 5_000,
+  });
 });
