@@ -1,11 +1,9 @@
-import {
-  CheckCircle2,
-} from "lucide-react";
-import { Link } from "react-router";
-
 import { Button } from "@/components/ui/button";
-import { Dialog } from "@/components/ui/dialog";
+import { AttentionResultDialog } from "@/features/attention-create/components/attention-result-dialog";
+import { StatusBadge } from "@/features/attentions/components/attention-badges";
 import type { Attention } from "@/features/attentions/model/attention.types";
+import { CheckCircle2, Eye } from "lucide-react";
+import { Link } from "react-router";
 
 export function AttentionCreateSuccessDialog({
   open,
@@ -23,84 +21,94 @@ export function AttentionCreateSuccessDialog({
   onCreateAnother: () => void;
 }) {
   return (
-    <Dialog
+    <AttentionResultDialog
       open={open}
       onOpenChange={onOpenChange}
+      tone="success"
+      icon={<CheckCircle2 className="h-7 w-7" />}
       title="Atención registrada correctamente"
-      description="La bitácora fue creada en API Mesa de Ayuda."
-      footer={
+      description="La información se guardó de manera exitosa y ya se encuentra disponible para consulta."
+      actions={
         <>
+          {attention ? (
+            <Button asChild className="w-full">
+              <Link
+                to={`/app/atenciones/${encodeURIComponent(attention.id)}`}
+                state={{
+                  attention,
+                  registeredBy: userName,
+                }}
+              >
+                <Eye className="h-4 w-4" />
+                Ver registro
+              </Link>
+            </Button>
+          ) : (
+            <Button type="button" className="w-full" disabled>
+              <Eye className="h-4 w-4" />
+              Ver registro
+            </Button>
+          )}
+
           <Button
+            type="button"
             variant="secondary"
+            className="w-full"
             onClick={onCreateAnother}
           >
             Registrar otra atención
           </Button>
 
-          <Button asChild>
-            <Link to="/app/atenciones">
-              <CheckCircle2 className="h-4 w-4" />
-              Ver bitácora
-            </Link>
+          <Button asChild variant="ghost" className="w-full text-blue-600">
+            <Link to="/app/atenciones">Ir a Atenciones</Link>
           </Button>
         </>
       }
     >
-      <div className="text-center">
-        <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-50 text-emerald-600">
-          <CheckCircle2 className="h-8 w-8" />
-        </span>
+      <div className="rounded-xl bg-slate-50 p-4 text-left">
+        <div className="grid gap-x-5 gap-y-4 sm:grid-cols-2">
+          <SummaryValue
+            label="Referencia"
+            value={attention?.reference ?? "—"}
+            valueClassName="text-blue-600"
+          />
 
-        <div className="mt-5 grid gap-3 rounded-xl bg-slate-50 p-4 text-left sm:grid-cols-2">
           <SummaryValue
-            label="Identificador"
-            value={attention?.id ?? "—"}
-            valueClassName="break-all text-blue-700"
+            label="Fecha de registro"
+            value={attention?.createdAt ?? "—"}
+            align="right"
           />
-          <SummaryValue
-            label="Estatus"
-            value={
-              attention?.status ??
-              "Sin estatus"
-            }
-          />
-          <SummaryValue
-            label="Entidad"
-            value={
-              attention?.entity ??
-              "Sin entidad"
-            }
-          />
+
+          <div>
+            <p className="text-xs text-slate-400">Estatus inicial</p>
+            <div className="mt-1.5">
+              {attention ? (
+                <StatusBadge status={attention.status} />
+              ) : (
+                <span className="text-sm font-semibold text-slate-700">—</span>
+              )}
+            </div>
+          </div>
+
           <SummaryValue
             label="Tipo de registro"
-            value={
-              attention?.registry ?? "—"
-            }
-          />
-          <SummaryValue
-            label="Registrado por"
-            value={userName}
+            value={attention?.registry ?? "—"}
+            align="right"
           />
         </div>
-
-        {uploadWarnings.length ? (
-          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-left text-xs text-amber-800">
-            La bitácora fue creada, pero
-            algunos archivos no pudieron
-            adjuntarse:
-            <ul className="mt-2 list-disc space-y-1 pl-5">
-              {uploadWarnings.map(
-                (warning) => (
-                  <li key={warning}>
-                    {warning}
-                  </li>
-                ),
-              )}
-            </ul>
-          </div>
-        ) : null}
       </div>
-    </Dialog>
+
+      {uploadWarnings.length ? (
+        <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-left text-xs leading-5 text-amber-800">
+          La atención fue creada, pero algunos archivos no pudieron adjuntarse:
+          <ul className="mt-1.5 list-disc space-y-1 pl-5">
+            {uploadWarnings.map((warning) => (
+              <li key={warning}>{warning}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </AttentionResultDialog>
   );
 }
 
@@ -108,19 +116,17 @@ function SummaryValue({
   label,
   value,
   valueClassName = "",
+  align = "left",
 }: {
   label: string;
   value: string;
   valueClassName?: string;
+  align?: "left" | "right";
 }) {
   return (
-    <div>
-      <p className="text-xs text-slate-400">
-        {label}
-      </p>
-      <p
-        className={`mt-1 font-bold text-slate-800 ${valueClassName}`}
-      >
+    <div className={align === "right" ? "sm:text-right" : ""}>
+      <p className="text-xs text-slate-400">{label}</p>
+      <p className={`mt-1 break-words text-sm font-bold text-slate-800 ${valueClassName}`}>
         {value}
       </p>
     </div>

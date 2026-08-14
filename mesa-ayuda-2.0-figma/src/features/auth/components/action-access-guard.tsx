@@ -1,19 +1,27 @@
 import type { ReactNode } from "react";
 import { ShieldAlert } from "lucide-react";
+import { Link } from "react-router";
 
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeading } from "@/components/ui/page-heading";
 import { userHasAction } from "@/features/auth/model/auth.selectors";
-import { sessionHasExactAction } from "@/features/auth/services/jwt-actions";
 import { useAuthStore } from "@/features/auth/model/auth.store";
+import { sessionHasExactAction } from "@/features/auth/services/jwt-actions";
 
 export function ActionAccessGuard({
   action,
   exact = false,
   children,
+  moduleTitle,
+  moduleDescription,
 }: {
   action: string;
   exact?: boolean;
   children: ReactNode;
+  moduleTitle?: string;
+  moduleDescription?: string;
 }) {
   const user = useAuthStore((state) => state.user);
   const allowed = exact
@@ -22,17 +30,36 @@ export function ActionAccessGuard({
 
   if (!allowed) {
     return (
-      <Card className="p-8 text-center">
-        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-amber-50 text-amber-600">
-          <ShieldAlert className="h-6 w-6" />
-        </span>
-        <h1 className="mt-4 text-lg font-bold text-[var(--ui-text-primary)]">
-          Acceso restringido
-        </h1>
-        <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-[var(--ui-text-secondary)]">
-          Tu cuenta no tiene la acción {action} necesaria para consultar este módulo.
-        </p>
-      </Card>
+      <div className="app-page">
+        {moduleTitle ? (
+          <PageHeading
+            eyebrow={
+              <>
+                <span>Dashboard</span>{" "}
+                <span className="px-1">›</span>{" "}
+                <span className="text-blue-600">{moduleTitle}</span>
+              </>
+            }
+            title={moduleTitle}
+            description={moduleDescription}
+          />
+        ) : null}
+
+        <Card>
+          <EmptyState
+            icon={ShieldAlert}
+            title="Acceso restringido"
+            description="Su perfil no cuenta con permisos para consultar este módulo. Contacte al administrador del sistema para solicitar acceso o cambiar su perfil."
+            tone="slate"
+            size="lg"
+            action={
+              <Button variant="secondary" asChild>
+                <Link to="/app/dashboard">Volver al Dashboard</Link>
+              </Button>
+            }
+          />
+        </Card>
+      </div>
     );
   }
 

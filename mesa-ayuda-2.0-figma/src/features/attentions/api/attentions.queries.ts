@@ -57,16 +57,6 @@ export function useUpdateAttention() {
   });
 }
 
-export function useDeleteAttention() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => attentionsService.remove(id),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: attentionKeys.all });
-    },
-  });
-}
-
 export function useUploadAttentionFile() {
   const queryClient = useQueryClient();
   return useMutation({

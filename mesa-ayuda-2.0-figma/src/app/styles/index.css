@@ -23,8 +23,15 @@
   --sidebar-collapsed-width: 56px;
   --sidebar-expanded-width: 224px;
   --sidebar-current-width: var(--sidebar-collapsed-width);
-  --app-content-max-width: 1180px;
+
+  /*
+   * El contenido principal se mantiene centrado, pero con un ancho de trabajo
+   * considerablemente mayor para aprovechar pantallas de escritorio amplias.
+   * La variable es compartida por todos los módulos de la aplicación.
+   */
+  --app-content-max-width: 1680px;
   --app-content-gap: 20px;
+  --app-content-gutter: clamp(18px, 1.8vw, 30px);
 }
 
 * {
@@ -75,7 +82,7 @@ button:not(:disabled),
 .app-content-shell {
   width: min(100%, var(--app-content-max-width));
   margin-inline: auto;
-  padding: 18px clamp(14px, 2vw, 28px) 32px;
+  padding: 22px var(--app-content-gutter) 36px;
 }
 
 .app-page {
@@ -88,13 +95,14 @@ button:not(:disabled),
 .app-content-actions {
   width: min(100%, var(--app-content-max-width));
   margin-inline: auto;
-  padding-inline: clamp(14px, 2vw, 28px);
+  padding-inline: var(--app-content-gutter);
 }
 
 @media (max-width: 767px) {
   :root {
     --sidebar-collapsed-width: 52px;
     --app-content-gap: 16px;
+    --app-content-gutter: 14px;
   }
 
   .app-content-shell {

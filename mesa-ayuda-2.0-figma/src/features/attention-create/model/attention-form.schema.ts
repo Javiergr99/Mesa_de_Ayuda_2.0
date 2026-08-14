@@ -10,11 +10,30 @@ const optionalCatalogId = z.string().refine(
   "Seleccione una opción válida.",
 );
 
+function getTodayDateValue(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+const optionalAttentionDate = z
+  .string()
+  .refine(
+    (value) => !value || /^\d{4}-\d{2}-\d{2}$/.test(value),
+    "Ingrese una fecha válida.",
+  )
+  .refine(
+    (value) => !value || value <= getTodayDateValue(),
+    "La fecha de atención no puede ser posterior a la fecha actual.",
+  );
 export const attentionFormSchema = z.object({
   name: z.string().max(100, "Máximo 100 caracteres."),
   firstName: z.string().max(100, "Máximo 100 caracteres."),
   secondName: z.string().max(100, "Máximo 100 caracteres."),
-  date: z.string(),
+  date: optionalAttentionDate,
   time: z.string(),
   instance: z.string().max(150, "Máximo 150 caracteres."),
   email: optionalEmail.refine((value) => value.length <= 200, "Máximo 200 caracteres."),

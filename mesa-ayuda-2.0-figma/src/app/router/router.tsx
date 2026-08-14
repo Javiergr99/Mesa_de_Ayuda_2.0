@@ -29,6 +29,14 @@ const AttentionCreatePage = lazy(() =>
   })),
 );
 
+const AttentionDetailPage = lazy(() =>
+  import(
+    "@/features/attentions/pages/attention-detail-page"
+  ).then((module) => ({
+    default: module.AttentionDetailPage,
+  })),
+);
+
 const AttentionsPage = lazy(() =>
   import(
     "@/features/attentions/pages/attentions-page"
@@ -142,7 +150,10 @@ export const router = createBrowserRouter([
     path: "/",
     ErrorBoundary: RootErrorBoundary,
     children: [
-      { index: true, element: <Navigate to="/app/dashboard" replace /> },
+      {
+        index: true,
+        element: <Navigate to="/app/dashboard" replace />,
+      },
       {
         path: "app",
         element: (
@@ -151,7 +162,10 @@ export const router = createBrowserRouter([
           </ProtectedAppRoute>
         ),
         children: [
-          { index: true, element: <Navigate to="dashboard" replace /> },
+          {
+            index: true,
+            element: <Navigate to="dashboard" replace />,
+          },
           {
             path: "dashboard",
             element: (
@@ -179,6 +193,8 @@ export const router = createBrowserRouter([
               <ActionAccessGuard
                 action={MESA_AYUDA_ACTIONS.viewLog}
                 exact
+                moduleTitle="Atenciones"
+                moduleDescription="Consulte, asigne y dé seguimiento a las atenciones registradas en Mesa de Ayuda."
               >
                 <DeferredRoute>
                   <AttentionsPage />
@@ -192,9 +208,26 @@ export const router = createBrowserRouter([
               <ActionAccessGuard
                 action={MESA_AYUDA_ACTIONS.createLog}
                 exact
+                moduleTitle="Registrar atención"
+                moduleDescription="Capture una nueva atención en Mesa de Ayuda."
               >
                 <DeferredRoute>
                   <AttentionCreatePage />
+                </DeferredRoute>
+              </ActionAccessGuard>
+            ),
+          },
+          {
+            path: "atenciones/:attentionId",
+            element: (
+              <ActionAccessGuard
+                action={MESA_AYUDA_ACTIONS.viewLog}
+                exact
+                moduleTitle="Detalle de la atención"
+                moduleDescription="Consulte la información registrada en modo de solo lectura."
+              >
+                <DeferredRoute>
+                  <AttentionDetailPage />
                 </DeferredRoute>
               </ActionAccessGuard>
             ),
@@ -213,6 +246,8 @@ export const router = createBrowserRouter([
               <ActionAccessGuard
                 action={MESA_AYUDA_ACTIONS.viewLog}
                 exact
+                moduleTitle="Seguimiento de atenciones"
+                moduleDescription="Consulte y actualice el seguimiento de las atenciones registradas."
               >
                 <DeferredRoute>
                   <TrackingPage />

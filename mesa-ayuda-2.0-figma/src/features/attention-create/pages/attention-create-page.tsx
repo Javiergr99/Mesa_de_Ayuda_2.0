@@ -1,22 +1,6 @@
-import {
-  useMemo,
-  useState,
-} from "react";
-import {
-  zodResolver,
-} from "@hookform/resolvers/zod";
-import {
-  useForm,
-} from "react-hook-form";
-import {
-  ArrowLeft,
-  Save,
-} from "lucide-react";
-import { Link } from "react-router";
-import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/ui/page-heading";
+import { AttentionCreateErrorDialog, type AttentionCreateFailureKind } from "@/features/attention-create/components/attention-create-error-dialog";
 import {
   AttentionClassificationSection,
   AttentionDetailsSection,
@@ -38,19 +22,28 @@ import type { Attention } from "@/features/attentions/model/attention.types";
 import { getUserDisplayName } from "@/features/auth/model/auth.selectors";
 import { useAuthStore } from "@/features/auth/model/auth.store";
 import { sessionHasExactAction } from "@/features/auth/services/jwt-actions";
+import { MesaAyudaApiError } from "@/shared/api/mesa-ayuda-api-error";
 import { MESA_AYUDA_ACTIONS } from "@/shared/permissions/mesa-ayuda-actions";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeft, Save } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router";
 
 type UploadFileInput = {
   id: string;
   file: File;
 };
 
+type CreateFailure = {
+  kind: AttentionCreateFailureKind;
+  message: string;
+};
+
 async function uploadAttentionFiles(
   attentionId: string,
   files: File[],
-  upload: (
-    input: UploadFileInput,
-  ) => Promise<unknown>,
+  upload: (input: UploadFileInput) => Promise<unknown>,
 ): Promise<string[]> {
   const results = await Promise.all(
     files.map((file) =>
@@ -59,12 +52,13 @@ async function uploadAttentionFiles(
         file,
       })
         .then(() => null)
-        .catch((error: unknown) =>
-          `${file.name}: ${
-            error instanceof Error
-              ? error.message
-              : "no fue posible adjuntarlo"
-          }`,
+        .catch(
+          (error: unknown) =>
+            `${file.name}: ${
+              error instanceof Error
+                ? error.message
+                : "no fue posible adjuntarlo"
+            }`,
         ),
     ),
   );
@@ -78,114 +72,89 @@ async function uploadAttentionFiles(
   return warnings;
 }
 
+function getFailureKind(error: unknown): AttentionCreateFailureKind {
+  if (error instanceof MesaAyudaApiError) return "request";
+  if (error instanceof TypeError) return "connection";
+
+  if (
+    error instanceof Error &&
+    /failed to fetch|network|conexi[oó]n|load failed|fetch failed/i.test(
+      error.message,
+    )
+  ) {
+    return "connection";
+  }
+
+  return "request";
+}
+
 export function AttentionCreatePage() {
-  const user = useAuthStore(
-    (state) => state.user,
-  );
-  const createMutation =
-    useCreateAttention();
-  const uploadMutation =
-    useUploadAttentionFile();
+  const user = useAuthStore((state) => state.user);
+  const createMutation = useCreateAttention();
+  const uploadMutation = useUploadAttentionFile();
 
-  const canUploadFiles =
-    sessionHasExactAction(
-      user,
-      MESA_AYUDA_ACTIONS.uploadLogFile,
-    );
-
-  const [files, setFiles] = useState<
-    File[]
-  >([]);
-  const [successOpen, setSuccessOpen] =
-    useState(false);
-  const [
-    createdAttention,
-    setCreatedAttention,
-  ] = useState<Attention | null>(null);
-  const [
-    uploadWarnings,
-    setUploadWarnings,
-  ] = useState<string[]>([]);
-
-  const today = useMemo(
-    () =>
-      new Date()
-        .toISOString()
-        .slice(0, 10),
-    [],
+  const canUploadFiles = sessionHasExactAction(
+    user,
+    MESA_AYUDA_ACTIONS.uploadLogFile,
   );
 
-  const userName =
-    getUserDisplayName(user);
+  const [files, setFiles] = useState<File[]>([]);
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [createdAttention, setCreatedAttention] = useState<Attention | null>(
+    null,
+  );
+  const [uploadWarnings, setUploadWarnings] = useState<string[]>([]);
+  const [failure, setFailure] = useState<CreateFailure | null>(null);
+
+  const userName = getUserDisplayName(user);
 
   const defaultValues = useMemo(
     () =>
       createAttentionFormDefaults({
-        date: today,
-        instance:
-          user?.instancia?.nombre,
-        entityId:
-          user?.entidad_federativa_id,
+        date: "",
+        instance: user?.instancia?.nombre,
+        entityId: user?.entidad_federativa_id,
       }),
-    [
-      today,
-      user?.entidad_federativa_id,
-      user?.instancia?.nombre,
-    ],
+    [user?.entidad_federativa_id, user?.instancia?.nombre],
   );
 
   const {
     control,
     register,
     handleSubmit,
-    formState: {
-      errors,
-      isSubmitting,
-    },
+    formState: { errors, isSubmitting },
     reset,
   } = useForm<AttentionFormValues>({
-    resolver: zodResolver(
-      attentionFormSchema,
-    ),
+    resolver: zodResolver(attentionFormSchema),
     defaultValues,
   });
 
-  async function onSubmit(
-    values: AttentionFormValues,
-  ) {
+  async function onSubmit(values: AttentionFormValues) {
+    setFailure(null);
     setUploadWarnings([]);
 
     try {
-      const created =
-        await createMutation.mutateAsync(
-          mapAttentionFormToCreatePayload(
-            values,
-          ),
-        );
+      const created = await createMutation.mutateAsync(
+        mapAttentionFormToCreatePayload(values),
+      );
 
-      const warnings =
-        await uploadAttentionFiles(
-          created.id,
-          files,
-          (input) =>
-            uploadMutation.mutateAsync(
-              input,
-            ),
-        );
+      const warnings = await uploadAttentionFiles(
+        created.id,
+        files,
+        (input) => uploadMutation.mutateAsync(input),
+      );
 
       setCreatedAttention(created);
       setUploadWarnings(warnings);
       setSuccessOpen(true);
     } catch (error) {
-      toast.error(
-        "No fue posible registrar la atención",
-        {
-          description:
-            error instanceof Error
-              ? error.message
-              : "La API rechazó la solicitud.",
-        },
-      );
+      setFailure({
+        kind: getFailureKind(error),
+        message:
+          error instanceof Error
+            ? error.message
+            : "No fue posible completar el registro.",
+      });
     }
   }
 
@@ -194,6 +163,7 @@ export function AttentionCreatePage() {
     setFiles([]);
     setCreatedAttention(null);
     setUploadWarnings([]);
+    setFailure(null);
   }
 
   function createAnother() {
@@ -201,10 +171,12 @@ export function AttentionCreatePage() {
     setSuccessOpen(false);
   }
 
+  function retrySubmit() {
+    void handleSubmit(onSubmit)();
+  }
+
   const busy =
-    isSubmitting ||
-    createMutation.isPending ||
-    uploadMutation.isPending;
+    isSubmitting || createMutation.isPending || uploadMutation.isPending;
 
   return (
     <div className="app-page pb-20">
@@ -212,20 +184,13 @@ export function AttentionCreatePage() {
         eyebrow={
           <>
             <span>Dashboard</span>{" "}
-            <span className="px-1">
-              ›
-            </span>{" "}
-            <span className="text-blue-600">
-              Registrar Atención
-            </span>
+            <span className="px-1">›</span>{" "}
+            <span className="text-blue-600">Registrar Atención</span>
           </>
         }
         title="Registrar Nueva Atención"
         actions={
-          <Button
-            asChild
-            variant="secondary"
-          >
+          <Button asChild variant="secondary">
             <Link to="/app/atenciones">
               <ArrowLeft className="h-4 w-4" />
               Regresar
@@ -234,19 +199,16 @@ export function AttentionCreatePage() {
         }
       />
 
+      <p className="mb-4 -mt-1 text-sm text-slate-500">
+        Ingrese los datos para registrar una nueva atención en el sistema.
+      </p>
+
       <form
         id="attention-form"
-        onSubmit={(event) =>
-          void handleSubmit(onSubmit)(
-            event,
-          )
-        }
+        onSubmit={(event) => void handleSubmit(onSubmit)(event)}
         className="space-y-4"
       >
-        <AttentionPersonSection
-          register={register}
-          errors={errors}
-        />
+        <AttentionPersonSection register={register} errors={errors} />
 
         <AttentionDetailsSection
           register={register}
@@ -262,18 +224,15 @@ export function AttentionCreatePage() {
 
         <AttentionObservationsSection
           register={register}
+          control={control}
           errors={errors}
-          canUploadFiles={
-            canUploadFiles
-          }
+          canUploadFiles={canUploadFiles}
           files={files}
           onFilesChange={setFiles}
         />
       </form>
 
-      <AttentionCreateActions
-        busy={busy}
-      />
+      <AttentionCreateActions busy={busy} />
 
       <AttentionCreateSuccessDialog
         open={successOpen}
@@ -283,36 +242,32 @@ export function AttentionCreatePage() {
         userName={userName}
         onCreateAnother={createAnother}
       />
+
+      <AttentionCreateErrorDialog
+        open={Boolean(failure)}
+        onOpenChange={(open) => {
+          if (!open) setFailure(null);
+        }}
+        kind={failure?.kind ?? "request"}
+        message={failure?.message ?? ""}
+        busy={busy}
+        onRetry={retrySubmit}
+      />
     </div>
   );
 }
 
-function AttentionCreateActions({
-  busy,
-}: {
-  busy: boolean;
-}) {
+function AttentionCreateActions({ busy }: { busy: boolean }) {
   return (
     <div className="fixed bottom-0 left-[var(--sidebar-current-width)] right-0 z-20 border-t border-[var(--ui-border)] bg-[var(--ui-surface)]/95 py-2.5 shadow-[0_-8px_24px_rgb(15_23_42/0.05)] backdrop-blur transition-[left] duration-150 ease-out motion-reduce:transition-none">
       <div className="app-content-actions flex min-h-11 flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
-        <Button
-          asChild
-          variant="secondary"
-        >
-          <Link to="/app/atenciones">
-            Cancelar
-          </Link>
+        <Button asChild variant="secondary">
+          <Link to="/app/atenciones">Cancelar</Link>
         </Button>
 
-        <Button
-          type="submit"
-          form="attention-form"
-          disabled={busy}
-        >
+        <Button type="submit" form="attention-form" disabled={busy}>
           <Save className="h-4 w-4" />
-          {busy
-            ? "Registrando atención..."
-            : "Registrar atención"}
+          {busy ? "Registrando atención..." : "Registrar atención"}
         </Button>
       </div>
     </div>
