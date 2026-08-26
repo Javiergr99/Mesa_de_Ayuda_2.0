@@ -26,7 +26,7 @@ export const sessionPersistence = {
   has(): boolean {
     return Boolean(
       sessionStorage.getItem(SESSION_PERSISTENCE_KEY) ||
-        localStorage.getItem(SESSION_PERSISTENCE_KEY),
+      localStorage.getItem(SESSION_PERSISTENCE_KEY),
     );
   },
 

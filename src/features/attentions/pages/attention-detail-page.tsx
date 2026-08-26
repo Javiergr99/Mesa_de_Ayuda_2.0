@@ -1,9 +1,4 @@
-import {
-  ArrowLeft,
-  Download,
-  FileQuestion,
-  Printer,
-} from "lucide-react";
+import { ArrowLeft, Download, FileQuestion, Printer } from "lucide-react";
 import { Link, useLocation, useParams } from "react-router";
 
 import { Button } from "@/components/ui/button";
@@ -19,10 +14,7 @@ import {
   AttentionPersonSection,
   AttentionRequestSection,
 } from "@/features/attentions/components/attention-detail-sections";
-import type {
-  Attention,
-  AttentionFile,
-} from "@/features/attentions/model/attention.types";
+import type { Attention, AttentionFile } from "@/features/attentions/model/attention.types";
 import { Badge } from "@/components/ui/badge";
 
 type AttentionDetailRouteState = {
@@ -30,10 +22,7 @@ type AttentionDetailRouteState = {
   registeredBy?: string;
 };
 
-function exportAttention(
-  attention: Attention,
-  files: AttentionFile[],
-) {
+function exportAttention(attention: Attention, files: AttentionFile[]) {
   const data = {
     reference: attention.reference,
     createdAt: attention.createdAt,
@@ -59,10 +48,7 @@ function exportAttention(
   const anchor = document.createElement("a");
 
   anchor.href = url;
-  anchor.download = `atencion-${attention.reference.replaceAll(
-    "…",
-    "-",
-  )}.json`;
+  anchor.download = `atencion-${attention.reference.replaceAll("…", "-")}.json`;
   anchor.click();
 
   URL.revokeObjectURL(url);
@@ -71,11 +57,9 @@ function exportAttention(
 export function AttentionDetailPage() {
   const { attentionId } = useParams();
   const location = useLocation();
-  const routeState =
-    location.state as AttentionDetailRouteState | null;
+  const routeState = location.state as AttentionDetailRouteState | null;
   const routeAttention = routeState?.attention ?? null;
-  const attention =
-    routeAttention?.id === attentionId ? routeAttention : null;
+  const attention = routeAttention?.id === attentionId ? routeAttention : null;
 
   const filesQuery = useAttentionFiles(attention?.id);
 
@@ -85,11 +69,8 @@ export function AttentionDetailPage() {
         <PageHeading
           eyebrow={
             <>
-              <span>Dashboard</span>{" "}
-              <span className="px-1">›</span>{" "}
-              <span>Atenciones</span>{" "}
-              <span className="px-1">›</span>{" "}
-              <span className="text-blue-600">Detalle</span>
+              <span>Dashboard</span> <span className="px-1">›</span> <span>Atenciones</span>{" "}
+              <span className="px-1">›</span> <span className="text-blue-600">Detalle</span>
             </>
           }
           title="Detalle de la atención"
@@ -113,9 +94,7 @@ export function AttentionDetailPage() {
             size="lg"
             action={
               <Button variant="secondary" asChild>
-                <Link to="/app/atenciones">
-                  Volver a Atenciones
-                </Link>
+                <Link to="/app/atenciones">Volver a Atenciones</Link>
               </Button>
             }
           />
@@ -131,19 +110,14 @@ export function AttentionDetailPage() {
       <PageHeading
         eyebrow={
           <>
-            <span>Dashboard</span>{" "}
-            <span className="px-1">›</span>{" "}
-            <span>Atenciones</span>{" "}
-            <span className="px-1">›</span>{" "}
-            <span className="text-blue-600">Detalle</span>
+            <span>Dashboard</span> <span className="px-1">›</span> <span>Atenciones</span>{" "}
+            <span className="px-1">›</span> <span className="text-blue-600">Detalle</span>
           </>
         }
         title={
           <span className="inline-flex flex-wrap items-center gap-2">
             <span>Detalle de la atención</span>
-            <span className="text-blue-600">
-              {attention.reference}
-            </span>
+            <span className="text-blue-600">{attention.reference}</span>
             <StatusBadge status={attention.status} />
             <Badge tone="blue">{attention.registry}</Badge>
           </span>
@@ -157,11 +131,7 @@ export function AttentionDetailPage() {
               </Link>
             </Button>
 
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => window.print()}
-            >
+            <Button type="button" variant="secondary" onClick={() => window.print()}>
               <Printer className="h-4 w-4" />
               Imprimir
             </Button>
@@ -188,10 +158,7 @@ export function AttentionDetailPage() {
         error={filesQuery.error}
       />
 
-      <AttentionAdminSection
-        attention={attention}
-        registeredBy={routeState?.registeredBy}
-      />
+      <AttentionAdminSection attention={attention} registeredBy={routeState?.registeredBy} />
     </div>
   );
 }

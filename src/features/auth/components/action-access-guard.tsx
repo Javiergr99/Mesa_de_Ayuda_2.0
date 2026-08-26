@@ -24,9 +24,7 @@ export function ActionAccessGuard({
   moduleDescription?: string;
 }) {
   const user = useAuthStore((state) => state.user);
-  const allowed = exact
-    ? sessionHasExactAction(user, action)
-    : userHasAction(user, action);
+  const allowed = exact ? sessionHasExactAction(user, action) : userHasAction(user, action);
 
   if (!allowed) {
     return (
@@ -35,8 +33,7 @@ export function ActionAccessGuard({
           <PageHeading
             eyebrow={
               <>
-                <span>Dashboard</span>{" "}
-                <span className="px-1">›</span>{" "}
+                <span>Dashboard</span> <span className="px-1">›</span>{" "}
                 <span className="text-blue-600">{moduleTitle}</span>
               </>
             }

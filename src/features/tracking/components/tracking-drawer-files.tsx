@@ -45,8 +45,7 @@ export function TrackingDrawerFiles({
       toast.success("Archivos adjuntados correctamente");
     } catch (error) {
       toast.error("No fue posible adjuntar los archivos", {
-        description:
-          error instanceof Error ? error.message : "La API rechazó el archivo.",
+        description: error instanceof Error ? error.message : "La API rechazó el archivo.",
       });
     }
   }
@@ -54,9 +53,7 @@ export function TrackingDrawerFiles({
   return (
     <div className="space-y-5 p-5 sm:p-6">
       <section>
-        <h3 className="text-base font-bold text-slate-900">
-          Archivos relacionados
-        </h3>
+        <h3 className="text-base font-bold text-slate-900">Archivos relacionados</h3>
 
         <div className="mt-4 space-y-3">
           {filesQuery.isPending ? (
@@ -76,17 +73,11 @@ export function TrackingDrawerFiles({
                 className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4"
               >
                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-blue-50 text-blue-600">
-                  {file.isEmail ? (
-                    <Mail className="h-5 w-5" />
-                  ) : (
-                    <FileText className="h-5 w-5" />
-                  )}
+                  {file.isEmail ? <Mail className="h-5 w-5" /> : <FileText className="h-5 w-5" />}
                 </span>
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-bold text-slate-800">
-                    {file.name}
-                  </p>
+                  <p className="truncate text-sm font-bold text-slate-800">{file.name}</p>
                   <p className="mt-0.5 text-xs text-slate-500">
                     {file.size} · {file.date}
                   </p>
@@ -121,9 +112,7 @@ export function TrackingDrawerFiles({
                             fileId: file.id,
                             file: nextFile,
                           })
-                          .then(() =>
-                            toast.success("Archivo reemplazado correctamente"),
-                          )
+                          .then(() => toast.success("Archivo reemplazado correctamente"))
                           .catch((error: unknown) =>
                             toast.error("No fue posible reemplazar el archivo", {
                               description:
@@ -149,9 +138,7 @@ export function TrackingDrawerFiles({
       </section>
 
       <div className="border-t border-slate-200 pt-5">
-        <h3 className="text-base font-bold text-slate-900">
-          Adjuntar evidencia de seguimiento
-        </h3>
+        <h3 className="text-base font-bold text-slate-900">Adjuntar evidencia de seguimiento</h3>
 
         {canManageFiles ? (
           <>
@@ -178,9 +165,7 @@ export function TrackingDrawerFiles({
                   disabled={uploadMutation.isPending}
                 >
                   <UploadCloud className="h-4 w-4" />
-                  {uploadMutation.isPending
-                    ? "Adjuntando..."
-                    : "Adjuntar archivos"}
+                  {uploadMutation.isPending ? "Adjuntando..." : "Adjuntar archivos"}
                 </Button>
               </div>
             ) : null}

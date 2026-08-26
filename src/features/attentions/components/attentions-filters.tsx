@@ -1,10 +1,7 @@
 import { Search } from "lucide-react";
 
 import { DatePickerField } from "@/components/ui/date-picker-field";
-import {
-  FilterPanel,
-  type ActiveFilterChip,
-} from "@/components/ui/filter-panel";
+import { FilterPanel, type ActiveFilterChip } from "@/components/ui/filter-panel";
 import { Input } from "@/components/ui/input";
 import { SelectField } from "@/components/ui/select-field";
 import {
@@ -37,11 +34,7 @@ export function AttentionsFilters({
   onClear: () => void;
 }) {
   return (
-    <FilterPanel
-      activeFilters={activeFilters}
-      onApply={onApply}
-      onClear={onClear}
-    >
+    <FilterPanel activeFilters={activeFilters} onApply={onApply} onClear={onClear}>
       <Input
         label="Búsqueda rápida"
         value={filters.query}

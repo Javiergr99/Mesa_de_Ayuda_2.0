@@ -5,21 +5,15 @@ import { Check, ChevronDown, Clock3 } from "lucide-react";
 import { SelectField, type SelectOption } from "@/components/ui/select-field";
 import { cn } from "@/shared/lib/cn";
 
-const HOUR_OPTIONS: readonly SelectOption[] = Array.from(
-  { length: 24 },
-  (_, hour) => {
-    const value = String(hour).padStart(2, "0");
-    return { value, label: value };
-  },
-);
+const HOUR_OPTIONS: readonly SelectOption[] = Array.from({ length: 24 }, (_, hour) => {
+  const value = String(hour).padStart(2, "0");
+  return { value, label: value };
+});
 
-const MINUTE_OPTIONS: readonly SelectOption[] = Array.from(
-  { length: 60 },
-  (_, minute) => {
-    const value = String(minute).padStart(2, "0");
-    return { value, label: value };
-  },
-);
+const MINUTE_OPTIONS: readonly SelectOption[] = Array.from({ length: 60 }, (_, minute) => {
+  const value = String(minute).padStart(2, "0");
+  return { value, label: value };
+});
 
 type TimePickerFieldProps = {
   id?: string;
@@ -70,11 +64,7 @@ export function TimePickerField({
   const [draftMinute, setDraftMinute] = useState("");
 
   const errorMessage =
-    typeof error === "string"
-      ? error
-      : error
-        ? "Seleccione una hora válida."
-        : "";
+    typeof error === "string" ? error : error ? "Seleccione una hora válida." : "";
 
   function handleOpenChange(nextOpen: boolean) {
     if (nextOpen) {
@@ -139,10 +129,7 @@ export function TimePickerField({
             )}
           >
             <span className="flex min-w-0 items-center gap-2.5">
-              <Clock3
-                aria-hidden="true"
-                className="h-4 w-4 shrink-0 text-[var(--ui-primary)]"
-              />
+              <Clock3 aria-hidden="true" className="h-4 w-4 shrink-0 text-[var(--ui-primary)]" />
               <span
                 className={cn(
                   "truncate",
@@ -174,9 +161,7 @@ export function TimePickerField({
           >
             <div className="mb-3 flex items-center justify-between">
               <div>
-                <p className="text-sm font-bold text-[var(--ui-text-primary)]">
-                  Hora de atención
-                </p>
+                <p className="text-sm font-bold text-[var(--ui-text-primary)]">Hora de atención</p>
                 <p className="mt-0.5 text-xs text-[var(--ui-text-secondary)]">
                   Formato de 24 horas
                 </p>

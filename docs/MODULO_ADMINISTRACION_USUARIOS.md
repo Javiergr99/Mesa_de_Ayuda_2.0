@@ -76,8 +76,9 @@ Authorization: Bearer <access_token>
 ```
 
 El access token **no se busca en Web Storage**. Vive únicamente en memoria
-durante la sesión del frontend. El refresh token permanece en cookie HttpOnly y
-se utiliza exclusivamente a través de `auth_service`.
+durante la sesión del frontend. Mesa no persiste el refresh token. El modelo
+objetivo es que `auth_service` lo administre mediante cookie HttpOnly; esta
+parte del contrato permanece pendiente de Backend.
 
 ## Funciones aún no publicadas por backend
 

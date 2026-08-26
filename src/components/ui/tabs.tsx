@@ -25,7 +25,11 @@ export function Tabs({ defaultValue, tabs, className }: TabsProps) {
         ))}
       </TabsPrimitive.List>
       {tabs.map((tab) => (
-        <TabsPrimitive.Content key={tab.value} value={tab.value} className={cn("outline-none", className)}>
+        <TabsPrimitive.Content
+          key={tab.value}
+          value={tab.value}
+          className={cn("outline-none", className)}
+        >
           {tab.content}
         </TabsPrimitive.Content>
       ))}

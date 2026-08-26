@@ -1,7 +1,8 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { extname, join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = new URL("../", import.meta.url).pathname;
+const root = fileURLToPath(new URL("../", import.meta.url));
 const sourceRoot = join(root, "src");
 const supportedExtensions = [".ts", ".tsx"];
 const missingImports = [];
@@ -46,4 +47,6 @@ if (missingImports.length > 0) {
   process.exit(1);
 }
 
-console.log(`Estructura validada: ${files.length} archivos TypeScript y ninguna importación local faltante.`);
+console.log(
+  `Estructura validada: ${files.length} archivos TypeScript y ninguna importación local faltante.`,
+);

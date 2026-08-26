@@ -34,9 +34,7 @@ export function AttentionCreateErrorDialog({
         )
       }
       title={
-        connectionFailure
-          ? "Sin conexión con el servidor"
-          : "No fue posible registrar la atención"
+        connectionFailure ? "Sin conexión con el servidor" : "No fue posible registrar la atención"
       }
       description={
         connectionFailure
@@ -45,12 +43,7 @@ export function AttentionCreateErrorDialog({
       }
       actions={
         <>
-          <Button
-            type="button"
-            className="w-full"
-            onClick={onRetry}
-            disabled={busy}
-          >
+          <Button type="button" className="w-full" onClick={onRetry} disabled={busy}>
             <RefreshCw className={`h-4 w-4 ${busy ? "animate-spin" : ""}`} />
             {busy
               ? "Intentando nuevamente..."

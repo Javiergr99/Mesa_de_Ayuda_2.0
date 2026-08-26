@@ -7,7 +7,7 @@
 3. **Estado remoto separado del estado visual.** TanStack Query gestiona server-state y el estado efímero permanece cerca de su consumidor.
 4. **Contratos tipados.** Servicios, repositorios, mappers y formularios comparten tipos explícitos.
 5. **Autorización por acción.** Los guards mejoran UX; las APIs conservan la autoridad final.
-6. **Seguridad de sesión.** Access token en memoria y refresh token en cookie HttpOnly.
+6. **Seguridad de sesión.** Access token en memoria; el frontend está preparado para refresh mediante cookie HttpOnly, pendiente de alineación con `auth_service`.
 7. **Carga progresiva.** Las páginas de ruta usan `React.lazy` para evitar un bundle monolítico.
 8. **Accesibilidad y semántica.** Radix UI y componentes propios mantienen foco, teclado, labels y estados visibles.
 
@@ -54,7 +54,7 @@ Mesa :5173?code=...
 POST /auth/exchange-code
    ↓
 access token en memoria
-refresh cookie HttpOnly
+refresh cookie HttpOnly (pendiente de alineación con auth_service)
    ↓
 GET /users/me
 ```

@@ -16,13 +16,13 @@ if (!rootElement) throw new Error("No se encontró el elemento raíz de la aplic
 
 createRoot(rootElement).render(
   <StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <AuthSessionProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthSessionProvider>
         <TooltipProvider delayDuration={250}>
           <RouterProvider router={router} />
           <Toaster position="top-right" richColors closeButton />
         </TooltipProvider>
-        </AuthSessionProvider>
-      </QueryClientProvider>
-</StrictMode>,
+      </AuthSessionProvider>
+    </QueryClientProvider>
+  </StrictMode>,
 );

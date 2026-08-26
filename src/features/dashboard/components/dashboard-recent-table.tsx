@@ -57,21 +57,13 @@ export function DashboardRecentTable({
                     key={attention.id}
                     className="border-t border-slate-100 text-[11px] transition-colors hover:bg-slate-50/70"
                   >
-                    <td className="px-5 py-3.5 font-bold text-blue-600">
-                      {attention.reference}
-                    </td>
+                    <td className="px-5 py-3.5 font-bold text-blue-600">{attention.reference}</td>
                     <td className="px-4 py-3.5 font-medium text-slate-800">
                       {attention.requester}
                     </td>
-                    <td className="px-4 py-3.5 text-slate-600">
-                      {attention.caseType}
-                    </td>
-                    <td className="px-4 py-3.5 text-slate-600">
-                      {attention.registry}
-                    </td>
-                    <td className="px-4 py-3.5 text-slate-500">
-                      {attention.date}
-                    </td>
+                    <td className="px-4 py-3.5 text-slate-600">{attention.caseType}</td>
+                    <td className="px-4 py-3.5 text-slate-600">{attention.registry}</td>
+                    <td className="px-4 py-3.5 text-slate-500">{attention.date}</td>
                     <td className="px-4 py-3.5">
                       <StatusBadge status={attention.status} />
                     </td>

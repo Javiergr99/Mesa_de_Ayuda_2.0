@@ -6,19 +6,14 @@ import type {
 import { authRequest } from "@/features/auth/api/auth-client";
 import type { TokenPersistence } from "@/features/auth/services/token-storage";
 
-function rememberSessionHeaders(
-  persistence: TokenPersistence,
-): HeadersInit {
+function rememberSessionHeaders(persistence: TokenPersistence): HeadersInit {
   return {
     "X-Remember-Session": persistence === "persistent" ? "true" : "false",
   };
 }
 
 export const authService = {
-  exchangeCode(
-    code: string,
-    persistence: TokenPersistence = "session",
-  ): Promise<TokenResponse> {
+  exchangeCode(code: string, persistence: TokenPersistence = "session"): Promise<TokenResponse> {
     const body: ExchangeCodeRequest = { code };
     return authRequest<TokenResponse>(
       "/auth/exchange-code",

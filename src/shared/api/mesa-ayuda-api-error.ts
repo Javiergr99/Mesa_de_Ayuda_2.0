@@ -18,7 +18,8 @@ function getErrorMessage(status: number, payload: MesaAyudaErrorPayload | null):
     if (messages.length) return messages.join(" · ");
   }
 
-  if (status === 401) return "La API de Mesa de Ayuda no pudo validar el token de acceso. Tu sesión central permanece activa.";
+  if (status === 401)
+    return "La API de Mesa de Ayuda no pudo validar el token de acceso. Tu sesión central permanece activa.";
   if (status === 403) return "No cuenta con la acción requerida para realizar esta operación.";
   if (status === 404) return "El recurso solicitado no existe o ya no está disponible.";
   if (status === 413) return "El archivo supera el tamaño máximo permitido de 20 MB.";

@@ -34,9 +34,7 @@ export function FilterPanel({
 
       <div className="mt-5 flex flex-col gap-3 border-t border-slate-100 pt-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex min-w-0 flex-wrap items-center gap-2">
-          <span className="text-xs font-semibold text-slate-500">
-            Filtros activos:
-          </span>
+          <span className="text-xs font-semibold text-slate-500">Filtros activos:</span>
 
           {activeFilters.map((filter) => (
             <span

@@ -1,7 +1,4 @@
-import type {
-  FocusEvent,
-  MouseEvent,
-} from "react";
+import type { FocusEvent, MouseEvent } from "react";
 import { useMemo, useRef, useState } from "react";
 import { ChevronDown, Dot } from "lucide-react";
 import { NavLink, useLocation } from "react-router";
@@ -35,10 +32,7 @@ const EMPTY_GROUP_OVERRIDES: ReadonlyMap<string, boolean> = new Map();
 function isGroupRouteActive(item: NavigationItem, pathname: string): boolean {
   const children = item.children ?? [];
 
-  return children.some(
-    (child) =>
-      pathname === child.to || pathname.startsWith(`${child.to}/`),
-  );
+  return children.some((child) => pathname === child.to || pathname.startsWith(`${child.to}/`));
 }
 
 export function AppSidebar({
@@ -52,10 +46,7 @@ export function AppSidebar({
   const focusOriginRef = useRef<FocusOrigin>("keyboard");
 
   const visibleItems = useMemo(
-    () =>
-      sidebarNavigation.filter((item) =>
-        canAccessNavigationItem(item, permissions),
-      ),
+    () => sidebarNavigation.filter((item) => canAccessNavigationItem(item, permissions)),
     [permissions],
   );
 
@@ -63,10 +54,7 @@ export function AppSidebar({
     const groups = new Set<string>();
 
     for (const item of visibleItems) {
-      if (
-        item.children?.length &&
-        isGroupRouteActive(item, location.pathname)
-      ) {
+      if (item.children?.length && isGroupRouteActive(item, location.pathname)) {
         groups.add(item.label);
       }
     }
@@ -74,24 +62,17 @@ export function AppSidebar({
     return groups;
   }, [location.pathname, visibleItems]);
 
-  const [groupOverrides, setGroupOverrides] = useState<GroupOverrideState>(
-    () => ({
-      pathname: location.pathname,
-      values: EMPTY_GROUP_OVERRIDES,
-    }),
-  );
+  const [groupOverrides, setGroupOverrides] = useState<GroupOverrideState>(() => ({
+    pathname: location.pathname,
+    values: EMPTY_GROUP_OVERRIDES,
+  }));
 
   const currentOverrides =
-    groupOverrides.pathname === location.pathname
-      ? groupOverrides.values
-      : EMPTY_GROUP_OVERRIDES;
+    groupOverrides.pathname === location.pathname ? groupOverrides.values : EMPTY_GROUP_OVERRIDES;
 
   function resetGroupOverrides() {
     setGroupOverrides((current) => {
-      if (
-        current.pathname === location.pathname &&
-        current.values.size === 0
-      ) {
+      if (current.pathname === location.pathname && current.values.size === 0) {
         return current;
       }
 
@@ -134,21 +115,14 @@ export function AppSidebar({
   function handleBlurCapture(event: FocusEvent<HTMLElement>) {
     const nextTarget = event.relatedTarget;
 
-    if (
-      !(nextTarget instanceof Node) ||
-      !event.currentTarget.contains(nextTarget)
-    ) {
+    if (!(nextTarget instanceof Node) || !event.currentTarget.contains(nextTarget)) {
       onFocusWithinChange?.(false);
     }
   }
 
   function handleNavigation(event: MouseEvent<HTMLAnchorElement>) {
     const isPrimaryNavigation =
-      event.button === 0 &&
-      !event.metaKey &&
-      !event.ctrlKey &&
-      !event.shiftKey &&
-      !event.altKey;
+      event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
 
     if (!isPrimaryNavigation) {
       return;
@@ -184,12 +158,8 @@ export function AppSidebar({
 
           if (children.length) {
             const defaultOpen = activeGroups.has(item.label);
-            const isOpen =
-              currentOverrides.get(item.label) ?? defaultOpen;
-            const isActive = isGroupRouteActive(
-              item,
-              location.pathname,
-            );
+            const isOpen = currentOverrides.get(item.label) ?? defaultOpen;
+            const isActive = isGroupRouteActive(item, location.pathname);
 
             return (
               <div key={item.label}>
@@ -231,8 +201,7 @@ export function AppSidebar({
                     className={cn(
                       "max-w-0 translate-x-1 overflow-hidden whitespace-nowrap opacity-0",
                       "transition-[max-width,opacity,transform] duration-150 ease-out motion-reduce:transition-none",
-                      expanded &&
-                        "md:max-w-[132px] md:translate-x-0 md:opacity-100",
+                      expanded && "md:max-w-[132px] md:translate-x-0 md:opacity-100",
                     )}
                   >
                     {item.label}
@@ -261,8 +230,7 @@ export function AppSidebar({
                             cn(
                               "focus-ring flex min-h-8 items-center gap-1.5 rounded-md px-2 text-[12px] font-medium",
                               "text-slate-400 transition-colors hover:bg-white/5 hover:text-slate-200",
-                              childActive &&
-                                "bg-white/7 font-semibold text-white",
+                              childActive && "bg-white/7 font-semibold text-white",
                             )
                           }
                         >
@@ -271,9 +239,7 @@ export function AppSidebar({
                             strokeWidth={1.8}
                             aria-hidden="true"
                           />
-                          <span className="truncate">
-                            {child.label}
-                          </span>
+                          <span className="truncate">{child.label}</span>
                         </NavLink>
                       );
                     })}
@@ -303,17 +269,12 @@ export function AppSidebar({
                 )
               }
             >
-              <Icon
-                className="h-[18px] w-[18px] shrink-0"
-                strokeWidth={1.85}
-                aria-hidden="true"
-              />
+              <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.85} aria-hidden="true" />
               <span
                 className={cn(
                   "max-w-0 translate-x-1 overflow-hidden whitespace-nowrap opacity-0",
                   "transition-[max-width,opacity,transform] duration-150 ease-out motion-reduce:transition-none",
-                  expanded &&
-                    "md:max-w-[164px] md:translate-x-0 md:opacity-100",
+                  expanded && "md:max-w-[164px] md:translate-x-0 md:opacity-100",
                 )}
               >
                 {item.label}

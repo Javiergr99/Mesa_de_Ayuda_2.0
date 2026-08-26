@@ -45,15 +45,8 @@ export type AccountStatusView = {
 export function getProfileInitials(user: AuthenticatedUser): string {
   const initials: string[] = [];
 
-  for (const part of [
-    user.nombre,
-    user.primer_apellido,
-    user.segundo_apellido,
-  ]) {
-    const initial = part
-      ?.trim()
-      .charAt(0)
-      .toUpperCase();
+  for (const part of [user.nombre, user.primer_apellido, user.segundo_apellido]) {
+    const initial = part?.trim().charAt(0).toUpperCase();
 
     if (initial) initials.push(initial);
   }
@@ -103,9 +96,7 @@ export function getAdministrativeAccessLabels(user: AuthenticatedUser): string[]
   const actions = new Set(getUserActionNames(user));
   const labels: string[] = [];
 
-  for (const [action, label] of Object.entries(
-    ADMINISTRATIVE_ACTION_LABELS,
-  )) {
+  for (const [action, label] of Object.entries(ADMINISTRATIVE_ACTION_LABELS)) {
     if (actions.has(action)) {
       labels.push(label);
     }

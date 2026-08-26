@@ -8,22 +8,15 @@ import type {
 } from "@/features/attentions/api/attentions.contracts";
 import type { AttentionsRepository } from "@/features/attentions/api/attentions.repository";
 import { buildAttentionFileFormData } from "@/features/attentions/api/attention-file-form-data";
-import {
-  mesaAyudaRequest,
-  toSearchParams,
-} from "@/shared/api/mesa-ayuda-api-client";
+import { mesaAyudaRequest, toSearchParams } from "@/shared/api/mesa-ayuda-api-client";
 
 function listQuery(params: BitacoraListParams = {}): string {
   return toSearchParams(params);
 }
 
-
-
 export const httpAttentionsRepository: AttentionsRepository = {
   list(params = {}): Promise<BitacoraListResponse> {
-    return mesaAyudaRequest<BitacoraListResponse>(
-      `/api/v1/bitacoras/${listQuery(params)}`,
-    );
+    return mesaAyudaRequest<BitacoraListResponse>(`/api/v1/bitacoras/${listQuery(params)}`);
   },
 
   create(payload: BitacoraCreatePayload): Promise<BitacoraApiRecord> {
@@ -47,22 +40,20 @@ export const httpAttentionsRepository: AttentionsRepository = {
   },
 
   listFiles(id: string): Promise<BitacoraArchivoApi[]> {
-    return mesaAyudaRequest<BitacoraArchivoApi[]>(
-      `/api/v1/bitacoras/${id}/archivos`,
-    );
+    return mesaAyudaRequest<BitacoraArchivoApi[]>(`/api/v1/bitacoras/${id}/archivos`);
   },
 
   uploadFile(id: string, file: File): Promise<BitacoraArchivoApi> {
-    return mesaAyudaRequest<BitacoraArchivoApi>(
-      `/api/v1/bitacoras/${id}/archivos`,
-      { method: "POST", body: buildAttentionFileFormData(file) },
-    );
+    return mesaAyudaRequest<BitacoraArchivoApi>(`/api/v1/bitacoras/${id}/archivos`, {
+      method: "POST",
+      body: buildAttentionFileFormData(file),
+    });
   },
 
   replaceFile(id: string, fileId: string, file: File): Promise<BitacoraArchivoApi> {
-    return mesaAyudaRequest<BitacoraArchivoApi>(
-      `/api/v1/bitacoras/${id}/archivos/${fileId}`,
-      { method: "PUT", body: buildAttentionFileFormData(file) },
-    );
+    return mesaAyudaRequest<BitacoraArchivoApi>(`/api/v1/bitacoras/${id}/archivos/${fileId}`, {
+      method: "PUT",
+      body: buildAttentionFileFormData(file),
+    });
   },
 };

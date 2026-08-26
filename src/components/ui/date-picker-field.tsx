@@ -63,15 +63,10 @@ export function DatePickerField({
   const today = startOfDay(new Date());
 
   const errorMessage =
-    typeof error === "string"
-      ? error
-      : error
-        ? "Seleccione una fecha válida."
-        : "";
+    typeof error === "string" ? error : error ? "Seleccione una fecha válida." : "";
 
   const todayIsAllowed =
-    (!minDateValue || today >= minDateValue) &&
-    (!maxDateValue || today <= maxDateValue);
+    (!minDateValue || today >= minDateValue) && (!maxDateValue || today <= maxDateValue);
 
   const disabledDays = [
     ...(minDateValue ? [{ before: minDateValue }] : []),

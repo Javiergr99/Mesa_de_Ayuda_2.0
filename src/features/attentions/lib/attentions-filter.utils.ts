@@ -54,10 +54,7 @@ export function buildAttentionFilterChips(
     });
   }
 
-  const registry = catalogLabel(
-    filters.registryId,
-    ATTENTION_REGISTRY_CATALOG,
-  );
+  const registry = catalogLabel(filters.registryId, ATTENTION_REGISTRY_CATALOG);
 
   if (registry) {
     chips.push({
@@ -67,10 +64,7 @@ export function buildAttentionFilterChips(
     });
   }
 
-  const status = catalogLabel(
-    filters.statusId,
-    ATTENTION_STATUS_CATALOG,
-  );
+  const status = catalogLabel(filters.statusId, ATTENTION_STATUS_CATALOG);
 
   if (status) {
     chips.push({
@@ -80,9 +74,7 @@ export function buildAttentionFilterChips(
     });
   }
 
-  const entity =
-    ENTITY_OPTIONS.find((item) => item.value === filters.entityId)?.label ??
-    null;
+  const entity = ENTITY_OPTIONS.find((item) => item.value === filters.entityId)?.label ?? null;
 
   if (entity) {
     chips.push({
@@ -92,10 +84,7 @@ export function buildAttentionFilterChips(
     });
   }
 
-  const caseType = catalogLabel(
-    filters.caseTypeId,
-    ATTENTION_CASE_CATALOG,
-  );
+  const caseType = catalogLabel(filters.caseTypeId, ATTENTION_CASE_CATALOG);
 
   if (caseType) {
     chips.push({

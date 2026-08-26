@@ -32,9 +32,7 @@ export function getAccessTokenActionNames(): string[] {
         continue;
       }
 
-      const normalized = action
-        .trim()
-        .toUpperCase();
+      const normalized = action.trim().toUpperCase();
 
       if (normalized) {
         actions.add(normalized);

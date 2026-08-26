@@ -32,9 +32,7 @@ function compactPeriodLabel(period: string): string {
   const [, year, month] = dateMatch;
   const date = new Date(Number(year), Number(month) - 1, 1);
 
-  return MONTH_LABEL_FORMATTER
-    .format(date)
-    .replace(".", "");
+  return MONTH_LABEL_FORMATTER.format(date).replace(".", "");
 }
 
 export function DashboardActivityChart({
@@ -69,7 +67,6 @@ export function DashboardActivityChart({
   const groupWidth = chartWidth / points.length;
   const barWidth = Math.min(28, Math.max(10, groupWidth * 0.32));
 
-
   return (
     <div className="mt-4 min-h-[254px] overflow-hidden">
       <svg
@@ -84,21 +81,8 @@ export function DashboardActivityChart({
 
           return (
             <g key={ratio}>
-              <line
-                x1={left}
-                y1={y}
-                x2={width - right}
-                y2={y}
-                stroke="#E2E8F0"
-                strokeWidth="1"
-              />
-              <text
-                x={left - 10}
-                y={y + 4}
-                textAnchor="end"
-                fontSize="10"
-                fill="#94A3B8"
-              >
+              <line x1={left} y1={y} x2={width - right} y2={y} stroke="#E2E8F0" strokeWidth="1" />
+              <text x={left - 10} y={y + 4} textAnchor="end" fontSize="10" fill="#94A3B8">
                 {tickValue.toLocaleString("es-MX")}
               </text>
             </g>
@@ -112,14 +96,7 @@ export function DashboardActivityChart({
 
           return (
             <g key={`${point.periodo}-${index}`}>
-              <rect
-                x={x}
-                y={y}
-                width={barWidth}
-                height={barHeight}
-                rx="3"
-                fill="#2563EB"
-              />
+              <rect x={x} y={y} width={barWidth} height={barHeight} rx="3" fill="#2563EB" />
               <text
                 x={x + barWidth / 2}
                 y={height - 17}
@@ -196,10 +173,7 @@ export function DashboardStatusDistribution({
           const percentage = total ? Math.round((entry.value / total) * 100) : 0;
 
           return (
-            <div
-              key={entry.label}
-              className="flex items-center justify-between gap-3 text-[11px]"
-            >
+            <div key={entry.label} className="flex items-center justify-between gap-3 text-[11px]">
               <span className="flex min-w-0 items-center gap-2 text-slate-700">
                 <span
                   className="h-2 w-2 shrink-0 rounded-full"

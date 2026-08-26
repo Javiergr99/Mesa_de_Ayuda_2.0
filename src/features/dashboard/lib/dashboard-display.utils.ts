@@ -19,17 +19,13 @@ export function formatDashboardPercent(value: number | null | undefined): string
   return `${formatDashboardDecimal(value)}%`;
 }
 
-export function rankLabel(
-  value?: DashboardRankItem | string | number | null,
-): string {
+export function rankLabel(value?: DashboardRankItem | string | number | null): string {
   if (typeof value === "string") return value;
   if (typeof value === "number") return value.toLocaleString("es-MX");
   return value?.nombre ?? value?.clave ?? "Sin información";
 }
 
-export function rankTotal(
-  value?: DashboardRankItem | string | number | null,
-): number | null {
+export function rankTotal(value?: DashboardRankItem | string | number | null): number | null {
   if (typeof value === "number") return value;
   if (typeof value === "object" && value) return value.total ?? null;
   return null;
@@ -64,17 +60,10 @@ export function getTopDashboardEntities(
   const largest = Math.max(...ordered.map((item) => item.total), 1);
 
   return ordered.map((item, index) => {
-    const derivedPercentage =
-      overallTotal > 0 ? (item.total / overallTotal) * 100 : 0;
+    const derivedPercentage = overallTotal > 0 ? (item.total / overallTotal) * 100 : 0;
 
     return {
-      id: String(
-        item.entidad_federativa_id ??
-          item.clave ??
-          item.nombre ??
-          item.entidad ??
-          index,
-      ),
+      id: String(item.entidad_federativa_id ?? item.clave ?? item.nombre ?? item.entidad ?? index),
       label: entityName(item),
       total: item.total,
       percentage: Number(item.porcentaje ?? derivedPercentage),

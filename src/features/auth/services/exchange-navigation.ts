@@ -15,10 +15,7 @@ export class ExchangeNavigationError extends Error {
     | "INVALID_EXCHANGE_CODE"
     | "INVALID_PERSISTENCE";
 
-  constructor(
-    code: ExchangeNavigationError["code"],
-    message: string,
-  ) {
+  constructor(code: ExchangeNavigationError["code"], message: string) {
     super(message);
     this.name = "ExchangeNavigationError";
     this.code = code;
@@ -62,9 +59,7 @@ function assertExpectedQueryParameters(url: URL) {
   }
 }
 
-export function readExchangeNavigationRequest(
-  url: URL,
-): ExchangeNavigationRequest | null {
+export function readExchangeNavigationRequest(url: URL): ExchangeNavigationRequest | null {
   const codeValues = url.searchParams.getAll("code");
   if (codeValues.length === 0) {
     if (url.searchParams.has("persistence")) {

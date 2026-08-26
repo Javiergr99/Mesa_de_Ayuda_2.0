@@ -22,32 +22,20 @@ function AssignmentField({
         className="mt-2 truncate text-sm font-semibold text-[var(--ui-text-primary)]"
         title={value || undefined}
       >
-        {value || "â€”"}
+        {value || "—"}
       </p>
     </div>
   );
 }
 
-export function SystemAssignmentSummary({
-  userName,
-}: {
-  userName: string;
-}) {
+export function SystemAssignmentSummary({ userName }: { userName: string }) {
   const displayName = userName.trim();
 
   return (
     <div className="grid gap-3 md:grid-cols-2">
-      <AssignmentField
-        label="Atendido por"
-        value={displayName}
-        icon="user"
-      />
+      <AssignmentField label="Atendido por" value={displayName} icon="user" />
 
-      <AssignmentField
-        label="Creado por"
-        value={displayName}
-        icon="lock"
-      />
+      <AssignmentField label="Creado por" value={displayName} icon="lock" />
     </div>
   );
 }

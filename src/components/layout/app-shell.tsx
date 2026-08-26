@@ -53,12 +53,15 @@ export function AppShell() {
     );
   }, [isSidebarExpanded]);
 
-  useEffect(() => () => {
-    document.documentElement.style.setProperty(
-      "--sidebar-current-width",
-      "var(--sidebar-collapsed-width)",
-    );
-  }, []);
+  useEffect(
+    () => () => {
+      document.documentElement.style.setProperty(
+        "--sidebar-current-width",
+        "var(--sidebar-collapsed-width)",
+      );
+    },
+    [],
+  );
 
   return (
     <div

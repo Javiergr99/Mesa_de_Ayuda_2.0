@@ -9,7 +9,7 @@
 5. Mesa de Ayuda valida que la ruta sea una entrada permitida.
 6. El código se elimina inmediatamente de la URL.
 7. Se ejecuta `POST /auth/exchange-code`.
-8. `auth_service` devuelve el access token para memoria y establece/rota el refresh token mediante cookie HttpOnly.
+8. Mesa consume el access token en memoria. El frontend está preparado para que `auth_service` establezca y rote el refresh token mediante cookie HttpOnly; esta parte del contrato permanece pendiente de Backend.
 9. El frontend consulta `GET /users/me`.
 10. Guards y navegación consumen las acciones del usuario.
 
@@ -44,16 +44,16 @@ src/features/auth/services/exchange-navigation.ts
 - La URL se limpia antes de completar el intercambio.
 - `persistence` expresa una preferencia de sesión, no una credencial.
 - El access token resultante vive únicamente en memoria.
-- El refresh token permanece fuera de JavaScript en cookie HttpOnly.
+- Mesa no persiste el refresh token. El modelo objetivo es mantenerlo fuera de JavaScript mediante cookie HttpOnly administrada por `auth_service`; esta parte permanece pendiente de Backend.
 
-## Restauración tras F5
+## Restauración tras F5 — modelo objetivo
 
 Al recargar:
 
 1. el access token en memoria desaparece;
 2. permanece únicamente el marcador no sensible de sesión;
 3. una petición protegida intenta restaurar la sesión;
-4. `/auth/refresh` usa la cookie HttpOnly y rota la sesión;
+4. `/auth/refresh` deberá usar la cookie HttpOnly y rotar la sesión;
 5. el nuevo access token vuelve a memoria;
 6. `/users/me` hidrata al usuario.
 

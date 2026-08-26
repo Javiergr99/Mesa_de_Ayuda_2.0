@@ -5,21 +5,12 @@ import * as m from "motion/react-m";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tooltip } from "@/components/ui/tooltip";
-import {
-  ViewModeToggle,
-  type ViewModeOption,
-} from "@/components/ui/view-mode-toggle";
+import { ViewModeToggle, type ViewModeOption } from "@/components/ui/view-mode-toggle";
 import { StatusBadge } from "@/features/attentions/components/attention-badges";
 import type { Attention } from "@/features/attentions/model/attention.types";
 import type { DashboardSummaryResponse } from "@/features/dashboard/api/dashboard.contracts";
 import { StatCard } from "@/components/ui/stat-card";
-import {
-  CircleCheck,
-  ClipboardList,
-  Clock3,
-  Waves,
-  XCircle,
-} from "lucide-react";
+import { CircleCheck, ClipboardList, Clock3, Waves, XCircle } from "lucide-react";
 
 export type AttentionsViewMode = "table" | "board";
 
@@ -71,9 +62,7 @@ export function AttentionsSummaryCards({
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
       <StatCard
         title="Total de atenciones"
-        value={(summary?.total_atenciones ?? fallbackTotal).toLocaleString(
-          "es-MX",
-        )}
+        value={(summary?.total_atenciones ?? fallbackTotal).toLocaleString("es-MX")}
         detail="Registros acumulados"
         icon={ClipboardList}
         tone="blue"
@@ -166,10 +155,7 @@ export function AttentionTable({
                 "Actualización",
                 "Acción",
               ].map((label) => (
-                <th
-                  key={label}
-                  className="border-b border-slate-200 px-4 py-3"
-                >
+                <th key={label} className="border-b border-slate-200 px-4 py-3">
                   {label}
                 </th>
               ))}
@@ -182,32 +168,20 @@ export function AttentionTable({
                 key={attention.id}
                 className="group border-b border-slate-100 last:border-0 hover:bg-slate-50/55"
               >
-                <td className="px-4 py-4 text-sm font-bold text-blue-600">
-                  {attention.reference}
-                </td>
+                <td className="px-4 py-4 text-sm font-bold text-blue-600">{attention.reference}</td>
                 <td className="px-4 py-4">
-                  <p className="text-sm font-semibold text-slate-800">
-                    {attention.requester}
-                  </p>
-                  <p className="max-w-52 truncate text-xs text-slate-400">
-                    {attention.email}
-                  </p>
+                  <p className="text-sm font-semibold text-slate-800">{attention.requester}</p>
+                  <p className="max-w-52 truncate text-xs text-slate-400">{attention.email}</p>
                 </td>
-                <td className="px-4 py-4 text-sm text-slate-700">
-                  {attention.caseType}
-                </td>
+                <td className="px-4 py-4 text-sm text-slate-700">{attention.caseType}</td>
                 <td className="px-4 py-4 text-sm font-semibold text-slate-700">
                   {attention.registry}
                 </td>
-                <td className="px-4 py-4 text-sm text-slate-700">
-                  {attention.entity}
-                </td>
+                <td className="px-4 py-4 text-sm text-slate-700">{attention.entity}</td>
                 <td className="px-4 py-4">
                   <StatusBadge status={attention.status} />
                 </td>
-                <td className="px-4 py-4 text-sm text-slate-600">
-                  {attention.updatedAt}
-                </td>
+                <td className="px-4 py-4 text-sm text-slate-600">{attention.updatedAt}</td>
                 <td className="px-4 py-4">
                   <Tooltip content="Ver registro">
                     <Button
@@ -240,23 +214,14 @@ export function AttentionBoard({
     <LazyMotion features={domAnimation}>
       <div className="grid gap-3 xl:grid-cols-4">
         {BOARD_COLUMNS.map((column) => {
-          const items = attentions.filter(
-            (attention) => attention.status === column.status,
-          );
+          const items = attentions.filter((attention) => attention.status === column.status);
 
           return (
-            <Card
-              key={column.status}
-              className="min-h-[460px] bg-slate-50/60 p-3"
-            >
+            <Card key={column.status} className="min-h-[460px] bg-slate-50/60 p-3">
               <div className="mb-3 flex items-center justify-between gap-2 px-1">
                 <div className="flex items-center gap-2">
-                  <span
-                    className={`h-2 w-2 rounded-full ${column.markerClassName}`}
-                  />
-                  <h3 className="text-sm font-bold text-slate-800">
-                    {column.label}
-                  </h3>
+                  <span className={`h-2 w-2 rounded-full ${column.markerClassName}`} />
+                  <h3 className="text-sm font-bold text-slate-800">{column.label}</h3>
                 </div>
 
                 <span className="rounded-full bg-white px-2 py-0.5 text-xs font-bold text-slate-500 shadow-sm">
@@ -273,9 +238,7 @@ export function AttentionBoard({
                       className={`rounded-xl border bg-white p-4 shadow-sm ${column.cardClassName}`}
                     >
                       <div className="flex items-start justify-between gap-2">
-                        <p className="text-xs font-bold text-blue-600">
-                          {attention.reference}
-                        </p>
+                        <p className="text-xs font-bold text-blue-600">{attention.reference}</p>
                         <StatusBadge status={attention.status} />
                       </div>
 
@@ -283,9 +246,7 @@ export function AttentionBoard({
                         {attention.caseType}
                       </h4>
 
-                      <p className="mt-1 text-sm text-slate-700">
-                        {attention.requester}
-                      </p>
+                      <p className="mt-1 text-sm text-slate-700">{attention.requester}</p>
 
                       <p className="mt-3 text-xs text-slate-500">
                         {attention.registry} · {attention.entity}
@@ -313,9 +274,7 @@ export function AttentionBoard({
                   ))}
                 </div>
               ) : (
-                <p className="pt-2 text-center text-xs text-slate-400">
-                  Sin atenciones
-                </p>
+                <p className="pt-2 text-center text-xs text-slate-400">Sin atenciones</p>
               )}
             </Card>
           );
@@ -330,10 +289,7 @@ export function AttentionSkeleton() {
     <Card className="overflow-hidden p-5">
       <div className="space-y-3">
         {["a", "b", "c", "d"].map((key) => (
-          <div
-            key={key}
-            className="relative h-16 overflow-hidden rounded-lg bg-slate-100"
-          >
+          <div key={key} className="relative h-16 overflow-hidden rounded-lg bg-slate-100">
             <span className="animate-shimmer absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent" />
           </div>
         ))}

@@ -1,11 +1,5 @@
 import { useMemo, useState } from "react";
-import {
-  CheckCircle2,
-  ClipboardList,
-  Clock3,
-  Gauge,
-  RefreshCw,
-} from "lucide-react";
+import { CheckCircle2, ClipboardList, Clock3, Gauge, RefreshCw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -57,10 +51,7 @@ export function DashboardPage() {
 
   const summary = summaryQuery.data;
   const error =
-    summaryQuery.error ??
-    temporalQuery.error ??
-    entitiesQuery.error ??
-    recentQuery.error;
+    summaryQuery.error ?? temporalQuery.error ?? entitiesQuery.error ?? recentQuery.error;
   const isRefreshing =
     summaryQuery.isFetching ||
     temporalQuery.isFetching ||
@@ -91,9 +82,7 @@ export function DashboardPage() {
         actions={
           <div className="flex flex-wrap items-end justify-end gap-2">
             <div className="flex min-h-10 items-center rounded-lg border border-slate-200 bg-white pl-3 shadow-sm">
-              <span className="whitespace-nowrap text-[11px] text-slate-500">
-                Periodo:
-              </span>
+              <span className="whitespace-nowrap text-[11px] text-slate-500">Periodo:</span>
               <div className="w-[170px]">
                 <SelectField
                   value={period}
@@ -121,10 +110,7 @@ export function DashboardPage() {
       />
 
       {error ? (
-        <Card
-          role="alert"
-          className="border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-        >
+        <Card role="alert" className="border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {error instanceof Error
             ? error.message
             : "No fue posible consultar todos los indicadores del dashboard."}
@@ -137,11 +123,7 @@ export function DashboardPage() {
       >
         <DashboardMetricCard
           title="Atenciones registradas"
-          value={
-            summaryQuery.isPending
-              ? "—"
-              : formatDashboardNumber(summary?.total_atenciones)
-          }
+          value={summaryQuery.isPending ? "—" : formatDashboardNumber(summary?.total_atenciones)}
           detail={`Promedio diario: ${formatDashboardDecimal(
             summary?.promedio_atenciones_por_dia,
           )}`}
@@ -150,24 +132,14 @@ export function DashboardPage() {
         />
         <DashboardMetricCard
           title="Atenciones pendientes"
-          value={
-            summaryQuery.isPending
-              ? "—"
-              : formatDashboardNumber(summary?.pendientes)
-          }
-          detail={`${formatDashboardNumber(
-            summary?.en_proceso,
-          )} actualmente en proceso`}
+          value={summaryQuery.isPending ? "—" : formatDashboardNumber(summary?.pendientes)}
+          detail={`${formatDashboardNumber(summary?.en_proceso)} actualmente en proceso`}
           icon={Clock3}
           tone="amber"
         />
         <DashboardMetricCard
           title="Atenciones finalizadas"
-          value={
-            summaryQuery.isPending
-              ? "—"
-              : formatDashboardNumber(summary?.atendidas)
-          }
+          value={summaryQuery.isPending ? "—" : formatDashboardNumber(summary?.atendidas)}
           detail={`${formatDashboardPercent(
             summary?.porcentaje_finalizacion,
           )} de resolución general`}
@@ -181,9 +153,7 @@ export function DashboardPage() {
               ? "—"
               : formatDashboardDecimal(summary?.promedio_atenciones_por_dia)
           }
-          detail={`${formatDashboardNumber(
-            summary?.canceladas,
-          )} registros cancelados`}
+          detail={`${formatDashboardNumber(summary?.canceladas)} registros cancelados`}
           icon={Gauge}
           tone="violet"
         />
@@ -193,18 +163,13 @@ export function DashboardPage() {
         <Card className="min-w-0 p-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h2 className="text-[14px] font-bold text-slate-900">
-                Actividad mensual
-              </h2>
+              <h2 className="text-[14px] font-bold text-slate-900">Actividad mensual</h2>
               <p className="mt-1 text-[11px] text-slate-500">
                 Volumen de atenciones registradas durante el periodo seleccionado.
               </p>
             </div>
             <span className="inline-flex items-center gap-2 text-[10px] font-medium text-slate-500">
-              <span
-                className="h-2 w-2 rounded-sm bg-blue-600"
-                aria-hidden="true"
-              />
+              <span className="h-2 w-2 rounded-sm bg-blue-600" aria-hidden="true" />
               Atenciones
             </span>
           </div>
@@ -219,9 +184,7 @@ export function DashboardPage() {
 
         <Card className="p-5">
           <div>
-            <h2 className="text-[14px] font-bold text-slate-900">
-              Distribución por estatus
-            </h2>
+            <h2 className="text-[14px] font-bold text-slate-900">Distribución por estatus</h2>
             <p className="mt-1 text-[11px] text-slate-500">
               Estado general de las atenciones registradas.
             </p>
@@ -238,10 +201,7 @@ export function DashboardPage() {
       </section>
 
       <section className="grid gap-4 xl:grid-cols-2">
-        <DashboardTerritorialActivity
-          data={entitiesQuery.data}
-          loading={entitiesQuery.isPending}
-        />
+        <DashboardTerritorialActivity data={entitiesQuery.data} loading={entitiesQuery.isPending} />
         <DashboardOperationalIndicators
           summary={summary}
           entities={entitiesQuery.data}

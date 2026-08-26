@@ -72,10 +72,7 @@ export function ProfilePage() {
 
       <ReadOnlyDataCard title="Información institucional" icon={Building2}>
         <dl className="profile-data-grid grid sm:grid-cols-2 lg:grid-cols-3">
-          <ReadOnlyDataItem
-            label="Institución"
-            value={user.instancia?.nombre || "No registrada"}
-          />
+          <ReadOnlyDataItem label="Institución" value={user.instancia?.nombre || "No registrada"} />
           <ReadOnlyDataItem
             label="Siglas de la institución"
             value={user.instancia?.siglas || "No registradas"}
@@ -84,11 +81,7 @@ export function ProfilePage() {
           <ReadOnlyDataItem
             label="Estatus de la cuenta"
             value={
-              <ProfileStatusBadge
-                label={accountStatus.label}
-                tone={accountStatus.tone}
-                compact
-              />
+              <ProfileStatusBadge label={accountStatus.label} tone={accountStatus.tone} compact />
             }
           />
           <ReadOnlyDataItem label="Identificador del usuario" value={user.id} />
@@ -114,11 +107,7 @@ export function ProfilePage() {
             />
           </SecurityStatusItem>
           <SecurityStatusItem label="Estado de la cuenta">
-            <ProfileStatusBadge
-              label={accountStatus.label}
-              tone={accountStatus.tone}
-              compact
-            />
+            <ProfileStatusBadge label={accountStatus.label} tone={accountStatus.tone} compact />
           </SecurityStatusItem>
           <SecurityStatusItem label="Intentos de inicio de sesión">
             <ProfileStatusBadge

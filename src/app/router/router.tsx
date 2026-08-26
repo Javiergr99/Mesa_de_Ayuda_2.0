@@ -10,65 +10,49 @@ import { PlaceholderPage } from "@/features/placeholders/pages/placeholder-page"
 import { MESA_AYUDA_ACTIONS } from "@/shared/permissions/mesa-ayuda-actions";
 
 const AttentionCreatePage = lazy(() =>
-  import(
-    "@/features/attention-create/pages/attention-create-page"
-  ).then((module) => ({
+  import("@/features/attention-create/pages/attention-create-page").then((module) => ({
     default: module.AttentionCreatePage,
   })),
 );
 
 const AttentionDetailPage = lazy(() =>
-  import(
-    "@/features/attentions/pages/attention-detail-page"
-  ).then((module) => ({
+  import("@/features/attentions/pages/attention-detail-page").then((module) => ({
     default: module.AttentionDetailPage,
   })),
 );
 
 const AttentionsPage = lazy(() =>
-  import(
-    "@/features/attentions/pages/attentions-page"
-  ).then((module) => ({
+  import("@/features/attentions/pages/attentions-page").then((module) => ({
     default: module.AttentionsPage,
   })),
 );
 
 const DashboardPage = lazy(() =>
-  import(
-    "@/features/dashboard/pages/dashboard-page"
-  ).then((module) => ({
+  import("@/features/dashboard/pages/dashboard-page").then((module) => ({
     default: module.DashboardPage,
   })),
 );
 
 const OrganizerPage = lazy(() =>
-  import(
-    "@/features/organizer/pages/organizer-page"
-  ).then((module) => ({
+  import("@/features/organizer/pages/organizer-page").then((module) => ({
     default: module.OrganizerPage,
   })),
 );
 
 const NotFoundPage = lazy(() =>
-  import(
-    "@/features/placeholders/pages/not-found-page"
-  ).then((module) => ({
+  import("@/features/placeholders/pages/not-found-page").then((module) => ({
     default: module.NotFoundPage,
   })),
 );
 
 const ProfilePage = lazy(() =>
-  import(
-    "@/features/profile/pages/profile-page"
-  ).then((module) => ({
+  import("@/features/profile/pages/profile-page").then((module) => ({
     default: module.ProfilePage,
   })),
 );
 
 const TrackingPage = lazy(() =>
-  import(
-    "@/features/tracking/pages/tracking-page"
-  ).then((module) => ({
+  import("@/features/tracking/pages/tracking-page").then((module) => ({
     default: module.TrackingPage,
   })),
 );
@@ -97,10 +81,7 @@ export const router = createBrowserRouter([
           {
             path: "dashboard",
             element: (
-              <ActionAccessGuard
-                action={MESA_AYUDA_ACTIONS.viewDashboard}
-                exact
-              >
+              <ActionAccessGuard action={MESA_AYUDA_ACTIONS.viewDashboard} exact>
                 <DeferredRoute>
                   <DashboardPage />
                 </DeferredRoute>
@@ -194,10 +175,7 @@ export const router = createBrowserRouter([
           {
             path: "mineria",
             element: (
-              <PlaceholderPage
-                title="Minería"
-                description="Módulo pendiente de maquetación."
-              />
+              <PlaceholderPage title="Minería" description="Módulo pendiente de maquetación." />
             ),
           },
         ],

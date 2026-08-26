@@ -4,10 +4,7 @@ import type {
   DashboardTemporalPoint,
 } from "@/features/dashboard/api/dashboard.contracts";
 import type { DashboardRepository } from "@/features/dashboard/api/dashboard.repository";
-import {
-  mesaAyudaRequest,
-  toSearchParams,
-} from "@/shared/api/mesa-ayuda-api-client";
+import { mesaAyudaRequest, toSearchParams } from "@/shared/api/mesa-ayuda-api-client";
 
 function query(values: Record<string, string | number | undefined>): string {
   return toSearchParams(values);
@@ -15,9 +12,7 @@ function query(values: Record<string, string | number | undefined>): string {
 
 export const httpDashboardRepository: DashboardRepository = {
   getSummary(params = {}) {
-    return mesaAyudaRequest<DashboardSummaryResponse>(
-      `/api/v1/dashboard/resumen${query(params)}`,
-    );
+    return mesaAyudaRequest<DashboardSummaryResponse>(`/api/v1/dashboard/resumen${query(params)}`);
   },
 
   getTemporalSeries(params = {}) {

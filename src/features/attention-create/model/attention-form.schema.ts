@@ -1,14 +1,18 @@
 import { z } from "zod";
 
-const optionalEmail = z.string().refine(
-  (value) => !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-  "Ingrese un correo electrónico válido.",
-);
+const optionalEmail = z
+  .string()
+  .refine(
+    (value) => !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+    "Ingrese un correo electrónico válido.",
+  );
 
-const optionalCatalogId = z.string().refine(
-  (value) => !value || Number.isInteger(Number(value)) && Number(value) > 0,
-  "Seleccione una opción válida.",
-);
+const optionalCatalogId = z
+  .string()
+  .refine(
+    (value) => !value || (Number.isInteger(Number(value)) && Number(value) > 0),
+    "Seleccione una opción válida.",
+  );
 
 function getTodayDateValue(): string {
   const now = new Date();
@@ -21,10 +25,7 @@ function getTodayDateValue(): string {
 
 const optionalAttentionDate = z
   .string()
-  .refine(
-    (value) => !value || /^\d{4}-\d{2}-\d{2}$/.test(value),
-    "Ingrese una fecha válida.",
-  )
+  .refine((value) => !value || /^\d{4}-\d{2}-\d{2}$/.test(value), "Ingrese una fecha válida.")
   .refine(
     (value) => !value || value <= getTodayDateValue(),
     "La fecha de atención no puede ser posterior a la fecha actual.",

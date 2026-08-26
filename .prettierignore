@@ -2,3 +2,6 @@ dist
 coverage
 playwright-report
 node_modules
+
+docs/contracts/**/*.json
+docs/archive/**

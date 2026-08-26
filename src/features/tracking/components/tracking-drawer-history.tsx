@@ -1,11 +1,7 @@
 import type { Attention } from "@/features/attentions/model/attention.types";
 import { Clock3, Info } from "lucide-react";
 
-export function TrackingDrawerHistory({
-  attention,
-}: {
-  attention: Attention;
-}) {
+export function TrackingDrawerHistory({ attention }: { attention: Attention }) {
   const timestamps = [
     {
       key: "created",
@@ -22,21 +18,17 @@ export function TrackingDrawerHistory({
   return (
     <div className="space-y-5 p-5 sm:p-6">
       <div>
-        <h3 className="text-base font-bold text-slate-900">
-          Historial de actualizaciones
-        </h3>
+        <h3 className="text-base font-bold text-slate-900">Historial de actualizaciones</h3>
         <p className="mt-1 text-sm leading-6 text-slate-500">
-          Se muestran únicamente las marcas temporales disponibles en el
-          contrato actual.
+          Se muestran únicamente las marcas temporales disponibles en el contrato actual.
         </p>
       </div>
 
       <div className="flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm leading-6 text-blue-700">
         <Info className="mt-1 h-4 w-4 shrink-0" />
         <p>
-          La API disponible no expone un endpoint público de auditoría
-          detallada. Por ello no se inventan autores, cambios de estatus ni
-          comentarios históricos.
+          La API disponible no expone un endpoint público de auditoría detallada. Por ello no se
+          inventan autores, cambios de estatus ni comentarios históricos.
         </p>
       </div>
 

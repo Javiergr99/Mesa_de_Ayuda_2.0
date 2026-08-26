@@ -18,17 +18,8 @@ import {
   ATTENTION_ATTACHMENT_ACCEPT,
   validateAttentionAttachment,
 } from "@/shared/files/attention-attachment.rules";
-import {
-  ClipboardCheck,
-  FileText,
-  MapPin,
-  UserRound,
-} from "lucide-react";
-import type {
-  Control,
-  FieldErrors,
-  UseFormRegister,
-} from "react-hook-form";
+import { ClipboardCheck, FileText, MapPin, UserRound } from "lucide-react";
+import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -51,15 +42,9 @@ function getTodayDateInputValue(): string {
   return `${year}-${month}-${day}`;
 }
 
-export function AttentionPersonSection({
-  register,
-  errors,
-}: FormFieldsProps) {
+export function AttentionPersonSection({ register, errors }: FormFieldsProps) {
   return (
-    <SectionCard
-      title="Datos de la persona"
-      icon={<UserRound className="h-4 w-4" />}
-    >
+    <SectionCard title="Datos de la persona" icon={<UserRound className="h-4 w-4" />}>
       <div className="grid gap-x-3.5 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
         <Input
           label="Nombre(s)"
@@ -106,10 +91,7 @@ export function AttentionDetailsSection({
   control: Control<AttentionFormValues>;
 }) {
   return (
-    <SectionCard
-      title="Datos de la atención"
-      icon={<MapPin className="h-4 w-4" />}
-    >
+    <SectionCard title="Datos de la atención" icon={<MapPin className="h-4 w-4" />}>
       <div className="grid gap-x-3.5 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
         <Controller
           control={control}
@@ -176,10 +158,7 @@ export function AttentionClassificationSection({
   userName: string;
 }) {
   return (
-    <SectionCard
-      title="Clasificación y asignación"
-      icon={<ClipboardCheck className="h-4 w-4" />}
-    >
+    <SectionCard title="Clasificación y asignación" icon={<ClipboardCheck className="h-4 w-4" />}>
       <div className="grid gap-x-3.5 gap-y-4 md:grid-cols-2">
         <Controller
           control={control}
@@ -232,15 +211,9 @@ function RegistryTypeSelector({
       name="registryTypeId"
       render={({ field }) => (
         <div>
-          <p className="mb-2 text-xs font-semibold text-slate-700">
-            Tipo de registro
-          </p>
+          <p className="mb-2 text-xs font-semibold text-slate-700">Tipo de registro</p>
 
-          <div
-            role="radiogroup"
-            aria-label="Tipo de registro"
-            className="flex flex-wrap gap-2"
-          >
+          <div role="radiogroup" aria-label="Tipo de registro" className="flex flex-wrap gap-2">
             {REGISTRY_TYPE_OPTIONS.map((option) => {
               const selected = field.value === option.value;
 
@@ -264,9 +237,7 @@ function RegistryTypeSelector({
                     aria-hidden="true"
                     className={[
                       "h-2.5 w-2.5 rounded-full border",
-                      selected
-                        ? "border-blue-600 bg-blue-600"
-                        : "border-slate-400 bg-transparent",
+                      selected ? "border-blue-600 bg-blue-600" : "border-slate-400 bg-transparent",
                     ].join(" ")}
                   />
                   {option.label}
@@ -276,9 +247,7 @@ function RegistryTypeSelector({
           </div>
 
           {errors.registryTypeId?.message ? (
-            <p className="mt-1.5 text-xs text-red-600">
-              {errors.registryTypeId.message}
-            </p>
+            <p className="mt-1.5 text-xs text-red-600">{errors.registryTypeId.message}</p>
           ) : null}
         </div>
       )}
@@ -300,10 +269,7 @@ export function AttentionObservationsSection({
   onFilesChange: (files: File[]) => void;
 }) {
   return (
-    <SectionCard
-      title="Detalles de la atención"
-      icon={<FileText className="h-4 w-4" />}
-    >
+    <SectionCard title="Detalles de la atención" icon={<FileText className="h-4 w-4" />}>
       <RegistryTypeSelector control={control} errors={errors} />
 
       <div className="mt-4">
@@ -317,9 +283,7 @@ export function AttentionObservationsSection({
       </div>
 
       <div className="mt-4">
-        <p className="mb-2 text-xs font-semibold text-slate-700">
-          Archivos adjuntos
-        </p>
+        <p className="mb-2 text-xs font-semibold text-slate-700">Archivos adjuntos</p>
 
         {canUploadFiles ? (
           <FileDropzone
@@ -336,8 +300,8 @@ export function AttentionObservationsSection({
           />
         ) : (
           <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-5 text-sm text-slate-500">
-            No tiene permisos para adjuntar archivos en esta atención. Puede
-            registrar la atención sin archivos.
+            No tiene permisos para adjuntar archivos en esta atención. Puede registrar la atención
+            sin archivos.
           </div>
         )}
       </div>

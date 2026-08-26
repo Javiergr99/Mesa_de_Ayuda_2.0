@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/ui/page-heading";
-import { AttentionCreateErrorDialog, type AttentionCreateFailureKind } from "@/features/attention-create/components/attention-create-error-dialog";
+import {
+  AttentionCreateErrorDialog,
+  type AttentionCreateFailureKind,
+} from "@/features/attention-create/components/attention-create-error-dialog";
 import {
   AttentionClassificationSection,
   AttentionDetailsSection,
@@ -54,11 +57,7 @@ async function uploadAttentionFiles(
         .then(() => null)
         .catch(
           (error: unknown) =>
-            `${file.name}: ${
-              error instanceof Error
-                ? error.message
-                : "no fue posible adjuntarlo"
-            }`,
+            `${file.name}: ${error instanceof Error ? error.message : "no fue posible adjuntarlo"}`,
         ),
     ),
   );
@@ -78,9 +77,7 @@ function getFailureKind(error: unknown): AttentionCreateFailureKind {
 
   if (
     error instanceof Error &&
-    /failed to fetch|network|conexi[oó]n|load failed|fetch failed/i.test(
-      error.message,
-    )
+    /failed to fetch|network|conexi[oó]n|load failed|fetch failed/i.test(error.message)
   ) {
     return "connection";
   }
@@ -93,16 +90,11 @@ export function AttentionCreatePage() {
   const createMutation = useCreateAttention();
   const uploadMutation = useUploadAttentionFile();
 
-  const canUploadFiles = sessionHasExactAction(
-    user,
-    MESA_AYUDA_ACTIONS.uploadLogFile,
-  );
+  const canUploadFiles = sessionHasExactAction(user, MESA_AYUDA_ACTIONS.uploadLogFile);
 
   const [files, setFiles] = useState<File[]>([]);
   const [successOpen, setSuccessOpen] = useState(false);
-  const [createdAttention, setCreatedAttention] = useState<Attention | null>(
-    null,
-  );
+  const [createdAttention, setCreatedAttention] = useState<Attention | null>(null);
   const [uploadWarnings, setUploadWarnings] = useState<string[]>([]);
   const [failure, setFailure] = useState<CreateFailure | null>(null);
 
@@ -134,14 +126,10 @@ export function AttentionCreatePage() {
     setUploadWarnings([]);
 
     try {
-      const created = await createMutation.mutateAsync(
-        mapAttentionFormToCreatePayload(values),
-      );
+      const created = await createMutation.mutateAsync(mapAttentionFormToCreatePayload(values));
 
-      const warnings = await uploadAttentionFiles(
-        created.id,
-        files,
-        (input) => uploadMutation.mutateAsync(input),
+      const warnings = await uploadAttentionFiles(created.id, files, (input) =>
+        uploadMutation.mutateAsync(input),
       );
 
       setCreatedAttention(created);
@@ -150,10 +138,7 @@ export function AttentionCreatePage() {
     } catch (error) {
       setFailure({
         kind: getFailureKind(error),
-        message:
-          error instanceof Error
-            ? error.message
-            : "No fue posible completar el registro.",
+        message: error instanceof Error ? error.message : "No fue posible completar el registro.",
       });
     }
   }
@@ -175,16 +160,14 @@ export function AttentionCreatePage() {
     void handleSubmit(onSubmit)();
   }
 
-  const busy =
-    isSubmitting || createMutation.isPending || uploadMutation.isPending;
+  const busy = isSubmitting || createMutation.isPending || uploadMutation.isPending;
 
   return (
     <div className="app-page pb-20">
       <PageHeading
         eyebrow={
           <>
-            <span>Dashboard</span>{" "}
-            <span className="px-1">›</span>{" "}
+            <span>Dashboard</span> <span className="px-1">›</span>{" "}
             <span className="text-blue-600">Registrar Atención</span>
           </>
         }
@@ -210,17 +193,9 @@ export function AttentionCreatePage() {
       >
         <AttentionPersonSection register={register} errors={errors} />
 
-        <AttentionDetailsSection
-          register={register}
-          control={control}
-          errors={errors}
-        />
+        <AttentionDetailsSection register={register} control={control} errors={errors} />
 
-        <AttentionClassificationSection
-          control={control}
-          errors={errors}
-          userName={userName}
-        />
+        <AttentionClassificationSection control={control} errors={errors} userName={userName} />
 
         <AttentionObservationsSection
           register={register}

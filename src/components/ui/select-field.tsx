@@ -26,9 +26,7 @@ type SelectFieldProps = {
 };
 
 function normalizeOption(option: SelectOptionInput): SelectOption {
-  return typeof option === "string"
-    ? { value: option, label: option }
-    : option;
+  return typeof option === "string" ? { value: option, label: option } : option;
 }
 
 export function SelectField({
@@ -37,7 +35,7 @@ export function SelectField({
   value = "",
   onValueChange,
   options = [],
-  placeholder = "Seleccione una opciÃ³n",
+  placeholder = "Seleccione una opción",
   error,
   disabled = false,
   className,
@@ -48,11 +46,7 @@ export function SelectField({
   const errorId = `${triggerId}-error`;
   const normalizedOptions = options.map(normalizeOption);
   const errorMessage =
-    typeof error === "string"
-      ? error
-      : error
-        ? "Seleccione una opciÃ³n vÃ¡lida."
-        : "";
+    typeof error === "string" ? error : error ? "Seleccione una opción válida." : "";
 
   return (
     <div className={cn("min-w-0", className)}>
@@ -65,11 +59,7 @@ export function SelectField({
         </label>
       ) : null}
 
-      <SelectPrimitive.Root
-        value={value}
-        onValueChange={onValueChange}
-        disabled={disabled}
-      >
+      <SelectPrimitive.Root value={value} onValueChange={onValueChange} disabled={disabled}>
         <SelectPrimitive.Trigger
           id={triggerId}
           aria-label={label ? undefined : placeholder}
@@ -106,8 +96,7 @@ export function SelectField({
             )}
             style={{
               width: "var(--radix-select-trigger-width)",
-              maxHeight:
-                "min(20rem, var(--radix-select-content-available-height))",
+              maxHeight: "min(20rem, var(--radix-select-content-available-height))",
             }}
           >
             <SelectPrimitive.ScrollUpButton className="flex h-8 shrink-0 cursor-default items-center justify-center border-b border-[var(--ui-border)] bg-[var(--ui-surface)] text-[var(--ui-text-secondary)]">
@@ -138,9 +127,7 @@ export function SelectField({
                     </SelectPrimitive.ItemIndicator>
                   </span>
 
-                  <SelectPrimitive.ItemText>
-                    {option.label}
-                  </SelectPrimitive.ItemText>
+                  <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
                 </SelectPrimitive.Item>
               ))}
             </SelectPrimitive.Viewport>
@@ -153,11 +140,7 @@ export function SelectField({
       </SelectPrimitive.Root>
 
       {errorMessage ? (
-        <p
-          id={errorId}
-          role="alert"
-          className="mt-1 text-xs text-red-600"
-        >
+        <p id={errorId} role="alert" className="mt-1 text-xs text-red-600">
           {errorMessage}
         </p>
       ) : null}

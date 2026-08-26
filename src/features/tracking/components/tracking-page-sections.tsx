@@ -60,11 +60,7 @@ export type TrackingFilterActions = {
   onApply: () => void;
 };
 
-export function TrackingSummaryCards({
-  summary,
-}: {
-  summary?: DashboardSummaryResponse;
-}) {
+export function TrackingSummaryCards({ summary }: { summary?: DashboardSummaryResponse }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
       <StatCard
@@ -135,9 +131,7 @@ export function TrackingStatusTabs({
             onClick={() => onChange(tab.value)}
             className={[
               "relative min-h-12 shrink-0 px-4 text-sm font-semibold transition-colors",
-              active
-                ? "text-blue-600"
-                : "text-slate-500 hover:text-slate-800",
+              active ? "text-blue-600" : "text-slate-500 hover:text-slate-800",
             ].join(" ")}
           >
             <span>{tab.label}</span>
@@ -234,8 +228,7 @@ export function TrackingFilters({
 
       <div className="mt-5 flex flex-col gap-3 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs font-semibold text-slate-500">
-          Filtros activos:{" "}
-          <span className="text-slate-800">{activeFilterCount}</span>
+          Filtros activos: <span className="text-slate-800">{activeFilterCount}</span>
         </p>
 
         <div className="flex flex-wrap justify-end gap-2">
@@ -306,10 +299,7 @@ export function TrackingTable({
               "Actualización",
               "Acción",
             ].map((label) => (
-              <th
-                key={label}
-                className="border-b border-slate-200 px-4 py-3"
-              >
+              <th key={label} className="border-b border-slate-200 px-4 py-3">
                 {label}
               </th>
             ))}
@@ -318,36 +308,21 @@ export function TrackingTable({
 
         <tbody>
           {attentions.map((attention) => (
-            <tr
-              key={attention.id}
-              className="group border-b border-slate-100 last:border-0"
-            >
+            <tr key={attention.id} className="group border-b border-slate-100 last:border-0">
               <td className="relative px-4 py-4 text-sm font-bold text-slate-900 before:absolute before:inset-y-2 before:left-0 before:w-[3px] before:scale-y-95 before:rounded-r before:bg-blue-600 before:opacity-0 before:transition-[transform,opacity] group-hover:text-blue-600 group-hover:before:scale-y-100 group-hover:before:opacity-100">
                 {attention.reference}
               </td>
               <td className="px-4 py-4">
-                <p className="text-sm font-semibold text-slate-800">
-                  {attention.requester}
-                </p>
-                <p className="max-w-48 truncate text-xs text-slate-400">
-                  {attention.email}
-                </p>
+                <p className="text-sm font-semibold text-slate-800">{attention.requester}</p>
+                <p className="max-w-48 truncate text-xs text-slate-400">{attention.email}</p>
               </td>
-              <td className="px-4 py-4 text-sm text-slate-700">
-                {attention.registry}
-              </td>
-              <td className="px-4 py-4 text-sm text-slate-700">
-                {attention.caseType}
-              </td>
+              <td className="px-4 py-4 text-sm text-slate-700">{attention.registry}</td>
+              <td className="px-4 py-4 text-sm text-slate-700">{attention.caseType}</td>
               <td className="px-4 py-4">
                 <StatusBadge status={attention.status} />
               </td>
-              <td className="px-4 py-4 text-sm text-slate-700">
-                {attention.entity}
-              </td>
-              <td className="px-4 py-4 text-sm text-slate-600">
-                {attention.updatedAt}
-              </td>
+              <td className="px-4 py-4 text-sm text-slate-700">{attention.entity}</td>
+              <td className="px-4 py-4 text-sm text-slate-600">{attention.updatedAt}</td>
               <td className="px-4 py-4">
                 <Tooltip content="Ver y actualizar seguimiento">
                   <Button
@@ -365,10 +340,7 @@ export function TrackingTable({
 
           {!isFetching && !attentions.length ? (
             <tr>
-              <td
-                colSpan={8}
-                className="px-4 py-10 text-center text-sm text-slate-500"
-              >
+              <td colSpan={8} className="px-4 py-10 text-center text-sm text-slate-500">
                 No hay registros que coincidan con los filtros.
               </td>
             </tr>

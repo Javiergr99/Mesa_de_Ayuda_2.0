@@ -1,12 +1,5 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import {
-  Activity,
-  Bell,
-  ChevronDown,
-  LogOut,
-  ShieldCheck,
-  UserRound,
-} from "lucide-react";
+import { Activity, Bell, ChevronDown, LogOut, ShieldCheck, UserRound } from "lucide-react";
 import { Link, NavLink } from "react-router";
 
 import { useAuthStore } from "@/features/auth/model/auth.store";
@@ -27,7 +20,10 @@ export function AppHeader() {
   const initials = getUserInitials(user);
   return (
     <header className="fixed inset-x-0 top-0 z-40 flex h-[var(--header-height)] items-center border-b border-[var(--ui-border)] bg-[var(--ui-header)] px-6">
-      <Link to="/app/dashboard" className="flex w-[calc(var(--sidebar-expanded-width)-24px)] shrink-0 items-center gap-3">
+      <Link
+        to="/app/dashboard"
+        className="flex w-[calc(var(--sidebar-expanded-width)-24px)] shrink-0 items-center gap-3"
+      >
         <span className="grid h-9 w-9 place-items-center rounded-lg bg-[var(--ui-primary)] text-white shadow-sm">
           <Activity className="h-5 w-5" />
         </span>
@@ -37,10 +33,12 @@ export function AppHeader() {
         </span>
       </Link>
 
-      <nav className="flex flex-1 items-center justify-center gap-6" aria-label="Navegación superior">
+      <nav
+        className="flex flex-1 items-center justify-center gap-6"
+        aria-label="Navegación superior"
+      >
         {topNavigation.map((item) => {
-          const external =
-            "external" in item && item.external === true;
+          const external = "external" in item && item.external === true;
 
           if (external || item.to.startsWith("#")) {
             return (
@@ -73,20 +71,30 @@ export function AppHeader() {
 
       <div className="flex min-w-[340px] items-center justify-end gap-3">
         <AccessHubButton />
-        <button className="focus-ring grid h-9 w-9 place-items-center rounded-full bg-slate-50 text-slate-500 hover:bg-slate-100" aria-label="Notificaciones">
+        <button
+          className="focus-ring grid h-9 w-9 place-items-center rounded-full bg-slate-50 text-slate-500 hover:bg-slate-100"
+          aria-label="Notificaciones"
+        >
           <Bell className="h-4.5 w-4.5" />
         </button>
         <span className="h-8 w-px bg-[var(--ui-border)]" />
 
         <DropdownMenu.Root modal={false}>
           <DropdownMenu.Trigger asChild>
-            <button className="focus-ring flex items-center gap-3 rounded-lg px-1 py-1 text-left hover:bg-slate-50" aria-label="Abrir opciones del perfil">
+            <button
+              className="focus-ring flex items-center gap-3 rounded-lg px-1 py-1 text-left hover:bg-slate-50"
+              aria-label="Abrir opciones del perfil"
+            >
               <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-amber-100 to-blue-100 text-xs font-bold text-slate-700 ring-2 ring-white shadow-sm">
                 {initials}
               </span>
               <span className="max-w-[180px] leading-tight">
-                <strong className="block truncate text-sm text-[var(--ui-text-primary)]">{displayName}</strong>
-                <span className="block truncate text-xs text-[var(--ui-text-secondary)]">{roleLabel}</span>
+                <strong className="block truncate text-sm text-[var(--ui-text-primary)]">
+                  {displayName}
+                </strong>
+                <span className="block truncate text-xs text-[var(--ui-text-secondary)]">
+                  {roleLabel}
+                </span>
               </span>
               <ChevronDown className="h-4 w-4 text-slate-400" />
             </button>
@@ -99,8 +107,12 @@ export function AppHeader() {
               className="profile-menu-content z-50 min-w-72 origin-top-right rounded-xl border border-[var(--ui-border)] bg-[var(--ui-surface)] p-2 shadow-xl"
             >
               <div className="px-3 py-2">
-                <p className="truncate text-sm font-bold text-[var(--ui-text-primary)]">{displayName}</p>
-                <p className="mt-0.5 truncate text-xs text-[var(--ui-text-secondary)]">{user?.correo_electronico}</p>
+                <p className="truncate text-sm font-bold text-[var(--ui-text-primary)]">
+                  {displayName}
+                </p>
+                <p className="mt-0.5 truncate text-xs text-[var(--ui-text-secondary)]">
+                  {user?.correo_electronico}
+                </p>
               </div>
               <DropdownMenu.Separator className="my-1 h-px bg-[var(--ui-border)]" />
               <DropdownMenu.Item asChild>

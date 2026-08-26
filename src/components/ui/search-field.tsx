@@ -18,7 +18,11 @@ export function SearchField({
 }) {
   return (
     <label className={cn("block min-w-0", className)}>
-      {label ? <span className="mb-1.5 block text-xs font-semibold text-[var(--ui-text-secondary)]">{label}</span> : null}
+      {label ? (
+        <span className="mb-1.5 block text-xs font-semibold text-[var(--ui-text-secondary)]">
+          {label}
+        </span>
+      ) : null}
       <span className="relative block">
         <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--ui-text-secondary)]" />
         <input

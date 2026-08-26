@@ -10,19 +10,13 @@ describe("attention attachment rules", () => {
 
   it("rechaza imágenes fuera del contrato", () => {
     const file = new File(["image"], "captura.png", { type: "image/png" });
-    expect(validateAttentionAttachment(file)).toEqual(
-      expect.objectContaining({ valid: false }),
-    );
+    expect(validateAttentionAttachment(file)).toEqual(expect.objectContaining({ valid: false }));
   });
 
   it("rechaza archivos superiores a 20 MB", () => {
-    const file = new File(
-      [new Uint8Array(20 * 1024 * 1024 + 1)],
-      "evidencia.pdf",
-      { type: "application/pdf" },
-    );
-    expect(validateAttentionAttachment(file)).toEqual(
-      expect.objectContaining({ valid: false }),
-    );
+    const file = new File([new Uint8Array(20 * 1024 * 1024 + 1)], "evidencia.pdf", {
+      type: "application/pdf",
+    });
+    expect(validateAttentionAttachment(file)).toEqual(expect.objectContaining({ valid: false }));
   });
 });

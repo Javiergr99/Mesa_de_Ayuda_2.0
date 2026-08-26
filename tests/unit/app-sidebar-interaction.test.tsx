@@ -5,9 +5,7 @@ import { vi } from "vitest";
 
 import { AppSidebar } from "@/components/layout/app-sidebar";
 
-function renderSidebar(
-  props: Partial<ComponentProps<typeof AppSidebar>> = {},
-) {
+function renderSidebar(props: Partial<ComponentProps<typeof AppSidebar>> = {}) {
   return render(
     <MemoryRouter initialEntries={["/app/organizador"]}>
       <AppSidebar expanded {...props} />

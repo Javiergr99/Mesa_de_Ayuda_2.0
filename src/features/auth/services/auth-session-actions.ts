@@ -15,9 +15,7 @@ export type SessionMessage = {
  * Cierra la sesión remota y garantiza la limpieza local aun cuando el backend
  * no pueda completar el logout.
  */
-export async function logoutCurrentSession(
-  reason: SessionMessage["reason"] = "manual",
-) {
+export async function logoutCurrentSession(reason: SessionMessage["reason"] = "manual") {
   try {
     await authService.logout();
   } catch {

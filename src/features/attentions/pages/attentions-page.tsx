@@ -1,12 +1,5 @@
 import { useMemo, useState } from "react";
-import {
-  ClipboardList,
-  Download,
-  Plus,
-  RefreshCw,
-  SearchX,
-  XCircle,
-} from "lucide-react";
+import { ClipboardList, Download, Plus, RefreshCw, SearchX, XCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 
 import { Button } from "@/components/ui/button";
@@ -99,27 +92,18 @@ export function AttentionsPage() {
   const [draftFilters, setDraftFilters] = useState<AttentionsFilterState>({
     ...EMPTY_ATTENTIONS_FILTERS,
   });
-  const [appliedFilters, setAppliedFilters] =
-    useState<AttentionsFilterState>({
-      ...EMPTY_ATTENTIONS_FILTERS,
-    });
+  const [appliedFilters, setAppliedFilters] = useState<AttentionsFilterState>({
+    ...EMPTY_ATTENTIONS_FILTERS,
+  });
   const [page, setPage] = useState(1);
 
   const params = useMemo(
     () => ({
       nombre: appliedFilters.query.trim() || undefined,
-      tipo_registro_id: appliedFilters.registryId
-        ? Number(appliedFilters.registryId)
-        : undefined,
-      estatus_id: appliedFilters.statusId
-        ? Number(appliedFilters.statusId)
-        : undefined,
-      entidad_federativa_id: appliedFilters.entityId
-        ? Number(appliedFilters.entityId)
-        : undefined,
-      tipo_caso_id: appliedFilters.caseTypeId
-        ? Number(appliedFilters.caseTypeId)
-        : undefined,
+      tipo_registro_id: appliedFilters.registryId ? Number(appliedFilters.registryId) : undefined,
+      estatus_id: appliedFilters.statusId ? Number(appliedFilters.statusId) : undefined,
+      entidad_federativa_id: appliedFilters.entityId ? Number(appliedFilters.entityId) : undefined,
+      tipo_caso_id: appliedFilters.caseTypeId ? Number(appliedFilters.caseTypeId) : undefined,
       fecha_inicio: appliedFilters.startDate || undefined,
       fecha_fin: appliedFilters.endDate || undefined,
       pagina: page,
@@ -141,10 +125,7 @@ export function AttentionsPage() {
     });
   }
 
-  function updateDraftFilter(
-    key: AttentionsFilterKey,
-    value: string,
-  ) {
+  function updateDraftFilter(key: AttentionsFilterKey, value: string) {
     setDraftFilters((current) => ({
       ...current,
       [key]: value,
@@ -174,17 +155,13 @@ export function AttentionsPage() {
     setPage(1);
   }
 
-  const activeFilterChips = buildAttentionFilterChips(
-    appliedFilters,
-    removeFilter,
-  );
+  const activeFilterChips = buildAttentionFilterChips(appliedFilters, removeFilter);
 
   const heading = (
     <PageHeading
       eyebrow={
         <>
-          <span>Dashboard</span>{" "}
-          <span className="px-1">›</span>{" "}
+          <span>Dashboard</span> <span className="px-1">›</span>{" "}
           <span className="text-blue-600">Atenciones</span>
         </>
       }
@@ -246,10 +223,7 @@ export function AttentionsPage() {
     <div className="app-page">
       {heading}
 
-      <AttentionsSummaryCards
-        summary={summaryQuery.data}
-        fallbackTotal={total}
-      />
+      <AttentionsSummaryCards summary={summaryQuery.data} fallbackTotal={total} />
 
       <AttentionsFilters
         filters={draftFilters}
@@ -304,15 +278,9 @@ export function AttentionsPage() {
           />
 
           {view === "table" ? (
-            <AttentionTable
-              attentions={attentions}
-              onView={openAttention}
-            />
+            <AttentionTable attentions={attentions} onView={openAttention} />
           ) : (
-            <AttentionBoard
-              attentions={attentions}
-              onView={openAttention}
-            />
+            <AttentionBoard attentions={attentions} onView={openAttention} />
           )}
 
           <DataTablePagination

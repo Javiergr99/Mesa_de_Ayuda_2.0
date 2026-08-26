@@ -1,8 +1,4 @@
-import {
-  Activity,
-  Gauge,
-  MapPinned,
-} from "lucide-react";
+import { Activity, Gauge, MapPinned } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import type {
@@ -18,13 +14,7 @@ import {
   rankTotal,
 } from "@/features/dashboard/lib/dashboard-display.utils";
 
-function PanelHeader({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+function PanelHeader({ title, description }: { title: string; description: string }) {
   return (
     <div>
       <h2 className="text-[14px] font-bold text-slate-900">{title}</h2>
@@ -60,9 +50,7 @@ export function DashboardTerritorialActivity({
           {entities.map((entity) => (
             <div key={entity.id}>
               <div className="mb-1.5 flex items-center justify-between gap-4 text-[11px]">
-                <span className="min-w-0 truncate font-medium text-slate-700">
-                  {entity.label}
-                </span>
+                <span className="min-w-0 truncate font-medium text-slate-700">{entity.label}</span>
                 <span className="shrink-0 font-bold text-slate-900">
                   {formatDashboardNumber(entity.total)}
                 </span>
@@ -86,13 +74,7 @@ export function DashboardTerritorialActivity({
   );
 }
 
-function IndicatorTextRow({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
+function IndicatorTextRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between gap-4 border-b border-slate-100 pb-3 last:border-0 last:pb-0">
       <span className="min-w-0 text-[11px] text-slate-600">{label}</span>
@@ -103,20 +85,14 @@ function IndicatorTextRow({
   );
 }
 
-function IndicatorProgress({
-  value,
-}: {
-  value: number | null | undefined;
-}) {
+function IndicatorProgress({ value }: { value: number | null | undefined }) {
   const safe = Math.min(100, Math.max(0, Number(value ?? 0)));
 
   return (
     <div>
       <div className="mb-1.5 flex items-center justify-between gap-3 text-[11px]">
         <span className="font-medium text-slate-700">Porcentaje de finalización</span>
-        <span className="font-bold text-slate-900">
-          {formatDashboardPercent(value)}
-        </span>
+        <span className="font-bold text-slate-900">{formatDashboardPercent(value)}</span>
       </div>
       <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
         <div className="h-full rounded-full bg-emerald-500" style={{ width: `${safe}%` }} />
@@ -136,10 +112,7 @@ function MiniMetric({
   label: string;
   tone: "blue" | "violet";
 }) {
-  const toneClasses =
-    tone === "blue"
-      ? "bg-blue-50 text-blue-700"
-      : "bg-violet-50 text-violet-700";
+  const toneClasses = tone === "blue" ? "bg-blue-50 text-blue-700" : "bg-violet-50 text-violet-700";
 
   return (
     <div className="flex min-h-[64px] items-center gap-3 rounded-lg bg-slate-50 px-3 py-2.5">
@@ -195,9 +168,7 @@ export function DashboardOperationalIndicators({
               />
               <IndicatorTextRow
                 label="Estado más activo"
-                value={rankLabel(
-                  summary?.estado_mas_activo ?? entities?.estado_mas_activo,
-                )}
+                value={rankLabel(summary?.estado_mas_activo ?? entities?.estado_mas_activo)}
               />
             </div>
           </div>

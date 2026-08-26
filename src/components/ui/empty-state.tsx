@@ -44,25 +44,13 @@ export function EmptyState({
 
   return (
     <div
-      className={cn(
-        "flex flex-col items-center justify-center text-center",
-        sizes.root,
-        className,
-      )}
+      className={cn("flex flex-col items-center justify-center text-center", sizes.root, className)}
     >
-      <span
-        className={cn(
-          "grid place-items-center",
-          sizes.icon,
-          toneClasses[tone],
-        )}
-      >
+      <span className={cn("grid place-items-center", sizes.icon, toneClasses[tone])}>
         <Icon className={sizes.glyph} aria-hidden="true" />
       </span>
 
-      <h3 className="mt-5 text-lg font-bold text-[var(--ui-text-primary)]">
-        {title}
-      </h3>
+      <h3 className="mt-5 text-lg font-bold text-[var(--ui-text-primary)]">{title}</h3>
 
       <p className="mt-1.5 max-w-xl text-sm leading-6 text-[var(--ui-text-secondary)]">
         {description}

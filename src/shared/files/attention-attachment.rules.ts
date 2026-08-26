@@ -9,9 +9,7 @@ export const ATTENTION_ATTACHMENT_EXTENSIONS = [
   ".eml",
 ] as const;
 
-export type AttachmentValidationResult =
-  | { valid: true }
-  | { valid: false; message: string };
+export type AttachmentValidationResult = { valid: true } | { valid: false; message: string };
 
 function extensionOf(name: string): string {
   const index = name.lastIndexOf(".");
@@ -20,7 +18,11 @@ function extensionOf(name: string): string {
 
 export function validateAttentionAttachment(file: File): AttachmentValidationResult {
   const extension = extensionOf(file.name);
-  if (!ATTENTION_ATTACHMENT_EXTENSIONS.includes(extension as (typeof ATTENTION_ATTACHMENT_EXTENSIONS)[number])) {
+  if (
+    !ATTENTION_ATTACHMENT_EXTENSIONS.includes(
+      extension as (typeof ATTENTION_ATTACHMENT_EXTENSIONS)[number],
+    )
+  ) {
     return {
       valid: false,
       message: `“${file.name}” no tiene una extensión permitida.`,

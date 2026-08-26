@@ -96,16 +96,7 @@ export function TrackingPage() {
       pagina: page,
       limite: 25,
     }),
-    [
-      caseTypeId,
-      endDate,
-      entityId,
-      page,
-      query,
-      registryId,
-      startDate,
-      statusId,
-    ],
+    [caseTypeId, endDate, entityId, page, query, registryId, startDate, statusId],
   );
 
   const { data, isFetching, error, refetch } = useAttentions(params);
@@ -114,15 +105,8 @@ export function TrackingPage() {
   const attentions = data?.items ?? [];
 
   const activeFilterCount =
-    [
-      registryId,
-      caseTypeId,
-      entityId,
-      statusId,
-      startDate,
-      endDate,
-    ].filter(Boolean).length + (query.trim() ? 1 : 0);
-
+    [registryId, caseTypeId, entityId, statusId, startDate, endDate].filter(Boolean).length +
+    (query.trim() ? 1 : 0);
 
   function clearFilters() {
     setQuery("");
@@ -140,8 +124,7 @@ export function TrackingPage() {
       <PageHeading
         eyebrow={
           <>
-            <span>Dashboard</span>{" "}
-            <span className="px-1">›</span>{" "}
+            <span>Dashboard</span> <span className="px-1">›</span>{" "}
             <span className="text-blue-600">Seguimiento</span>
           </>
         }
@@ -158,14 +141,8 @@ export function TrackingPage() {
               Exportar
             </Button>
 
-            <Button
-              variant="secondary"
-              onClick={() => void refetch()}
-              disabled={isFetching}
-            >
-              <RefreshCw
-                className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`}
-              />
+            <Button variant="secondary" onClick={() => void refetch()} disabled={isFetching}>
+              <RefreshCw className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`} />
               Actualizar listado
             </Button>
           </div>
@@ -231,9 +208,7 @@ export function TrackingPage() {
 
       {error ? (
         <Card className="border-red-200 bg-red-50 p-4 text-sm text-red-700">
-          {error instanceof Error
-            ? error.message
-            : "No fue posible consultar el seguimiento."}
+          {error instanceof Error ? error.message : "No fue posible consultar el seguimiento."}
         </Card>
       ) : null}
 
@@ -243,11 +218,7 @@ export function TrackingPage() {
         isFetching={isFetching}
       />
 
-      <TrackingTable
-        attentions={attentions}
-        isFetching={isFetching}
-        onView={setSelected}
-      />
+      <TrackingTable attentions={attentions} isFetching={isFetching} onView={setSelected} />
 
       <DataTablePagination
         page={data?.pagina ?? page}

@@ -15,9 +15,7 @@ export function PageHeading({
     <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
       <div className="min-w-0">
         {eyebrow ? (
-          <div className="mb-1.5 text-xs text-[var(--ui-text-secondary)]">
-            {eyebrow}
-          </div>
+          <div className="mb-1.5 text-xs text-[var(--ui-text-secondary)]">{eyebrow}</div>
         ) : null}
 
         <h1 className="text-[22px] font-bold tracking-tight text-[var(--ui-text-primary)] sm:text-2xl">
@@ -31,11 +29,7 @@ export function PageHeading({
         ) : null}
       </div>
 
-      {actions ? (
-        <div className="flex shrink-0 flex-wrap items-center gap-2">
-          {actions}
-        </div>
-      ) : null}
+      {actions ? <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div> : null}
     </div>
   );
 }

@@ -4,17 +4,17 @@ Esta implementación alinea el frontend con el contrato técnico/funcional recib
 
 ## Separación de servicios
 
-- `auth_service`: `http://127.0.0.1:8000`
+- `auth_service`: `http://127.0.0.1:8001`
 - Frontend Mesa de Ayuda: `http://127.0.0.1:5173`
-- API Mesa de Ayuda: `http://127.0.0.1:8002`
+- API Mesa de Ayuda: `http://127.0.0.1:8000`
 
-En desarrollo, el frontend usa `/mesa-api` y el proxy de Vite lo dirige a `8002`. Esto evita depender de CORS mientras la API documentada todavía no lo configure.
+En desarrollo, el frontend usa `/mesa-api` y el proxy de Vite lo dirige a `8000`. Esto evita depender de CORS mientras la API documentada todavía no lo configure.
 
 Variables:
 
 ```env
 VITE_MESA_AYUDA_API_URL=/mesa-api
-VITE_MESA_AYUDA_API_PROXY_TARGET=http://127.0.0.1:8002
+VITE_MESA_AYUDA_API_PROXY_TARGET=http://127.0.0.1:8000
 ```
 
 ## Cliente HTTP
@@ -121,7 +121,7 @@ cd api_mesadeayuda
 uv sync
 uv run alembic upgrade head
 uv run python seed.py
-uv run uvicorn app.main:app --reload --port 8002
+uv run uvicorn app.main:app --reload --port 8000
 ```
 
 Frontend:
@@ -131,4 +131,4 @@ cd mesa_de_ayuda
 npm run dev -- --port 5173 --force
 ```
 
-El proxy de Vite enviará `/mesa-api/*` a `127.0.0.1:8002`.
+El proxy de Vite enviará `/mesa-api/*` a `127.0.0.1:8000`.

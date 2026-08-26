@@ -33,30 +33,30 @@ La implementación vigente emite el error en el nivel superior, no dentro de `de
 
 ## Estatus oficiales
 
-| ID | Nombre | Permite login |
-|---:|---|:---:|
-| 1 | Activo | Sí |
-| 2 | En Proceso | No |
-| 3 | Inactivo | No |
-| 4 | Intentos en exceso sesión | No |
+|  ID | Nombre                    | Permite login |
+| --: | ------------------------- | :-----------: |
+|   1 | Activo                    |      Sí       |
+|   2 | En Proceso                |      No       |
+|   3 | Inactivo                  |      No       |
+|   4 | Intentos en exceso sesión |      No       |
 
 ## Acciones por operación
 
-| Operación | Acción requerida |
-|---|---|
-| Listar usuarios | `VER_USUARIOS` |
-| Ver detalle | `VER_USUARIO_DETALLE` |
-| Crear usuario | `CREAR_USUARIO` |
-| Editar usuario | `ACTUALIZAR_USUARIO` |
-| Cambiar estatus | `ACTUALIZAR_USUARIO` |
-| Reenviar activación | `ACTUALIZAR_USUARIO` |
-| Enviar recuperación | `ACTUALIZAR_USUARIO` |
+| Operación                  | Acción requerida           |
+| -------------------------- | -------------------------- |
+| Listar usuarios            | `VER_USUARIOS`             |
+| Ver detalle                | `VER_USUARIO_DETALLE`      |
+| Crear usuario              | `CREAR_USUARIO`            |
+| Editar usuario             | `ACTUALIZAR_USUARIO`       |
+| Cambiar estatus            | `ACTUALIZAR_USUARIO`       |
+| Reenviar activación        | `ACTUALIZAR_USUARIO`       |
+| Enviar recuperación        | `ACTUALIZAR_USUARIO`       |
 | Asignar permisos iniciales | `ASIGNAR_ACCIONES_USUARIO` |
-| Agregar grupo | `ASIGNAR_GRUPOS_USUARIO` |
-| Agregar módulo | `ASIGNAR_MODULOS_USUARIO` |
-| Agregar acción | `ASIGNAR_ACCIONES_USUARIO` |
-| Retirar grupo | `QUITAR_GRUPOS_USUARIO` |
-| Retirar módulo | `QUITAR_MODULOS_USUARIO` |
-| Retirar acción | `QUITAR_ACCIONES_USUARIO` |
+| Agregar grupo              | `ASIGNAR_GRUPOS_USUARIO`   |
+| Agregar módulo             | `ASIGNAR_MODULOS_USUARIO`  |
+| Agregar acción             | `ASIGNAR_ACCIONES_USUARIO` |
+| Retirar grupo              | `QUITAR_GRUPOS_USUARIO`    |
+| Retirar módulo             | `QUITAR_MODULOS_USUARIO`   |
+| Retirar acción             | `QUITAR_ACCIONES_USUARIO`  |
 
 El alcance administrativo vigente se calcula por grupos. `SUPER_ADMIN` omite el alcance ordinario; los demás actores administran grupos donde poseen `ADMINISTRAR_USUARIOS`.

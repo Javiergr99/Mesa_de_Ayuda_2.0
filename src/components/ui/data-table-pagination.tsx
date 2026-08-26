@@ -25,14 +25,21 @@ export function DataTablePagination({
         Mostrando {first}–{last} de {totalItems.toLocaleString("es-MX")} resultados
       </p>
       <div className="flex flex-wrap items-center gap-2">
-        <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => onPageChange(page - 1)}>
+        <Button
+          variant="secondary"
+          size="sm"
+          disabled={page <= 1}
+          onClick={() => onPageChange(page - 1)}
+        >
           Anterior
         </Button>
         {pages.map((item, index) => {
           const previous = pages[index - 1];
           return (
             <span key={item} className="contents">
-              {previous && item - previous > 1 ? <span className="px-1 text-sm text-slate-400">…</span> : null}
+              {previous && item - previous > 1 ? (
+                <span className="px-1 text-sm text-slate-400">…</span>
+              ) : null}
               <Button
                 variant={item === page ? "primary" : "secondary"}
                 size="sm"
@@ -45,7 +52,12 @@ export function DataTablePagination({
             </span>
           );
         })}
-        <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => onPageChange(page + 1)}>
+        <Button
+          variant="secondary"
+          size="sm"
+          disabled={page >= totalPages}
+          onClick={() => onPageChange(page + 1)}
+        >
           Siguiente
         </Button>
       </div>

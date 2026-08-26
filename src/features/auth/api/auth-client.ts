@@ -1,14 +1,9 @@
-import type {
-  ApiErrorPayload,
-  TokenResponse,
-} from "@/features/auth/api/auth.contracts";
+import type { ApiErrorPayload, TokenResponse } from "@/features/auth/api/auth.contracts";
 import { authTokenStorage } from "@/features/auth/services/token-storage";
 
-const API_URL =
-  import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
+const API_URL = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
 
-export const AUTH_SESSION_EXPIRED_EVENT =
-  "mesa-ayuda:session-expired";
+export const AUTH_SESSION_EXPIRED_EVENT = "mesa-ayuda:session-expired";
 
 export class AuthApiError extends Error {
   readonly status: number;
@@ -17,23 +12,19 @@ export class AuthApiError extends Error {
 
   constructor(status: number, payload: ApiErrorPayload | null) {
     const nested =
-      payload?.detail &&
-      typeof payload.detail === "object" &&
-      !Array.isArray(payload.detail)
+      payload?.detail && typeof payload.detail === "object" && !Array.isArray(payload.detail)
         ? payload.detail
         : null;
 
     const detail =
       typeof payload?.detail === "string"
         ? payload.detail
-        : nested?.detail ??
-          "No fue posible completar la solicitud.";
+        : (nested?.detail ?? "No fue posible completar la solicitud.");
 
     super(detail);
     this.name = "AuthApiError";
     this.status = status;
-    this.code =
-      payload?.code ?? nested?.code ?? `HTTP_${status}`;
+    this.code = payload?.code ?? nested?.code ?? `HTTP_${status}`;
     this.fieldErrors = payload?.field_errors;
   }
 }
@@ -45,24 +36,19 @@ type AuthRequestOptions = {
 
 let refreshPromise: Promise<TokenResponse> | null = null;
 
-async function parseResponse<T>(
-  response: Response,
-): Promise<T> {
+async function parseResponse<T>(response: Response): Promise<T> {
   if (response.status === 204) return undefined as T;
 
   return (await response.json().catch(() => null)) as T;
 }
 
-async function parseApiError(
-  response: Response,
-): Promise<ApiErrorPayload | null> {
+async function parseApiError(response: Response): Promise<ApiErrorPayload | null> {
   return parseResponse<ApiErrorPayload | null>(response);
 }
 
 function rememberSessionHeader(): HeadersInit {
   return {
-    "X-Remember-Session":
-      authTokenStorage.getPersistence() === "persistent" ? "true" : "false",
+    "X-Remember-Session": authTokenStorage.getPersistence() === "persistent" ? "true" : "false",
   };
 }
 
@@ -108,10 +94,7 @@ export async function authRequest<T>(
   init: RequestInit = {},
   options: AuthRequestOptions = {},
 ): Promise<T> {
-  const {
-    authenticated = true,
-    retryOnUnauthorized = true,
-  } = options;
+  const { authenticated = true, retryOnUnauthorized = true } = options;
 
   const accessToken = authTokenStorage.getAccessToken();
   const headers = new Headers(init.headers);
@@ -145,9 +128,7 @@ export async function authRequest<T>(
       });
     } catch {
       authTokenStorage.clear();
-      window.dispatchEvent(
-        new CustomEvent(AUTH_SESSION_EXPIRED_EVENT),
-      );
+      window.dispatchEvent(new CustomEvent(AUTH_SESSION_EXPIRED_EVENT));
     }
   }
 

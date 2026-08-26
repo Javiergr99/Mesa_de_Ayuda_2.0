@@ -13,7 +13,11 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
 ) {
   return (
     <label className="block" htmlFor={id}>
-      {label ? <span className="mb-1.5 block text-xs font-semibold text-[var(--ui-text-secondary)]">{label}</span> : null}
+      {label ? (
+        <span className="mb-1.5 block text-xs font-semibold text-[var(--ui-text-secondary)]">
+          {label}
+        </span>
+      ) : null}
       <textarea
         ref={ref}
         id={id}
@@ -25,7 +29,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
         {...props}
       />
       {error ? <span className="mt-1 block text-xs text-[var(--ui-danger)]">{error}</span> : null}
-      {!error && hint ? <span className="mt-1 block text-xs text-[var(--ui-text-secondary)]">{hint}</span> : null}
+      {!error && hint ? (
+        <span className="mt-1 block text-xs text-[var(--ui-text-secondary)]">{hint}</span>
+      ) : null}
     </label>
   );
 });

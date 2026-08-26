@@ -13,11 +13,6 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./tests/setup.ts"],
     globals: true,
-    exclude: [
-      "tests/e2e/**",
-      ".patch-backups/**",
-      "node_modules/**",
-      "dist/**",
-    ],
+    exclude: ["tests/e2e/**", ".patch-backups/**", "node_modules/**", "dist/**"],
   },
 });

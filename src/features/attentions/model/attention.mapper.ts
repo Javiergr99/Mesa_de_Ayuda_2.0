@@ -21,9 +21,11 @@ const ATTENTION_DATE_TIME_FORMATTER = new Intl.DateTimeFormat("es-MX", {
 });
 
 function fullName(record: BitacoraApiRecord): string {
-  return [record.nombre, record.primer_apellido, record.segundo_apellido]
-    .filter((value): value is string => Boolean(value?.trim()))
-    .join(" ") || "Sin nombre";
+  return (
+    [record.nombre, record.primer_apellido, record.segundo_apellido]
+      .filter((value): value is string => Boolean(value?.trim()))
+      .join(" ") || "Sin nombre"
+  );
 }
 
 function formatDateTime(value?: string | null): string {
@@ -57,7 +59,12 @@ function labelFromCatalog(
   id: number | null | undefined,
   prefix: string,
 ): string {
-  return relation?.nombre?.trim() || relation?.clave?.trim() || fallback || (id ? `${prefix} #${id}` : "—");
+  return (
+    relation?.nombre?.trim() ||
+    relation?.clave?.trim() ||
+    fallback ||
+    (id ? `${prefix} #${id}` : "—")
+  );
 }
 
 function shortReference(id: string): string {
@@ -89,9 +96,7 @@ export function mapBitacoraToAttention(record: BitacoraApiRecord): Attention {
     entityId: record.entidad_federativa_id ?? null,
     entity: labelFromCatalog(
       record.entidad_federativa,
-      record.entidad_federativa_id
-        ? getFederalEntityName(record.entidad_federativa_id)
-        : null,
+      record.entidad_federativa_id ? getFederalEntityName(record.entidad_federativa_id) : null,
       record.entidad_federativa_id,
       "Entidad",
     ),
@@ -120,25 +125,14 @@ export function mapArchivoToAttentionFile(file: BitacoraArchivoApi): AttentionFi
   const fileId = file.archivo_id ?? file.id;
 
   if (!fileId) {
-    throw new Error(
-      "La API devolvio un archivo sin archivo_id.",
-    );
+    throw new Error("La API devolvio un archivo sin archivo_id.");
   }
 
   return {
     id: fileId,
-    name:
-      file.nombre_original ??
-      file.nombre ??
-      `Archivo ${fileId.slice(0, 8)}`,
-    size: formatBytes(
-      file.tamanio_bytes ??
-        file.tamano_bytes ??
-        file.size,
-    ),
-    date: formatDateTime(
-      file.created_at ?? file.fecha_creacion,
-    ),
+    name: file.nombre_original ?? file.nombre ?? `Archivo ${fileId.slice(0, 8)}`,
+    size: formatBytes(file.tamanio_bytes ?? file.tamano_bytes ?? file.size),
+    date: formatDateTime(file.created_at ?? file.fecha_creacion),
     isEmail: Boolean(file.es_correo_msg),
   };
 }

@@ -14,16 +14,14 @@ function getErrorPresentation(error: unknown): ErrorPresentation {
     if (error.status === 404) {
       return {
         title: "Página no disponible",
-        description:
-          "La sección solicitada no existe o ya no se encuentra disponible.",
+        description: "La sección solicitada no existe o ya no se encuentra disponible.",
       };
     }
 
     if (error.status === 403) {
       return {
         title: "Acceso no disponible",
-        description:
-          "No fue posible mostrar esta sección con los permisos actuales.",
+        description: "No fue posible mostrar esta sección con los permisos actuales.",
       };
     }
 

@@ -4,18 +4,17 @@ Baseline validado localmente el **13 de agosto de 2026**.
 
 ## Resultado
 
-| Validación | Resultado |
-|---|---|
-| TypeScript | ✅ |
-| Vitest | **14 archivos / 42 tests** |
-| Build Vite | ✅ |
-| React Doctor | **100/100 — No issues found** |
-| Code splitting | ✅ |
-| Mayor chunk observado | **469.44 kB / 148.35 kB gzip** |
-| Warning de chunks >500 kB | eliminado |
+| Validación                | Resultado                      |
+| ------------------------- | ------------------------------ |
+| TypeScript                | ✅                             |
+| Vitest                    | **14 archivos / 42 tests**     |
+| Build Vite                | ✅                             |
+| React Doctor              | **100/100 — No issues found**  |
+| Code splitting            | ✅                             |
+| Mayor chunk observado     | **465.62 kB / 147.41 kB gzip** |
+| Warning de chunks >500 kB | eliminado                      |
 
-El E2E real del portal Auth cubre además el ingreso cross-app a este frontend,
-el intercambio de código, la restauración después de F5 y el logout.
+El E2E real Auth → Mesa → F5 → logout queda pendiente de revalidación una vez que `auth_service` implemente el contrato de refresh mediante cookie HttpOnly.
 
 ## Validación mínima antes de integrar cambios
 

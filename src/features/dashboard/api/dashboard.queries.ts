@@ -8,7 +8,8 @@ export const dashboardKeys = {
   summary: (params: DashboardFilterParams) => ["mesa-ayuda-dashboard", "summary", params] as const,
   temporal: (params: DashboardFilterParams, agrupacion: "dia" | "mes" | "anio") =>
     ["mesa-ayuda-dashboard", "temporal", params, agrupacion] as const,
-  entities: (params: DashboardFilterParams) => ["mesa-ayuda-dashboard", "entities", params] as const,
+  entities: (params: DashboardFilterParams) =>
+    ["mesa-ayuda-dashboard", "entities", params] as const,
 };
 
 export function useDashboardSummary(params: DashboardFilterParams) {

@@ -50,12 +50,7 @@ export function AttentionCreateSuccessDialog({
             </Button>
           )}
 
-          <Button
-            type="button"
-            variant="secondary"
-            className="w-full"
-            onClick={onCreateAnother}
-          >
+          <Button type="button" variant="secondary" className="w-full" onClick={onCreateAnother}>
             Registrar otra atención
           </Button>
 
@@ -90,11 +85,7 @@ export function AttentionCreateSuccessDialog({
             </div>
           </div>
 
-          <SummaryValue
-            label="Tipo de registro"
-            value={attention?.registry ?? "—"}
-            align="right"
-          />
+          <SummaryValue label="Tipo de registro" value={attention?.registry ?? "—"} align="right" />
         </div>
       </div>
 

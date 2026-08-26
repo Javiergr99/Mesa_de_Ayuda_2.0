@@ -22,11 +22,7 @@ function renderSidebar({
 } = {}) {
   return render(
     <MemoryRouter initialEntries={[initialPath]}>
-      <AppSidebar
-        expanded={expanded}
-        permissions={permissions}
-        onNavigate={onNavigate}
-      />
+      <AppSidebar expanded={expanded} permissions={permissions} onNavigate={onNavigate} />
     </MemoryRouter>,
   );
 }

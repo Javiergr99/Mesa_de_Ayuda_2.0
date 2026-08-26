@@ -15,10 +15,7 @@ import {
   readExchangeNavigationRequest,
   type ExchangeNavigationRequest,
 } from "@/features/auth/services/exchange-navigation";
-import {
-  authTokenStorage,
-  type TokenPersistence,
-} from "@/features/auth/services/token-storage";
+import { authTokenStorage, type TokenPersistence } from "@/features/auth/services/token-storage";
 
 const INACTIVITY_LIMIT_MS = 60 * 60 * 1_000;
 const activityEvents: Array<keyof WindowEventMap> = [
@@ -54,11 +51,7 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
       try {
         exchangeRequest = readExchangeNavigationRequest(url);
       } catch (error) {
-        window.history.replaceState(
-          {},
-          document.title,
-          cleanExchangeNavigationParameters(url),
-        );
+        window.history.replaceState({}, document.title, cleanExchangeNavigationParameters(url));
         authTokenStorage.clear();
         if (active) useAuthStore.getState().setError(errorMessage(error));
         return;
@@ -66,11 +59,7 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
 
       if (exchangeRequest) {
         useAuthStore.getState().setExchanging();
-        window.history.replaceState(
-          {},
-          document.title,
-          cleanExchangeNavigationParameters(url),
-        );
+        window.history.replaceState({}, document.title, cleanExchangeNavigationParameters(url));
 
         if (!exchangePromise) {
           exchangePromise = exchangeAndHydrate(
@@ -131,8 +120,7 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
     };
 
     window.addEventListener(AUTH_SESSION_EXPIRED_EVENT, onSessionExpired);
-    return () =>
-      window.removeEventListener(AUTH_SESSION_EXPIRED_EVENT, onSessionExpired);
+    return () => window.removeEventListener(AUTH_SESSION_EXPIRED_EVENT, onSessionExpired);
   }, []);
 
   useEffect(() => {
@@ -172,9 +160,7 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
 
     return () => {
       window.clearTimeout(timeoutId);
-      activityEvents.forEach((eventName) =>
-        window.removeEventListener(eventName, scheduleLogout),
-      );
+      activityEvents.forEach((eventName) => window.removeEventListener(eventName, scheduleLogout));
     };
   }, [status]);
 

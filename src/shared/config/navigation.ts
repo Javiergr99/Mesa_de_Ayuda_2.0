@@ -32,9 +32,7 @@ export const sidebarNavigation: NavigationItem[] = [
     label: "Dashboard",
     to: "/app/dashboard",
     icon: LayoutDashboard,
-    requiredAnyAction: [
-      MESA_AYUDA_ACTIONS.viewDashboard,
-    ],
+    requiredAnyAction: [MESA_AYUDA_ACTIONS.viewDashboard],
     exactActions: true,
   },
   {
@@ -46,27 +44,21 @@ export const sidebarNavigation: NavigationItem[] = [
     label: "Atenciones",
     to: "/app/atenciones",
     icon: ClipboardList,
-    requiredAnyAction: [
-      MESA_AYUDA_ACTIONS.viewLog,
-    ],
+    requiredAnyAction: [MESA_AYUDA_ACTIONS.viewLog],
     exactActions: true,
   },
   {
     label: "Registrar Atención",
     to: "/app/atenciones/nueva",
     icon: CirclePlus,
-    requiredAnyAction: [
-      MESA_AYUDA_ACTIONS.createLog,
-    ],
+    requiredAnyAction: [MESA_AYUDA_ACTIONS.createLog],
     exactActions: true,
   },
   {
     label: "Seguimiento",
     to: "/app/seguimiento",
     icon: ListChecks,
-    requiredAnyAction: [
-      MESA_AYUDA_ACTIONS.viewLog,
-    ],
+    requiredAnyAction: [MESA_AYUDA_ACTIONS.viewLog],
     exactActions: true,
   },
   {
@@ -89,10 +81,7 @@ function canAccessWithPermissionSet(
     return true;
   }
 
-  if (
-    !item.exactActions &&
-    permissionSet.has("SUPER_ADMIN")
-  ) {
+  if (!item.exactActions && permissionSet.has("SUPER_ADMIN")) {
     return true;
   }
 
@@ -109,10 +98,7 @@ export function canAccessNavigationItem(
   item: NavigationAccessItem,
   permissions: readonly string[],
 ): boolean {
-  return canAccessWithPermissionSet(
-    item,
-    new Set(permissions),
-  );
+  return canAccessWithPermissionSet(item, new Set(permissions));
 }
 
 export function getVisibleNavigationChildren(
@@ -127,12 +113,7 @@ export function getVisibleNavigationChildren(
   const visible: NavigationChildItem[] = [];
 
   for (const child of children) {
-    if (
-      canAccessWithPermissionSet(
-        child,
-        permissionSet,
-      )
-    ) {
+    if (canAccessWithPermissionSet(child, permissionSet)) {
       visible.push(child);
     }
   }
@@ -141,8 +122,7 @@ export function getVisibleNavigationChildren(
 }
 
 const formatoNnaPublicUrl =
-  import.meta.env.VITE_FORMATO_NNA_PUBLIC_URL?.trim() ||
-  "http://127.0.0.1:5176";
+  import.meta.env.VITE_FORMATO_NNA_PUBLIC_URL?.trim() || "http://127.0.0.1:5176";
 
 export const topNavigation = [
   {

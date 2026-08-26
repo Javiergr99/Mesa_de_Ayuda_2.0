@@ -1,11 +1,11 @@
 /**
- * PolÃ­tica global de desplazamiento del Ecosistema Integral DGCP.
+ * Política global de desplazamiento del Ecosistema Integral DGCP.
  *
  * Reglas:
- * - toda navegaciÃ³n interna inicia en la parte superior;
- * - AtrÃ¡s/Adelante inicia arriba;
- * - BFCache no conserva la posiciÃ³n vertical anterior;
- * - tambiÃ©n se reinician contenedores principales con overflow.
+ * - toda navegación interna inicia en la parte superior;
+ * - Atrás/Adelante inicia arriba;
+ * - BFCache no conserva la posición vertical anterior;
+ * - también se reinician contenedores principales con overflow.
  */
 
 declare global {
@@ -24,28 +24,19 @@ const APP_SCROLL_SELECTORS = [
 ].join(",");
 
 function isRelevantScrollableElement(element: HTMLElement): boolean {
-  if (
-    element.matches(
-      '[data-scroll-restoration-root], main, [role="main"], #root',
-    )
-  ) {
+  if (element.matches('[data-scroll-restoration-root], main, [role="main"], #root')) {
     return true;
   }
 
   const styles = window.getComputedStyle(element);
   const hasScrollableOverflow =
-    styles.overflowY === "auto" ||
-    styles.overflowY === "scroll" ||
-    styles.overflowY === "overlay";
+    styles.overflowY === "auto" || styles.overflowY === "scroll" || styles.overflowY === "overlay";
 
   if (!hasScrollableOverflow) {
     return false;
   }
 
-  const minimumUsefulHeight = Math.min(
-    320,
-    Math.max(180, window.innerHeight * 0.35),
-  );
+  const minimumUsefulHeight = Math.min(320, Math.max(180, window.innerHeight * 0.35));
 
   return (
     element.clientHeight >= minimumUsefulHeight &&
@@ -67,19 +58,17 @@ function resetScrollPosition(): void {
   document.body.scrollTop = 0;
   document.body.scrollLeft = 0;
 
-  document
-    .querySelectorAll<HTMLElement>(APP_SCROLL_SELECTORS)
-    .forEach((element) => {
-      if (!isRelevantScrollableElement(element)) {
-        return;
-      }
+  document.querySelectorAll<HTMLElement>(APP_SCROLL_SELECTORS).forEach((element) => {
+    if (!isRelevantScrollableElement(element)) {
+      return;
+    }
 
-      element.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: "auto",
-      });
+    element.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
     });
+  });
 }
 
 let scheduledFrame: number | null = null;
@@ -115,9 +104,7 @@ function installGlobalScrollReset(): void {
   const originalPushState = window.history.pushState.bind(window.history);
   const originalReplaceState = window.history.replaceState.bind(window.history);
 
-  window.history.pushState = ((
-    ...args: Parameters<History["pushState"]>
-  ) => {
+  window.history.pushState = ((...args: Parameters<History["pushState"]>) => {
     const previousUrl = window.location.href;
     originalPushState(...args);
 
@@ -126,9 +113,7 @@ function installGlobalScrollReset(): void {
     }
   }) as History["pushState"];
 
-  window.history.replaceState = ((
-    ...args: Parameters<History["replaceState"]>
-  ) => {
+  window.history.replaceState = ((...args: Parameters<History["replaceState"]>) => {
     const previousUrl = window.location.href;
     originalReplaceState(...args);
 

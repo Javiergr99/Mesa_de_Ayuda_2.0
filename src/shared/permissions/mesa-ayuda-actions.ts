@@ -7,5 +7,4 @@ export const MESA_AYUDA_ACTIONS = {
   viewDashboard: "VER_DASHBOARD",
 } as const;
 
-export type MesaAyudaAction =
-  (typeof MESA_AYUDA_ACTIONS)[keyof typeof MESA_AYUDA_ACTIONS];
+export type MesaAyudaAction = (typeof MESA_AYUDA_ACTIONS)[keyof typeof MESA_AYUDA_ACTIONS];

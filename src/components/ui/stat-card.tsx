@@ -30,18 +30,25 @@ export function StatCard({
   return (
     <LazyMotion features={domAnimation}>
       <m.div className="h-full" whileHover={{ y: -1 }} transition={{ duration: 0.16 }}>
-      <Card className="h-full p-4 transition-colors hover:border-slate-300">
-        <div className="flex items-start justify-between gap-3">
-          <p className="text-xs font-semibold leading-5 text-[var(--ui-text-secondary)]">{title}</p>
-          <span className={cn("grid h-8 w-8 shrink-0 place-items-center rounded-lg", toneClasses[tone])}>
-            <Icon className="h-4 w-4" />
-          </span>
-        </div>
-        <p className="mt-2.5 text-[26px] font-bold leading-none tracking-tight text-[var(--ui-text-primary)]">
-          {value}
-        </p>
-        <p className="mt-1.5 text-[11px] leading-4 text-[var(--ui-text-secondary)]">{detail}</p>
-      </Card>
+        <Card className="h-full p-4 transition-colors hover:border-slate-300">
+          <div className="flex items-start justify-between gap-3">
+            <p className="text-xs font-semibold leading-5 text-[var(--ui-text-secondary)]">
+              {title}
+            </p>
+            <span
+              className={cn(
+                "grid h-8 w-8 shrink-0 place-items-center rounded-lg",
+                toneClasses[tone],
+              )}
+            >
+              <Icon className="h-4 w-4" />
+            </span>
+          </div>
+          <p className="mt-2.5 text-[26px] font-bold leading-none tracking-tight text-[var(--ui-text-primary)]">
+            {value}
+          </p>
+          <p className="mt-1.5 text-[11px] leading-4 text-[var(--ui-text-secondary)]">{detail}</p>
+        </Card>
       </m.div>
     </LazyMotion>
   );

@@ -4,9 +4,7 @@ function normalize(value?: string | null): string {
   return value?.trim().toUpperCase() ?? "";
 }
 
-export function getUserActionNames(
-  user?: AuthenticatedUser | null,
-): string[] {
+export function getUserActionNames(user?: AuthenticatedUser | null): string[] {
   const actions =
     user?.permisos?.grupos?.flatMap((group) =>
       (group.modulos ?? []).flatMap((module) =>
@@ -17,14 +15,10 @@ export function getUserActionNames(
   return [...new Set(actions.filter(Boolean))];
 }
 
-export function userHasAction(
-  user: AuthenticatedUser | null | undefined,
-  action: string,
-): boolean {
+export function userHasAction(user: AuthenticatedUser | null | undefined, action: string): boolean {
   const actions = new Set(getUserActionNames(user));
   return actions.has("SUPER_ADMIN") || actions.has(normalize(action));
 }
-
 
 export function userHasExactAction(
   user: AuthenticatedUser | null | undefined,
@@ -39,16 +33,12 @@ export function isSuperAdmin(user?: AuthenticatedUser | null): boolean {
 
 export function getUserDisplayName(user?: AuthenticatedUser | null): string {
   if (!user) return "Usuario";
-  return [user.nombre, user.primer_apellido, user.segundo_apellido]
-    .filter(Boolean)
-    .join(" ");
+  return [user.nombre, user.primer_apellido, user.segundo_apellido].filter(Boolean).join(" ");
 }
 
 export function getUserInitials(user?: AuthenticatedUser | null): string {
   if (!user) return "US";
-  return `${user.nombre?.[0] ?? ""}${user.primer_apellido?.[0] ?? ""}`
-    .toUpperCase()
-    .slice(0, 2);
+  return `${user.nombre?.[0] ?? ""}${user.primer_apellido?.[0] ?? ""}`.toUpperCase().slice(0, 2);
 }
 
 export function getUserRoleLabel(user?: AuthenticatedUser | null): string {

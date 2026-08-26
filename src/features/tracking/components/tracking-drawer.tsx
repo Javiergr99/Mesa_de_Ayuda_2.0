@@ -49,33 +49,20 @@ function TrackingDrawerEditor({
 }) {
   const user = useAuthStore((state) => state.user);
   const canUpdate = sessionHasExactAction(user, MESA_AYUDA_ACTIONS.updateLog);
-  const canManageFiles = sessionHasExactAction(
-    user,
-    MESA_AYUDA_ACTIONS.uploadLogFile,
-  );
+  const canManageFiles = sessionHasExactAction(user, MESA_AYUDA_ACTIONS.uploadLogFile);
   const updateMutation = useUpdateAttention();
 
-  const [statusId, setStatusId] = useState(
-    attention.statusId ? String(attention.statusId) : "",
-  );
-  const [instance, setInstance] = useState(
-    attention.instance === "—" ? "" : attention.instance,
-  );
-  const [email, setEmail] = useState(
-    attention.email === "—" ? "" : attention.email,
-  );
-  const [phone, setPhone] = useState(
-    attention.phone === "—" ? "" : attention.phone,
-  );
+  const [statusId, setStatusId] = useState(attention.statusId ? String(attention.statusId) : "");
+  const [instance, setInstance] = useState(attention.instance === "—" ? "" : attention.instance);
+  const [email, setEmail] = useState(attention.email === "—" ? "" : attention.email);
+  const [phone, setPhone] = useState(attention.phone === "—" ? "" : attention.phone);
   const [description, setDescription] = useState(
-    attention.description === "Sin observaciones registradas."
-      ? ""
-      : attention.description,
+    attention.description === "Sin observaciones registradas." ? "" : attention.description,
   );
 
   const selectedStatus =
-    ATTENTION_STATUS_CATALOG.find((item) => String(item.id) === statusId)
-      ?.label ?? attention.status;
+    ATTENTION_STATUS_CATALOG.find((item) => String(item.id) === statusId)?.label ??
+    attention.status;
 
   async function handleSave() {
     const payload: {
@@ -106,9 +93,7 @@ function TrackingDrawerEditor({
 
     if (
       description !==
-      (attention.description === "Sin observaciones registradas."
-        ? ""
-        : attention.description)
+      (attention.description === "Sin observaciones registradas." ? "" : attention.description)
     ) {
       payload.observaciones = description || null;
     }
@@ -131,10 +116,7 @@ function TrackingDrawerEditor({
       onOpenChange(false);
     } catch (error) {
       toast.error("No fue posible actualizar la atención", {
-        description:
-          error instanceof Error
-            ? error.message
-            : "La API rechazó la actualización.",
+        description: error instanceof Error ? error.message : "La API rechazó la actualización.",
       });
     }
   }
@@ -158,12 +140,7 @@ function TrackingDrawerEditor({
 
   const history = <TrackingDrawerHistory attention={attention} />;
 
-  const files = (
-    <TrackingDrawerFiles
-      attention={attention}
-      canManageFiles={canManageFiles}
-    />
-  );
+  const files = <TrackingDrawerFiles attention={attention} canManageFiles={canManageFiles} />;
 
   return (
     <Drawer
@@ -184,14 +161,9 @@ function TrackingDrawerEditor({
             </Button>
 
             {canUpdate ? (
-              <Button
-                onClick={() => void handleSave()}
-                disabled={updateMutation.isPending}
-              >
+              <Button onClick={() => void handleSave()} disabled={updateMutation.isPending}>
                 <Save className="h-4 w-4" />
-                {updateMutation.isPending
-                  ? "Guardando..."
-                  : "Guardar actualización"}
+                {updateMutation.isPending ? "Guardando..." : "Guardar actualización"}
               </Button>
             ) : null}
           </div>
@@ -201,12 +173,8 @@ function TrackingDrawerEditor({
       <div className="border-b border-slate-100 px-6 py-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
-            <p className="text-xs font-medium text-slate-400">
-              {attention.reference}
-            </p>
-            <h2 className="mt-1 truncate text-xl font-bold text-slate-950">
-              {attention.caseType}
-            </h2>
+            <p className="text-xs font-medium text-slate-400">{attention.reference}</p>
+            <h2 className="mt-1 truncate text-xl font-bold text-slate-950">{attention.caseType}</h2>
             <p className="mt-2 text-xs leading-5 text-slate-500">
               Fecha de registro: {attention.createdAt}
               <span className="px-2 text-slate-300">|</span>

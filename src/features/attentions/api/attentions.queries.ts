@@ -41,13 +41,8 @@ export function useCreateAttention() {
 export function useUpdateAttention() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      id,
-      payload,
-    }: {
-      id: string;
-      payload: BitacoraUpdatePayload;
-    }) => attentionsService.update(id, payload),
+    mutationFn: ({ id, payload }: { id: string; payload: BitacoraUpdatePayload }) =>
+      attentionsService.update(id, payload),
     onSuccess: async (_data, variables) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: attentionKeys.all }),
