@@ -1,6 +1,0 @@
-export const authKeys = {
-  all: ["auth"] as const,
-  currentUser: () => [...authKeys.all, "current-user"] as const,
-  twoFactorSetup: (tempToken: string) =>
-    [...authKeys.all, "two-factor-setup", tempToken] as const,
-};

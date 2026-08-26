@@ -1,4 +1,4 @@
-﻿<a id="top"></a>
+<a id="top"></a>
 
 <div align="center">
   <img
@@ -18,9 +18,9 @@
   </p>
 
   <p>
-    <a href="./mesa-ayuda-auth-2.0"><strong>Portal de autenticaciÃ³n</strong></a>
+    <a href="./login_admin"><strong>Portal de autenticaciÃ³n</strong></a>
     Â·
-    <a href="./mesa-ayuda-2.0-figma"><strong>AplicaciÃ³n operativa</strong></a>
+    <a href="."><strong>AplicaciÃ³n operativa</strong></a>
     Â·
     <a href="#-inicio-rÃ¡pido"><strong>Inicio rÃ¡pido</strong></a>
     Â·
@@ -46,8 +46,8 @@
 
 | AplicaciÃ³n | Carpeta | Puerto local | Responsabilidad |
 |---|---|---:|---|
-| **Portal de autenticaciÃ³n** | [`mesa-ayuda-auth-2.0`](./mesa-ayuda-auth-2.0) | `5174` | Login, recuperaciÃ³n, creaciÃ³n inicial de contraseÃ±a, MFA, sesiÃ³n, perfil y accesos disponibles. |
-| **AplicaciÃ³n operativa** | [`mesa-ayuda-2.0-figma`](./mesa-ayuda-2.0-figma) | `5173` | Dashboard, organizador, atenciones, seguimiento, perfil, administraciÃ³n de usuarios y configuraciÃ³n visual. |
+| **Portal de autenticaciÃ³n** | [`login_admin`](./login_admin) | `5174` | Login, recuperaciÃ³n, creaciÃ³n inicial de contraseÃ±a, MFA, sesiÃ³n, perfil y accesos disponibles. |
+| **AplicaciÃ³n operativa** | [`mesa_de_ayuda`](.) | `5173` | Dashboard, organizador, atenciones, seguimiento, perfil, administraciÃ³n de usuarios y configuraciÃ³n visual. |
 
 La autenticaciÃ³n y la operaciÃ³n se despliegan y prueban de manera independiente. `auth_service` conserva la autoridad de autenticaciÃ³n y autorizaciÃ³n; la API de Mesa de Ayuda atiende el dominio operativo.
 
@@ -187,18 +187,18 @@ Los JWT nunca se incorporan a la URL ni se escriben en `localStorage` o `session
 ### OrganizaciÃ³n
 
 ```text
-Mesa_de_Ayuda_2.0/
+Ecosistema Integral DGCP/
 â”œâ”€â”€ .github/
 â”‚   â””â”€â”€ workflows/
 â”‚       â””â”€â”€ react-doctor.yml
 â”œâ”€â”€ docs/
-â”œâ”€â”€ mesa-ayuda-auth-2.0/
+â”œâ”€â”€ login_admin/
 â”‚   â”œâ”€â”€ docs/
 â”‚   â”œâ”€â”€ public/
 â”‚   â”œâ”€â”€ scripts/
 â”‚   â”œâ”€â”€ src/
 â”‚   â””â”€â”€ tests/
-â””â”€â”€ mesa-ayuda-2.0-figma/
+â””â”€â”€ mesa_de_ayuda/
     â”œâ”€â”€ docs/
     â”œâ”€â”€ scripts/
     â”œâ”€â”€ src/
@@ -239,10 +239,10 @@ La aplicaciÃ³n operativa mantiene sus tokens institucionales y el mÃ³dulo de
 git clone https://github.com/Javiergr99/Mesa_de_Ayuda_2.0.git
 cd Mesa_de_Ayuda_2.0
 
-cd .\mesa-ayuda-auth-2.0
+cd .\login_admin
 npm install
 
-cd ..\mesa-ayuda-2.0-figma
+cd ..\mesa_de_ayuda
 npm install
 ```
 
@@ -253,14 +253,14 @@ Configure cada frontend a partir de su `.env.example`. No mezcle `localhost` y `
 **Auth:**
 
 ```powershell
-cd .\mesa-ayuda-auth-2.0
+cd .\login_admin
 npm run dev
 ```
 
 **AplicaciÃ³n operativa:**
 
 ```powershell
-cd .\mesa-ayuda-2.0-figma
+cd .\mesa_de_ayuda
 npm run dev
 ```
 

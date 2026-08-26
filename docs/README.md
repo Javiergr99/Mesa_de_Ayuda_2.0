@@ -1,11 +1,33 @@
-# Documentación del repositorio
+# Documentación — Frontend operativo
 
-La documentación técnica vigente vive dentro de cada frontend:
+## Documentación vigente
 
-- [`mesa-ayuda-auth-2.0/docs`](../mesa-ayuda-auth-2.0/docs) — autenticación, seguridad, SSO, backend y sistema de diseño.
-- [`mesa-ayuda-2.0-figma/docs`](../mesa-ayuda-2.0-figma/docs) — arquitectura operativa, contratos, API, administración y roadmap.
+- [`ARQUITECTURA.md`](ARQUITECTURA.md) — estructura, capas y decisiones técnicas.
+- [`CALIDAD_Y_VALIDACION.md`](CALIDAD_Y_VALIDACION.md) — baseline de calidad.
+- [`INTEGRACION_LOGIN_UNIVERSAL.md`](INTEGRACION_LOGIN_UNIVERSAL.md) — sesión y SSO con Auth.
+- [`INTEGRACION_API_MESA_AYUDA_CONTRATO_1_0.md`](INTEGRACION_API_MESA_AYUDA_CONTRATO_1_0.md) — API operativa.
+- [`CONTRATO_ADMIN_AUTH_SERVICE_V1.md`](CONTRATO_ADMIN_AUTH_SERVICE_V1.md) — snapshot contractual del módulo administrativo.
+- [`MODULO_ADMINISTRACION_USUARIOS.md`](MODULO_ADMINISTRACION_USUARIOS.md).
+- [`MODULO_CONFIGURACION_IDENTIDAD.md`](MODULO_CONFIGURACION_IDENTIDAD.md).
+- [`MODULO_MI_PERFIL.md`](MODULO_MI_PERFIL.md).
+- `contracts/` — snapshots y referencias entregadas por backend.
+- `references/` — referencias visuales.
 
-`docs/assets/` contiene recursos utilizados por el README principal.
+## Roadmap
 
-Los documentos de rondas temporales, reportes de herramientas y scripts de
-aplicación no forman parte de la documentación vigente.
+`roadmap/` contiene requerimientos todavía no implementados o dependencias de
+backend futuras.
+
+## Archivo histórico
+
+`archive/2026-implementation-history/` contiene notas de implementación ya
+aplicadas. No es fuente de verdad.
+
+## Prioridad de fuentes
+
+Cuando exista una diferencia:
+
+1. contrato/OpenAPI vigente del backend;
+2. código actual;
+3. documentación vigente de esta carpeta;
+4. archivo histórico.
