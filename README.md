@@ -3,29 +3,47 @@
 <div align="center">
 
 <img
-    src="./docs/assets/mesa-ayuda-banner.svg"
-    alt="Mesa de Ayuda 2.0 — gestión operativa, seguimiento y atención institucional"
-    width="100%"
-  />
+  src="./docs/assets/mesa-ayuda-banner.svg"
+  alt="Mesa de Ayuda 2.0 — gestión operativa, seguimiento y atención institucional"
+  width="100%"
+/>
 
-  <br />
+<br />
 
-  <p>
-    <strong>Frontend operativo de Mesa de Ayuda del Ecosistema Integral DGCP.</strong>
-  </p>
+<p>
+  <strong>Frontend operativo de Mesa de Ayuda del Ecosistema Integral DGCP.</strong>
+</p>
 
-  <p>
-    Aplicación web modular para registrar, consultar y dar seguimiento a las atenciones,
-    integrada con el Login Universal y los servicios institucionales del Ecosistema.
-  </p>
+<p>
+  Dashboard · Atenciones · Seguimiento · Organizador · Perfil · Integración institucional
+</p>
 
-  <p>
-    <img src="https://img.shields.io/badge/Frontend-saneado-22C55E?style=for-the-badge" alt="Frontend saneado" />
-    <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=0F172A" alt="React 19.2" />
-    <img src="https://img.shields.io/badge/TypeScript-6-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 6" />
-    <img src="https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 8" />
-    <img src="https://img.shields.io/badge/React_Doctor-100%2F100-22C55E?style=for-the-badge" alt="React Doctor 100 de 100" />
-  </p>
+<p>
+  <img src="https://img.shields.io/badge/Frontend-saneado-22C55E?style=for-the-badge" alt="Frontend saneado" />
+  <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=0F172A" alt="React 19.2" />
+  <img src="https://img.shields.io/badge/TypeScript-6-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 6" />
+  <img src="https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 8" />
+</p>
+
+<p>
+  <img src="https://img.shields.io/badge/React_Doctor-100%2F100-22C55E?style=for-the-badge&logo=react&logoColor=white" alt="React Doctor 100 de 100" />
+  <img src="https://img.shields.io/badge/Tests-29%2F29-22C55E?style=for-the-badge&logo=vitest&logoColor=white" alt="29 de 29 tests" />
+  <img src="https://img.shields.io/badge/UTF--8-sin_BOM-0EA5E9?style=for-the-badge" alt="UTF-8 sin BOM" />
+</p>
+
+<p>
+  <a href="#-vista-previa"><strong>Vista previa</strong></a>
+  ·
+  <a href="#-arquitectura"><strong>Arquitectura</strong></a>
+  ·
+  <a href="#-capacidades-del-producto"><strong>Capacidades</strong></a>
+  ·
+  <a href="#-stack-tecnológico"><strong>Stack</strong></a>
+  ·
+  <a href="#-arquitectura-del-código"><strong>Código</strong></a>
+  ·
+  <a href="#-diseño"><strong>Figma</strong></a>
+</p>
 
 </div>
 
@@ -33,53 +51,38 @@
 
 ## ✨ Descripción
 
-**Mesa de Ayuda 2.0** es el frontend operativo de Mesa de Ayuda dentro del
+**Mesa de Ayuda 2.0** es el frontend operativo de atención y seguimiento dentro del
 **Ecosistema Integral DGCP**.
 
-Este repositorio contiene exclusivamente la aplicación de Mesa de Ayuda.
-El Login Universal, `auth_service` y la API operativa son proyectos y servicios
-independientes.
+Su función es concentrar los flujos de registro, consulta y seguimiento de atenciones
+en una experiencia modular, consistente y preparada para integrarse con los servicios
+institucionales del ecosistema.
 
-La aplicación mantiene una arquitectura modular basada en componentes reutilizables,
-tipado estricto, separación por dominio y controles automatizados de calidad.
+<table>
+<tr>
+<td width="33%" align="center" valign="top">
 
-> [!IMPORTANT]
-> El frontend se encuentra saneado y validado. La habilitación integral para producción
-> depende de completar la alineación del contrato de sesión con `auth_service` y ejecutar
-> posteriormente el E2E real de autenticación, refresh y logout.
+### 📊 Operación
 
----
+Dashboard, indicadores y contexto general de trabajo.
 
-## 🧩 Alcance del repositorio
+</td>
+<td width="33%" align="center" valign="top">
 
-Este repositorio contiene únicamente:
+### 🧾 Atenciones
 
-```text
-mesa_de_ayuda/
-├── .github/
-├── docs/
-├── scripts/
-├── src/
-├── tests/
-├── .env.example
-├── eslint.config.js
-├── package.json
-├── playwright.config.ts
-├── vite.config.ts
-└── vitest.config.ts
-```
+Registro, consulta y trazabilidad de solicitudes.
 
-No contiene el frontend de Login Universal ni los demás módulos del Ecosistema.
+</td>
+<td width="33%" align="center" valign="top">
 
-### Servicios relacionados
+### 🧭 Seguimiento
 
-| Servicio            | Puerto local | Responsabilidad                                   |
-| ------------------- | -----------: | ------------------------------------------------- |
-| Mesa de Ayuda       |       `5173` | Frontend operativo                                |
-| Login Universal     |       `5174` | Autenticación y accesos                           |
-| `auth_service`      |       `8001` | Autenticación, sesión, `/users/me` y autorización |
-| API Mesa de Ayuda   |       `8000` | Dominio operativo de Mesa de Ayuda                |
-| Formato NNA público |       `5176` | Interfaz pública independiente                    |
+Filtros, detalle, historial y continuidad operativa.
+
+</td>
+</tr>
+</table>
 
 ---
 
@@ -88,249 +91,277 @@ No contiene el frontend de Login Universal ni los demás módulos del Ecosistema
 <table>
   <tr>
     <td align="center"><strong>Seguimiento de atenciones</strong></td>
-    <td align="center"><strong>Registro de una nueva atención</strong></td>
+    <td align="center"><strong>Registro de atención</strong></td>
   </tr>
   <tr>
     <td width="50%">
       <img
         src="./docs/assets/seguimiento.png"
-        alt="Pantalla de seguimiento de atenciones"
+        alt="Pantalla de seguimiento de atenciones de Mesa de Ayuda 2.0"
       />
     </td>
     <td width="50%">
       <img
         src="./docs/assets/registrar-atencion.png"
-        alt="Formulario para registrar una nueva atención"
+        alt="Formulario de registro de atención de Mesa de Ayuda 2.0"
       />
     </td>
   </tr>
 </table>
 
-> Los nombres y datos visibles en las capturas son demostrativos.
-
----
-
-## 🚀 Capacidades principales
-
-### Dashboard
-
-- Resumen operativo de Mesa de Ayuda.
-- Métricas y visualizaciones.
-- Consultas mediante TanStack Query.
-- Integración con la API operativa.
-
-### Atenciones
-
-- Registro de nuevas atenciones.
-- Validación estructurada de formularios.
-- Adjuntos y reglas de archivos.
-- Catálogos y campos institucionales.
-- Mensajes de éxito y error.
-
-### Seguimiento
-
-- Consulta de atenciones.
-- Filtros.
-- Paginación.
-- Vista de detalle.
-- Historial y archivos relacionados.
-
-### Organizador
-
-- Vista operativa para organización y seguimiento de actividades.
-
-### Perfil
-
-- Consulta de información del usuario autenticado.
-- Datos administrativos de sólo lectura.
-- Estado de seguridad de la cuenta.
-
-### Autenticación integrada
-
-- Entrada mediante `redirect-code`.
-- Intercambio mediante `exchange-code`.
-- Access token mantenido únicamente en memoria.
-- Guards de sesión.
-- Cierre automático por inactividad.
-- Sincronización de logout entre pestañas.
-- Redirección al Login Universal cuando la sesión termina.
-
----
-
-## 🧰 Tecnologías
-
-| Área          | Tecnologías                              |
-| ------------- | ---------------------------------------- |
-| Frontend      | React 19, React DOM, TypeScript 6        |
-| Build         | Vite 8                                   |
-| Navegación    | React Router                             |
-| Datos remotos | TanStack Query                           |
-| Formularios   | React Hook Form, Zod                     |
-| Estado        | Zustand                                  |
-| UI            | Radix UI, Lucide React, Font Awesome     |
-| Estilos       | Tailwind CSS 4, Design Tokens, CSS       |
-| Interacción   | Motion, Sonner                           |
-| Pruebas       | Vitest, Testing Library, Playwright      |
-| Calidad       | ESLint, Prettier, React Doctor           |
-| Encoding      | UTF-8 sin BOM con validador automatizado |
+<p align="center">
+  <sub>Los nombres y datos visibles en las capturas son demostrativos.</sub>
+</p>
 
 ---
 
 ## 🏗️ Arquitectura
 
-```mermaid
-flowchart LR
-    U[Usuario] --> LOGIN[Login Universal :5174]
+<p align="center">
+  <img
+    src="./docs/assets/mesa-ayuda-architecture.svg"
+    alt="Arquitectura de Mesa de Ayuda 2.0 dentro del Ecosistema Integral DGCP"
+    width="100%"
+  />
+</p>
 
-    LOGIN --> AUTH[(auth_service :8001)]
+<table>
+<tr>
+<td width="25%" align="center" valign="top">
 
-    LOGIN -->|redirect-code| MESA[Mesa de Ayuda :5173]
+<strong>01 · ENTRADA</strong>
 
-    MESA -->|exchange-code| AUTH
+<br /><br />
 
-    MESA -->|Bearer access token| AUTH
+El usuario se autentica en Login Universal.
 
-    MESA -->|Datos operativos| API[(API Mesa de Ayuda :8000)]
+</td>
+<td width="25%" align="center" valign="top">
 
-    AUTH -. sesión .-> MESA
-```
+<strong>02 · HANDOFF</strong>
 
-### Responsabilidades
+<br /><br />
 
-```text
-Login Universal
-    │
-    ├── autenticación
-    ├── MFA
-    ├── accesos disponibles
-    └── redirect-code
-          │
-          ▼
-Mesa de Ayuda
-    │
-    ├── exchange-code
-    ├── sesión frontend
-    ├── dashboard
-    ├── atenciones
-    ├── seguimiento
-    ├── organizador
-    └── perfil
-```
+Mesa recibe un <code>redirect-code</code> de un solo uso.
 
----
+</td>
+<td width="25%" align="center" valign="top">
 
-## 🔐 Modelo de sesión del frontend
+<strong>03 · SESIÓN</strong>
 
-Mesa de Ayuda mantiene el `access_token` exclusivamente en memoria JavaScript.
+<br /><br />
 
-```text
-redirect-code
-      ↓
-exchange-code
-      ↓
-access_token
-      ↓
-memoria JavaScript
-      ↓
-GET /users/me
-      ↓
-sesión autenticada
-```
+Se intercambia el código y el access token vive en memoria.
 
-`localStorage` y `sessionStorage` sólo se utilizan para un marcador no sensible
-que indica la preferencia de persistencia de sesión.
+</td>
+<td width="25%" align="center" valign="top">
 
-No se deben almacenar allí:
+<strong>04 · OPERACIÓN</strong>
 
-- access tokens;
-- refresh tokens;
-- códigos MFA;
-- contraseñas;
-- secretos TOTP.
+<br /><br />
 
-### Refresh token
+Mesa consume su API para atender el dominio operativo.
 
-El frontend está preparado para consumir un refresh token administrado mediante
-cookie `HttpOnly` y realiza solicitudes de sesión con credenciales HTTP.
+</td>
+</tr>
+</table>
 
-Actualmente existe una diferencia entre este modelo y el contrato vigente de
-`auth_service`, que todavía utiliza el refresh token mediante JSON.
-
-Por este motivo, la renovación/restauración real de sesión se considera
-**pendiente de alineación con Backend**.
-
-El frontend no será degradado almacenando el refresh token en Web Storage para
-resolver temporalmente esta diferencia.
+<p align="center">
+  <img src="https://img.shields.io/badge/Login-independiente-2563EB?style=flat-square" alt="Login independiente" />
+  <img src="https://img.shields.io/badge/Redirect--code-7C3AED?style=flat-square" alt="Redirect code" />
+  <img src="https://img.shields.io/badge/Access_token-en_memoria-059669?style=flat-square" alt="Access token en memoria" />
+  <img src="https://img.shields.io/badge/API-operativa-C2410C?style=flat-square" alt="API operativa" />
+</p>
 
 ---
 
-## ⚙️ Configuración local
+## 🧩 Capacidades del producto
 
-La referencia de variables es `.env.example`.
+<table>
+<tr>
+<td width="33%" valign="top">
 
-Configuración principal:
+<strong>📊 Dashboard</strong>
 
-```env
-# auth_service
-VITE_API_URL=http://127.0.0.1:8001
+<br /><br />
 
-# API operativa de Mesa de Ayuda
-VITE_MESA_AYUDA_API_URL=/mesa-api
-VITE_MESA_AYUDA_API_PROXY_TARGET=http://127.0.0.1:8000
+Resumen operativo, métricas y visualizaciones para el trabajo diario.
 
-# Login Universal
-VITE_AUTH_APP_URL=http://127.0.0.1:5174/login
+<br /><br />
 
-# Formato NNA público
-VITE_FORMATO_NNA_PUBLIC_URL=http://127.0.0.1:5176
-```
+<code>dashboard</code> · <code>query</code> · <code>metrics</code>
 
-> [!CAUTION]
-> Nunca versionar `.env` reales, contraseñas, JWT, cookies, secretos TOTP,
-> claves privadas ni otras credenciales.
+</td>
+<td width="33%" valign="top">
 
-Durante desarrollo local se utiliza `127.0.0.1` de manera consistente para
-evitar inconsistencias de origen y cookies.
+<strong>📝 Registro</strong>
+
+<br /><br />
+
+Captura estructurada de nuevas atenciones con validaciones y adjuntos.
+
+<br /><br />
+
+<code>forms</code> · <code>schemas</code> · <code>files</code>
+
+</td>
+<td width="33%" valign="top">
+
+<strong>🔎 Seguimiento</strong>
+
+<br /><br />
+
+Consulta, filtros, paginación, detalle e historial de atenciones.
+
+<br /><br />
+
+<code>tracking</code> · <code>filters</code> · <code>history</code>
+
+</td>
+</tr>
+<tr>
+<td width="33%" valign="top">
+
+<strong>🗓️ Organizador</strong>
+
+<br /><br />
+
+Vista de apoyo para organización y continuidad de actividades.
+
+<br /><br />
+
+<code>organizer</code> · <code>workflow</code>
+
+</td>
+<td width="33%" valign="top">
+
+<strong>👤 Perfil</strong>
+
+<br /><br />
+
+Información administrativa del usuario y estado de seguridad.
+
+<br /><br />
+
+<code>profile</code> · <code>security</code>
+
+</td>
+<td width="33%" valign="top">
+
+<strong>🔐 Autenticación integrada</strong>
+
+<br /><br />
+
+Entrada mediante redirect-code, guards e inactividad.
+
+<br /><br />
+
+<code>auth</code> · <code>session</code> · <code>guards</code>
+
+</td>
+</tr>
+</table>
 
 ---
 
-## ⚡ Inicio rápido
+## 🛠️ Stack tecnológico
 
-### Requisitos
+<div align="center">
 
-- Node.js compatible con las dependencias declaradas en el proyecto.
-- npm.
-- Servicios backend únicamente cuando se prueben integraciones reales.
+### Core
 
-### Instalación
+<img
+  src="https://skillicons.dev/icons?i=react,ts,tailwind,vite,html,css&theme=dark&perline=6"
+  alt="React, TypeScript, Tailwind CSS, Vite, HTML y CSS"
+/>
 
-```powershell
-git clone https://github.com/Javiergr99/Mesa_de_Ayuda_2.0.git
-cd Mesa_de_Ayuda_2.0
-npm install
-```
+<br />
+<br />
 
-### Desarrollo
+<img src="https://img.shields.io/badge/React-19.2-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React 19.2" />
+<img src="https://img.shields.io/badge/TypeScript-6-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 6" />
+<img src="https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 8" />
+<img src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS 4" />
 
-```powershell
-npm run dev
-```
+</div>
 
-La aplicación estará disponible en:
+<br />
 
-```text
-http://127.0.0.1:5173
-```
+<table>
+<tr>
+<td width="50%" valign="top">
 
-### Build de producción
+<strong>⚙️ Estado · Datos · Formularios</strong>
 
-```powershell
-npm run build
-```
+<br /><br />
+
+<img src="https://img.shields.io/badge/React_Router-navigation-CA4245?style=flat-square&logo=reactrouter&logoColor=white" alt="React Router" />
+<img src="https://img.shields.io/badge/TanStack_Query-data-FF4154?style=flat-square&logo=reactquery&logoColor=white" alt="TanStack Query" />
+<img src="https://img.shields.io/badge/Zustand-state-443E38?style=flat-square" alt="Zustand" />
+<img src="https://img.shields.io/badge/React_Hook_Form-forms-EC5990?style=flat-square&logo=reacthookform&logoColor=white" alt="React Hook Form" />
+<img src="https://img.shields.io/badge/Zod-validation-3E67B1?style=flat-square" alt="Zod" />
+
+</td>
+<td width="50%" valign="top">
+
+<strong>🎛️ UI · Interacción</strong>
+
+<br /><br />
+
+<img src="https://img.shields.io/badge/Radix_UI-primitives-161618?style=flat-square&logo=radixui&logoColor=white" alt="Radix UI" />
+<img src="https://img.shields.io/badge/Lucide_React-icons-F56565?style=flat-square&logo=lucide&logoColor=white" alt="Lucide React" />
+<img src="https://img.shields.io/badge/Font_Awesome-icons-538DD7?style=flat-square&logo=fontawesome&logoColor=white" alt="Font Awesome" />
+<img src="https://img.shields.io/badge/Motion-interaction-FFF312?style=flat-square&logo=framer&logoColor=111827" alt="Motion" />
+<img src="https://img.shields.io/badge/Sonner-feedback-111827?style=flat-square" alt="Sonner" />
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+<strong>🧪 Testing · Calidad</strong>
+
+<br /><br />
+
+<img src="https://img.shields.io/badge/Vitest-unit_tests-6E9F18?style=flat-square&logo=vitest&logoColor=white" alt="Vitest" />
+<img src="https://img.shields.io/badge/Testing_Library-components-E33332?style=flat-square&logo=testinglibrary&logoColor=white" alt="Testing Library" />
+<img src="https://img.shields.io/badge/Playwright-E2E-2EAD33?style=flat-square&logo=playwright&logoColor=white" alt="Playwright" />
+<img src="https://img.shields.io/badge/ESLint-quality-4B32C3?style=flat-square&logo=eslint&logoColor=white" alt="ESLint" />
+<img src="https://img.shields.io/badge/Prettier-format-F7B93E?style=flat-square&logo=prettier&logoColor=111827" alt="Prettier" />
+<img src="https://img.shields.io/badge/React_Doctor-100%2F100-22C55E?style=flat-square&logo=react&logoColor=white" alt="React Doctor 100 de 100" />
+
+</td>
+<td width="50%" valign="top">
+
+<strong>🎨 Diseño · Tooling</strong>
+
+<br /><br />
+
+<img
+  src="https://skillicons.dev/icons?i=figma,git,github,npm,vscode&theme=dark&perline=5"
+  alt="Figma, Git, GitHub, npm y Visual Studio Code"
+/>
+
+</td>
+</tr>
+</table>
 
 ---
 
-## 🗂️ Organización del código
+## 🗂️ Arquitectura del código
+
+<p align="center">
+  <img
+    src="./docs/assets/mesa-ayuda-code-map.svg"
+    alt="Mapa visual de la organización del código de Mesa de Ayuda 2.0"
+    width="100%"
+  />
+</p>
+
+<details>
+<summary><strong>Explorar estructura técnica</strong></summary>
+
+<br />
 
 ```text
 src/
@@ -338,11 +369,9 @@ src/
 │   ├── providers/
 │   ├── router/
 │   └── styles/
-│
 ├── components/
 │   ├── layout/
 │   └── ui/
-│
 ├── features/
 │   ├── attention-create/
 │   ├── attentions/
@@ -352,7 +381,6 @@ src/
 │   ├── placeholders/
 │   ├── profile/
 │   └── tracking/
-│
 ├── shared/
 │   ├── api/
 │   ├── catalogs/
@@ -361,180 +389,36 @@ src/
 │   ├── lib/
 │   ├── navigation/
 │   └── permissions/
-│
 └── main.tsx
 ```
 
-La organización favorece:
+</details>
 
-- separación por dominio;
-- componentes reutilizables;
-- dependencias explícitas;
-- contratos tipados;
-- testabilidad;
-- escalabilidad.
-
----
-
-## ✅ Calidad y auditoría
-
-Estado validado durante el saneamiento del frontend:
-
-| Validación                   |                           Resultado |
-| ---------------------------- | ----------------------------------: |
-| UTF-8 válido                 |                                  ✅ |
-| BOM                          |                                 `0` |
-| Mojibake conocido            |                                 `0` |
-| Prettier                     |                                  ✅ |
-| Estructura                   | `110` archivos TypeScript validados |
-| Imports locales sin resolver |                                 `0` |
-| TypeScript                   |                                  ✅ |
-| ESLint                       |         ✅ `0 errores / 0 warnings` |
-| Unit tests                   |                          ✅ `29/29` |
-| Build Vite                   |                                  ✅ |
-| React Doctor                 |                        ✅ `100/100` |
-
-### Quality gate
-
-El proyecto dispone de un control integral:
-
-```powershell
-npm run quality
-```
-
-que ejecuta:
-
-```text
-validate:encoding
-        ↓
-format:check
-        ↓
-validate:structure
-        ↓
-typecheck
-        ↓
-lint
-        ↓
-test
-        ↓
-build
-        ↓
-React Doctor
-```
-
-### Encoding
-
-También puede ejecutarse de forma independiente:
-
-```powershell
-npm run validate:encoding
-```
-
-Este control detecta:
-
-- UTF-8 inválido;
-- BOM;
-- mojibake;
-- caracteres Unicode de reemplazo.
-
----
-
-## 🧪 Comandos de desarrollo
-
-```powershell
-npm run dev
-npm run build
-npm run typecheck
-npm run lint
-npm run format
-npm run format:check
-npm run test
-npm run test:e2e
-npm run validate:encoding
-npm run validate:structure
-npm run doctor
-npm run quality
-```
-
----
-
-## 🛡️ Seguridad
-
-El frontend aplica las siguientes reglas:
-
-- Access token únicamente en memoria.
-- Bearer Token para APIs protegidas.
-- Sin JWT persistidos en Web Storage.
-- Sin credenciales en parámetros de URL.
-- `redirect-code` de un solo uso para entrada desde Login Universal.
-- Limpieza de parámetros de intercambio después de procesarlos.
-- Logout sincronizado mediante `BroadcastChannel`.
-- Cierre de sesión por inactividad.
-- Limpieza local incluso cuando el logout remoto no puede completarse.
-- Backend como autoridad final de autenticación y autorización.
-
-### Dependencia pendiente de Backend
-
-Para completar el modelo de sesión previsto se requiere que `auth_service`
-administre el refresh token mediante cookie `HttpOnly`.
-
-Hasta que el contrato Backend sea actualizado:
-
-- no se considera validada la restauración real tras F5;
-- no se considera validado el refresh real mediante cookie;
-- no se considera completado el E2E real Auth → Mesa → F5 → logout.
-
----
-
-## 🧭 Estado del proyecto
-
-### Frontend completado
-
-- [x] Arquitectura modular.
-- [x] Dashboard.
-- [x] Atenciones.
-- [x] Registro de atenciones.
-- [x] Seguimiento.
-- [x] Organizador.
-- [x] Perfil.
-- [x] Integración `redirect-code` / `exchange-code`.
-- [x] Access token exclusivamente en memoria.
-- [x] Cierre por inactividad.
-- [x] Sincronización de logout.
-- [x] Code splitting por rutas.
-- [x] UTF-8 sin BOM ni mojibake.
-- [x] Prettier.
-- [x] TypeScript.
-- [x] ESLint.
-- [x] Unit tests.
-- [x] Build de producción.
-- [x] React Doctor 100/100.
-- [x] Quality gate automatizado.
-
-### Integración pendiente
-
-- [ ] Alineación de refresh token `HttpOnly` en `auth_service`.
-- [ ] Validación E2E real Auth → Mesa → F5 → logout.
-- [ ] Validación final del ambiente de producción.
-
-### Evolutivo
-
-- [ ] Auditoría Lighthouse y Web Vitals.
-- [ ] Auditoría dedicada de accesibilidad.
-- [ ] Pruebas de integración contra servicios productivos/no simulados cuando corresponda.
-- [ ] Observabilidad y estrategia de despliegue por ambientes.
+<p align="center">
+  <img src="https://img.shields.io/badge/Feature--based-architecture-7C3AED?style=flat-square" alt="Feature based architecture" />
+  <img src="https://img.shields.io/badge/Strict-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="Strict TypeScript" />
+  <img src="https://img.shields.io/badge/Component--driven-UI-06B6D4?style=flat-square&logo=react&logoColor=white" alt="Component driven UI" />
+  <img src="https://img.shields.io/badge/Typed-contracts-059669?style=flat-square" alt="Typed contracts" />
+</p>
 
 ---
 
 ## 🎨 Diseño
 
-Referencia principal de diseño:
+<div align="center">
 
-**Mesa de Ayuda 2.0**
+<p>
+  La interfaz se diseñó como parte del sistema visual del <strong>Ecosistema Integral DGCP</strong>,
+  manteniendo consistencia entre layout, navegación, componentes y estados.
+</p>
 
-```text
-QajWuVBDoFpZ4bSQqI4ZML
-```
+<p>
+  <a href="https://www.figma.com/design/QajWuVBDoFpZ4bSQqI4ZML/Mesa-de-Ayuda-2.0?node-id=0-1&t=mOrXzvU57rhdF9P2-1">
+    <img src="https://img.shields.io/badge/Explorar_Mesa_de_Ayuda_2.0-Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white" alt="Explorar Mesa de Ayuda 2.0 en Figma" />
+  </a>
+</p>
+
+</div>
 
 ---
 
@@ -542,11 +426,36 @@ QajWuVBDoFpZ4bSQqI4ZML
 
 <div align="center">
 
-<strong>Javier Garcia</strong><br />
-Programador Jr · Diseño y desarrollo frontend
+<br />
 
-  <br />
-  <br />
+<img
+  src="https://github.com/Javiergr99.png"
+  width="92"
+  height="92"
+  alt="Javier Garcia"
+/>
+
+### Javier Garcia
+
+**Programador Jr · Frontend Developer · UX/UI**
+
+Diseño y desarrollo de interfaces modulares, consistentes y orientadas a producto.
+
+<br />
+
+<a href="https://github.com/Javiergr99">
+  <img src="https://img.shields.io/badge/GitHub-Javiergr99-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub de Javier Garcia" />
+</a>
+
+<br />
+<br />
+
+<img src="https://img.shields.io/badge/Code-React_%2B_TypeScript-61DAFB?style=flat-square&logo=react&logoColor=0F172A" alt="React y TypeScript" />
+<img src="https://img.shields.io/badge/Design-Figma-F24E1E?style=flat-square&logo=figma&logoColor=white" alt="Figma" />
+<img src="https://img.shields.io/badge/Focus-Frontend_Architecture-7C3AED?style=flat-square" alt="Frontend Architecture" />
+
+<br />
+<br />
 
 <a href="#top"><strong>Volver al inicio ↑</strong></a>
 
