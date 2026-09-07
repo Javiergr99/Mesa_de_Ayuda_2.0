@@ -64,11 +64,7 @@ export async function mesaAyudaRequest<T>(
   const { retryOnUnauthorized = true } = options;
   const firstAttempt = await executeMesaAyudaRequest<T>(path, init);
 
-  if (
-    firstAttempt.response.status === 401 &&
-    retryOnUnauthorized &&
-    authTokenStorage.hasSession()
-  ) {
+  if (firstAttempt.response.status === 401 && retryOnUnauthorized) {
     try {
       await refreshAuthSession();
     } catch (error) {

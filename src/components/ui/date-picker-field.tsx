@@ -1,4 +1,4 @@
-import { useId, useMemo, useState } from "react";
+import { useId, useState } from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { DayPicker } from "@daypicker/react";
 import { es } from "@daypicker/react/locale";
@@ -40,6 +40,51 @@ function toDisplayDate(date: Date): string {
   return format(date, "dd/MM/yyyy");
 }
 
+function deriveDatePickerState(
+  value: string,
+  minDate: string | undefined,
+  maxDate: string | undefined,
+  error: string | boolean | undefined,
+  placeholder: string,
+) {
+  const selectedDate = parseDateValue(value);
+  const minDateValue = parseDateValue(minDate);
+  const maxDateValue = parseDateValue(maxDate);
+  const today = startOfDay(new Date());
+
+  const errorMessage =
+    typeof error === "string" ? error : error ? "Seleccione una fecha válida." : "";
+
+  const todayIsAllowed =
+    (!minDateValue || today >= minDateValue) && (!maxDateValue || today <= maxDateValue);
+
+  const disabledDays = [
+    ...(minDateValue ? [{ before: minDateValue }] : []),
+    ...(maxDateValue ? [{ after: maxDateValue }] : []),
+  ];
+
+  const triggerText = selectedDate ? toDisplayDate(selectedDate) : placeholder;
+
+  const triggerTextClassName = selectedDate
+    ? "font-medium text-[var(--ui-text-primary)]"
+    : "text-[var(--ui-text-secondary)]";
+
+  const defaultMonth = selectedDate ?? maxDateValue ?? today;
+
+  return {
+    selectedDate,
+    minDateValue,
+    maxDateValue,
+    today,
+    errorMessage,
+    todayIsAllowed,
+    disabledDays,
+    triggerText,
+    triggerTextClassName,
+    defaultMonth,
+  };
+}
+
 export function DatePickerField({
   id,
   label,
@@ -57,21 +102,18 @@ export function DatePickerField({
   const errorId = `${triggerId}-error`;
   const [open, setOpen] = useState(false);
 
-  const selectedDate = useMemo(() => parseDateValue(value), [value]);
-  const minDateValue = useMemo(() => parseDateValue(minDate), [minDate]);
-  const maxDateValue = useMemo(() => parseDateValue(maxDate), [maxDate]);
-  const today = startOfDay(new Date());
-
-  const errorMessage =
-    typeof error === "string" ? error : error ? "Seleccione una fecha válida." : "";
-
-  const todayIsAllowed =
-    (!minDateValue || today >= minDateValue) && (!maxDateValue || today <= maxDateValue);
-
-  const disabledDays = [
-    ...(minDateValue ? [{ before: minDateValue }] : []),
-    ...(maxDateValue ? [{ after: maxDateValue }] : []),
-  ];
+  const {
+    selectedDate,
+    minDateValue,
+    maxDateValue,
+    today,
+    errorMessage,
+    todayIsAllowed,
+    disabledDays,
+    triggerText,
+    triggerTextClassName,
+    defaultMonth,
+  } = deriveDatePickerState(value, minDate, maxDate, error, placeholder);
 
   function selectDate(date: Date | undefined) {
     if (!date) {
@@ -128,16 +170,7 @@ export function DatePickerField({
                 aria-hidden="true"
                 className="h-4 w-4 shrink-0 text-[var(--ui-primary)]"
               />
-              <span
-                className={cn(
-                  "truncate",
-                  selectedDate
-                    ? "font-medium text-[var(--ui-text-primary)]"
-                    : "text-[var(--ui-text-secondary)]",
-                )}
-              >
-                {selectedDate ? toDisplayDate(selectedDate) : placeholder}
-              </span>
+              <span className={cn("truncate", triggerTextClassName)}>{triggerText}</span>
             </span>
 
             <ChevronDown
@@ -168,7 +201,7 @@ export function DatePickerField({
               disabled={disabledDays}
               startMonth={minDateValue}
               endMonth={maxDateValue}
-              defaultMonth={selectedDate ?? maxDateValue ?? today}
+              defaultMonth={defaultMonth}
             />
 
             <div className="mt-2 flex items-center justify-between border-t border-[var(--ui-border)] pt-3">

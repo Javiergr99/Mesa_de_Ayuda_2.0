@@ -36,6 +36,20 @@ const periodOptions = [
   { label: "Año actual", value: "year" },
 ];
 
+function firstDashboardError(errors: unknown[]): unknown {
+  return errors.find((error) => error !== null && error !== undefined);
+}
+
+function hasActiveDashboardQuery(states: boolean[]): boolean {
+  return states.some(Boolean);
+}
+
+function dashboardErrorMessage(error: unknown): string {
+  return error instanceof Error
+    ? error.message
+    : "No fue posible consultar todos los indicadores del dashboard.";
+}
+
 export function DashboardPage() {
   const [period, setPeriod] = useState<DashboardPeriod>("30");
   const filters = useMemo(() => filtersForPeriod(period), [period]);
@@ -50,13 +64,18 @@ export function DashboardPage() {
   });
 
   const summary = summaryQuery.data;
-  const error =
-    summaryQuery.error ?? temporalQuery.error ?? entitiesQuery.error ?? recentQuery.error;
-  const isRefreshing =
-    summaryQuery.isFetching ||
-    temporalQuery.isFetching ||
-    entitiesQuery.isFetching ||
-    recentQuery.isFetching;
+  const error = firstDashboardError([
+    summaryQuery.error,
+    temporalQuery.error,
+    entitiesQuery.error,
+    recentQuery.error,
+  ]);
+  const isRefreshing = hasActiveDashboardQuery([
+    summaryQuery.isFetching,
+    temporalQuery.isFetching,
+    entitiesQuery.isFetching,
+    recentQuery.isFetching,
+  ]);
 
   async function refreshDashboard() {
     await Promise.all([
@@ -111,9 +130,7 @@ export function DashboardPage() {
 
       {error ? (
         <Card role="alert" className="border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {error instanceof Error
-            ? error.message
-            : "No fue posible consultar todos los indicadores del dashboard."}
+          {dashboardErrorMessage(error)}
         </Card>
       ) : null}
 

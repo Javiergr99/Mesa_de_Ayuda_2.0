@@ -32,7 +32,6 @@ describe("JWT action claims", () => {
   it("lee las acciones concretas del access token", () => {
     authTokenStorage.save({
       access_token: tokenWithActions(["VER_BITACORA", "VER_DASHBOARD"]),
-      refresh_token: "refresh",
     });
 
     expect(getAccessTokenActionNames()).toEqual(["VER_BITACORA", "VER_DASHBOARD"]);

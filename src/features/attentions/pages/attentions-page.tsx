@@ -86,6 +86,135 @@ function hasFilters(filters: AttentionsFilterState): boolean {
   return Object.values(filters).some((value) => Boolean(value));
 }
 
+function buildAttentionsParams(filters: AttentionsFilterState, page: number) {
+  return {
+    nombre: filters.query.trim() || undefined,
+    tipo_registro_id: filters.registryId ? Number(filters.registryId) : undefined,
+    estatus_id: filters.statusId ? Number(filters.statusId) : undefined,
+    entidad_federativa_id: filters.entityId ? Number(filters.entityId) : undefined,
+    tipo_caso_id: filters.caseTypeId ? Number(filters.caseTypeId) : undefined,
+    fecha_inicio: filters.startDate || undefined,
+    fecha_fin: filters.endDate || undefined,
+    pagina: page,
+    limite: 25,
+  };
+}
+
+type AttentionsResultsProps = {
+  isPending: boolean;
+  total: number;
+  hasActiveFilters: boolean;
+  attentions: Attention[];
+  view: AttentionsViewMode;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  onClearFilters: () => void;
+  onViewChange: (view: AttentionsViewMode) => void;
+  onViewAttention: (attention: Attention) => void;
+  onPageChange: (page: number) => void;
+};
+
+function AttentionsEmptyResults({
+  hasActiveFilters,
+  onClearFilters,
+}: Pick<AttentionsResultsProps, "hasActiveFilters" | "onClearFilters">) {
+  if (hasActiveFilters) {
+    return (
+      <Card>
+        <EmptyState
+          icon={SearchX}
+          title="No se encontraron atenciones"
+          description="Cambie los filtros o el término de búsqueda para consultar otros registros."
+          tone="slate"
+          size="lg"
+          action={
+            <Button variant="secondary" onClick={onClearFilters}>
+              Limpiar filtros
+            </Button>
+          }
+        />
+      </Card>
+    );
+  }
+
+  return (
+    <Card>
+      <EmptyState
+        icon={ClipboardList}
+        title="No hay atenciones registradas"
+        description="Las atenciones capturadas aparecerán en esta sección."
+        size="lg"
+        action={
+          <Button asChild>
+            <Link to="/app/atenciones/nueva">
+              <Plus className="h-4 w-4" />
+              Registrar atención
+            </Link>
+          </Button>
+        }
+      />
+    </Card>
+  );
+}
+
+function AttentionsCollection({
+  view,
+  attentions,
+  onViewAttention,
+}: Pick<AttentionsResultsProps, "view" | "attentions" | "onViewAttention">) {
+  if (view === "table") {
+    return <AttentionTable attentions={attentions} onView={onViewAttention} />;
+  }
+
+  return <AttentionBoard attentions={attentions} onView={onViewAttention} />;
+}
+
+function AttentionsResults({
+  isPending,
+  total,
+  hasActiveFilters,
+  attentions,
+  view,
+  page,
+  pageSize,
+  totalPages,
+  onClearFilters,
+  onViewChange,
+  onViewAttention,
+  onPageChange,
+}: AttentionsResultsProps) {
+  if (isPending) {
+    return <AttentionSkeleton />;
+  }
+
+  if (total === 0) {
+    return (
+      <AttentionsEmptyResults hasActiveFilters={hasActiveFilters} onClearFilters={onClearFilters} />
+    );
+  }
+
+  return (
+    <>
+      <AttentionsResultsToolbar
+        total={total}
+        pageSize={pageSize}
+        view={view}
+        onViewChange={onViewChange}
+      />
+
+      <AttentionsCollection view={view} attentions={attentions} onViewAttention={onViewAttention} />
+
+      <DataTablePagination
+        page={page}
+        totalPages={Math.max(totalPages, 1)}
+        totalItems={total}
+        pageSize={pageSize}
+        onPageChange={onPageChange}
+      />
+    </>
+  );
+}
 export function AttentionsPage() {
   const navigate = useNavigate();
   const [view, setView] = useState<AttentionsViewMode>("table");
@@ -97,20 +226,7 @@ export function AttentionsPage() {
   });
   const [page, setPage] = useState(1);
 
-  const params = useMemo(
-    () => ({
-      nombre: appliedFilters.query.trim() || undefined,
-      tipo_registro_id: appliedFilters.registryId ? Number(appliedFilters.registryId) : undefined,
-      estatus_id: appliedFilters.statusId ? Number(appliedFilters.statusId) : undefined,
-      entidad_federativa_id: appliedFilters.entityId ? Number(appliedFilters.entityId) : undefined,
-      tipo_caso_id: appliedFilters.caseTypeId ? Number(appliedFilters.caseTypeId) : undefined,
-      fecha_inicio: appliedFilters.startDate || undefined,
-      fecha_fin: appliedFilters.endDate || undefined,
-      pagina: page,
-      limite: 25,
-    }),
-    [appliedFilters, page],
-  );
+  const params = useMemo(() => buildAttentionsParams(appliedFilters, page), [appliedFilters, page]);
 
   const attentionsQuery = useAttentions(params);
   const summaryQuery = useDashboardSummary({});
@@ -234,64 +350,20 @@ export function AttentionsPage() {
         onClear={clearFilters}
       />
 
-      {attentionsQuery.isPending ? (
-        <AttentionSkeleton />
-      ) : total === 0 ? (
-        <Card>
-          {hasActiveFilters ? (
-            <EmptyState
-              icon={SearchX}
-              title="No se encontraron atenciones"
-              description="Cambie los filtros o el término de búsqueda para consultar otros registros."
-              tone="slate"
-              size="lg"
-              action={
-                <Button variant="secondary" onClick={clearFilters}>
-                  Limpiar filtros
-                </Button>
-              }
-            />
-          ) : (
-            <EmptyState
-              icon={ClipboardList}
-              title="No hay atenciones registradas"
-              description="Las atenciones capturadas aparecerán en esta sección."
-              size="lg"
-              action={
-                <Button asChild>
-                  <Link to="/app/atenciones/nueva">
-                    <Plus className="h-4 w-4" />
-                    Registrar atención
-                  </Link>
-                </Button>
-              }
-            />
-          )}
-        </Card>
-      ) : (
-        <>
-          <AttentionsResultsToolbar
-            total={total}
-            pageSize={data?.limite ?? 25}
-            view={view}
-            onViewChange={setView}
-          />
-
-          {view === "table" ? (
-            <AttentionTable attentions={attentions} onView={openAttention} />
-          ) : (
-            <AttentionBoard attentions={attentions} onView={openAttention} />
-          )}
-
-          <DataTablePagination
-            page={data?.pagina ?? page}
-            totalPages={Math.max(data?.total_paginas ?? 1, 1)}
-            totalItems={total}
-            pageSize={data?.limite ?? 25}
-            onPageChange={setPage}
-          />
-        </>
-      )}
+      <AttentionsResults
+        isPending={attentionsQuery.isPending}
+        total={total}
+        hasActiveFilters={hasActiveFilters}
+        attentions={attentions}
+        view={view}
+        page={data?.pagina ?? page}
+        pageSize={data?.limite ?? 25}
+        totalPages={data?.total_paginas ?? 1}
+        onClearFilters={clearFilters}
+        onViewChange={setView}
+        onViewAttention={openAttention}
+        onPageChange={setPage}
+      />
     </div>
   );
 }

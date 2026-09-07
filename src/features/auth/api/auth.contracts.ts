@@ -7,16 +7,11 @@ export interface ApiErrorPayload {
 
 export interface TokenResponse {
   access_token: string;
-  refresh_token: string;
   token_type?: string;
 }
 
 export interface ExchangeCodeRequest {
   code: string;
-}
-
-export interface RefreshTokenRequest {
-  refresh_token: string;
 }
 
 export interface AuthAction {

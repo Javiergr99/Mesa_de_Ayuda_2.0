@@ -66,9 +66,16 @@ describe("AppSidebar", () => {
     const onNavigate = vi.fn();
     renderSidebar({ onNavigate });
 
-    fireEvent.click(screen.getByRole("link", { name: "Atenciones" }), {
+    const link = screen.getByRole("link", { name: "Atenciones" });
+
+    link.addEventListener("click", (event) => event.preventDefault(), {
+      once: true,
+    });
+
+    fireEvent.click(link, {
       ctrlKey: true,
     });
+
     expect(onNavigate).not.toHaveBeenCalled();
   });
 });

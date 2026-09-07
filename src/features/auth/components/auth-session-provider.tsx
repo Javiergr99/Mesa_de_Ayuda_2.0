@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 
-import { AUTH_SESSION_EXPIRED_EVENT } from "@/features/auth/api/auth-client";
+import { AUTH_SESSION_EXPIRED_EVENT, refreshAuthSession } from "@/features/auth/api/auth-client";
 import { queryClient } from "@/app/providers/query-client";
 import { authService } from "@/features/auth/api/auth.service";
 import { useAuthStore } from "@/features/auth/model/auth.store";
@@ -90,18 +90,24 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      if (!authTokenStorage.hasSession()) {
-        useAuthStore.getState().setAnonymous();
-        return;
-      }
-
       useAuthStore.getState().setChecking();
+
       try {
+        if (!authTokenStorage.getAccessToken()) {
+          await refreshAuthSession();
+        }
+
         const user = await authService.getCurrentUser();
-        if (active) useAuthStore.getState().setAuthenticated(user);
+
+        if (active) {
+          useAuthStore.getState().setAuthenticated(user);
+        }
       } catch {
         authTokenStorage.clear();
-        if (active) useAuthStore.getState().setAnonymous();
+
+        if (active) {
+          useAuthStore.getState().setAnonymous();
+        }
       }
     };
 

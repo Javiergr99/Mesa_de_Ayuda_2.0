@@ -30,10 +30,6 @@ export const authTokenStorage = {
     return sessionPersistence.get();
   },
 
-  hasSession(): boolean {
-    return Boolean(accessToken) || sessionPersistence.has();
-  },
-
   clear() {
     accessToken = null;
     sessionPersistence.clear();

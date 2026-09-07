@@ -1,7 +1,7 @@
 import type { ApiErrorPayload, TokenResponse } from "@/features/auth/api/auth.contracts";
 import { authTokenStorage } from "@/features/auth/services/token-storage";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
+const API_URL = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8001";
 
 export const AUTH_SESSION_EXPIRED_EVENT = "mesa-ayuda:session-expired";
 
@@ -53,10 +53,6 @@ function rememberSessionHeader(): HeadersInit {
 }
 
 export async function refreshAuthSession(): Promise<TokenResponse> {
-  if (!authTokenStorage.hasSession()) {
-    throw new Error("No existe una sesión renovable.");
-  }
-
   if (!refreshPromise) {
     refreshPromise = fetch(`${API_URL}/auth/refresh`, {
       method: "POST",
@@ -114,12 +110,7 @@ export async function authRequest<T>(
     headers,
   });
 
-  if (
-    response.status === 401 &&
-    authenticated &&
-    retryOnUnauthorized &&
-    authTokenStorage.hasSession()
-  ) {
+  if (response.status === 401 && authenticated && retryOnUnauthorized) {
     try {
       await refreshAuthSession();
       return await authRequest<T>(path, init, {

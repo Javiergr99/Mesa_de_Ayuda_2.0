@@ -46,6 +46,73 @@ function parseTime(value?: string): { hour: string; minute: string } {
   };
 }
 
+function getTimeErrorMessage(error: string | boolean | undefined): string {
+  if (typeof error === "string") {
+    return error;
+  }
+
+  return error ? "Seleccione una hora válida." : "";
+}
+
+function getTimeTriggerText(value: string, placeholder: string): string {
+  return value ? value.slice(0, 5) : placeholder;
+}
+
+function getTimeTriggerTextClassName(value: string): string {
+  return value ? "font-medium text-[var(--ui-text-primary)]" : "text-[var(--ui-text-secondary)]";
+}
+
+function getTimePickerTriggerClassName(
+  disabled: boolean,
+  error: string | boolean | undefined,
+): string {
+  return cn(
+    "focus-ring flex h-10 w-full min-w-0 items-center justify-between gap-2 rounded-lg border bg-[var(--ui-surface)] px-3 text-left text-sm outline-none transition-colors",
+    disabled
+      ? "cursor-not-allowed border-[var(--ui-border)] bg-slate-50 opacity-60"
+      : "cursor-pointer border-[var(--ui-border)] hover:border-slate-300",
+    error ? "border-red-400" : undefined,
+  );
+}
+
+function TimePickerLabel({ id, label }: { id: string; label: string | undefined }) {
+  if (!label) {
+    return null;
+  }
+
+  return (
+    <label
+      htmlFor={id}
+      className="mb-1.5 block text-xs font-semibold text-[var(--ui-text-secondary)]"
+    >
+      {label}
+    </label>
+  );
+}
+
+function TimeDraftPreview({ hour, minute }: { hour: string; minute: string }) {
+  if (!hour || !minute) {
+    return null;
+  }
+
+  return (
+    <span className="rounded-lg bg-slate-100 px-2.5 py-1 text-sm font-bold tabular-nums text-[var(--ui-primary)]">
+      {hour}:{minute}
+    </span>
+  );
+}
+
+function TimePickerErrorMessage({ id, message }: { id: string; message: string }) {
+  if (!message) {
+    return null;
+  }
+
+  return (
+    <p id={id} role="alert" className="mt-1 text-xs text-red-600">
+      {message}
+    </p>
+  );
+}
 export function TimePickerField({
   id,
   label,
@@ -63,8 +130,11 @@ export function TimePickerField({
   const [draftHour, setDraftHour] = useState("");
   const [draftMinute, setDraftMinute] = useState("");
 
-  const errorMessage =
-    typeof error === "string" ? error : error ? "Seleccione una hora válida." : "";
+  const errorMessage = getTimeErrorMessage(error);
+  const triggerText = getTimeTriggerText(value, placeholder);
+  const triggerTextClassName = getTimeTriggerTextClassName(value);
+  const triggerClassName = getTimePickerTriggerClassName(disabled, error);
+  const canApply = Boolean(draftHour && draftMinute);
 
   function handleOpenChange(nextOpen: boolean) {
     if (nextOpen) {
@@ -103,14 +173,7 @@ export function TimePickerField({
 
   return (
     <div className={cn("min-w-0", className)}>
-      {label ? (
-        <label
-          htmlFor={triggerId}
-          className="mb-1.5 block text-xs font-semibold text-[var(--ui-text-secondary)]"
-        >
-          {label}
-        </label>
-      ) : null}
+      <TimePickerLabel id={triggerId} label={label} />
 
       <PopoverPrimitive.Root open={open} onOpenChange={handleOpenChange}>
         <PopoverPrimitive.Trigger asChild>
@@ -118,28 +181,13 @@ export function TimePickerField({
             id={triggerId}
             type="button"
             disabled={disabled}
-            aria-invalid={Boolean(error) || undefined}
+            aria-invalid={error ? true : undefined}
             aria-describedby={errorMessage ? errorId : undefined}
-            className={cn(
-              "focus-ring flex h-10 w-full min-w-0 items-center justify-between gap-2 rounded-lg border bg-[var(--ui-surface)] px-3 text-left text-sm outline-none transition-colors",
-              disabled
-                ? "cursor-not-allowed border-[var(--ui-border)] bg-slate-50 opacity-60"
-                : "cursor-pointer border-[var(--ui-border)] hover:border-slate-300",
-              error && "border-red-400",
-            )}
+            className={triggerClassName}
           >
             <span className="flex min-w-0 items-center gap-2.5">
               <Clock3 aria-hidden="true" className="h-4 w-4 shrink-0 text-[var(--ui-primary)]" />
-              <span
-                className={cn(
-                  "truncate",
-                  value
-                    ? "font-medium text-[var(--ui-text-primary)]"
-                    : "text-[var(--ui-text-secondary)]",
-                )}
-              >
-                {value ? value.slice(0, 5) : placeholder}
-              </span>
+              <span className={cn("truncate", triggerTextClassName)}>{triggerText}</span>
             </span>
 
             <ChevronDown
@@ -167,11 +215,7 @@ export function TimePickerField({
                 </p>
               </div>
 
-              {draftHour && draftMinute ? (
-                <span className="rounded-lg bg-slate-100 px-2.5 py-1 text-sm font-bold tabular-nums text-[var(--ui-primary)]">
-                  {draftHour}:{draftMinute}
-                </span>
-              ) : null}
+              <TimeDraftPreview hour={draftHour} minute={draftMinute} />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
@@ -216,7 +260,7 @@ export function TimePickerField({
               <button
                 type="button"
                 onClick={applyTime}
-                disabled={!draftHour || !draftMinute}
+                disabled={!canApply}
                 className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--ui-primary)] px-3 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Check aria-hidden="true" className="h-3.5 w-3.5" />
@@ -227,11 +271,7 @@ export function TimePickerField({
         </PopoverPrimitive.Portal>
       </PopoverPrimitive.Root>
 
-      {errorMessage ? (
-        <p id={errorId} role="alert" className="mt-1 text-xs text-red-600">
-          {errorMessage}
-        </p>
-      ) : null}
+      <TimePickerErrorMessage id={errorId} message={errorMessage} />
     </div>
   );
 }

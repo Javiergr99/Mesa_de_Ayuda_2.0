@@ -70,16 +70,16 @@ async function collectFiles(directory) {
   });
 
   const files = [];
+  const directories = [];
 
   for (const entry of entries) {
     const fullPath = path.join(directory, entry.name);
 
     if (entry.isDirectory()) {
-      if (ignoredDirectories.has(entry.name)) {
-        continue;
+      if (!ignoredDirectories.has(entry.name)) {
+        directories.push(fullPath);
       }
 
-      files.push(...(await collectFiles(fullPath)));
       continue;
     }
 
@@ -88,7 +88,11 @@ async function collectFiles(directory) {
     }
   }
 
-  return files;
+  const nestedFiles = await Promise.all(
+    directories.map((nestedDirectory) => collectFiles(nestedDirectory)),
+  );
+
+  return [...files, ...nestedFiles.flat()];
 }
 
 function hasUtf8Bom(buffer) {
@@ -116,9 +120,10 @@ function firstMatchingLine(content, pattern) {
 
 const files = await collectFiles(root);
 const issues = [];
+const fileBuffers = await Promise.all(files.map((file) => readFile(file)));
 
-for (const file of files) {
-  const buffer = await readFile(file);
+for (const [index, file] of files.entries()) {
+  const buffer = fileBuffers[index];
 
   if (hasUtf8Bom(buffer)) {
     issues.push({
