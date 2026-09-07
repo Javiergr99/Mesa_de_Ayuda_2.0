@@ -20,27 +20,35 @@
 
 <p>
   <img src="https://img.shields.io/badge/Frontend-saneado-22C55E?style=for-the-badge" alt="Frontend saneado" />
-  <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=0F172A" alt="React 19.2" />
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=0F172A" alt="React 19" />
   <img src="https://img.shields.io/badge/TypeScript-6-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 6" />
   <img src="https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 8" />
 </p>
 
 <p>
+  <img src="https://img.shields.io/badge/Auth-v2-059669?style=for-the-badge" alt="Auth v2" />
   <img src="https://img.shields.io/badge/React_Doctor-100%2F100-22C55E?style=for-the-badge&logo=react&logoColor=white" alt="React Doctor 100 de 100" />
   <img src="https://img.shields.io/badge/Tests-29%2F29-22C55E?style=for-the-badge&logo=vitest&logoColor=white" alt="29 de 29 tests" />
   <img src="https://img.shields.io/badge/UTF--8-sin_BOM-0EA5E9?style=for-the-badge" alt="UTF-8 sin BOM" />
 </p>
 
 <p>
+  <img src="https://img.shields.io/badge/E2E_Login→Mesa-PASS-22C55E?style=for-the-badge&logo=playwright&logoColor=white" alt="E2E Login a Mesa aprobado" />
+  <img src="https://img.shields.io/badge/npm_audit_prod-0_vulnerabilidades-22C55E?style=for-the-badge&logo=npm&logoColor=white" alt="npm audit producción cero vulnerabilidades" />
+</p>
+
+<p>
   <a href="#-vista-previa"><strong>Vista previa</strong></a>
   ·
-  <a href="#-arquitectura"><strong>Arquitectura</strong></a>
+  <a href="#️-arquitectura"><strong>Arquitectura</strong></a>
   ·
   <a href="#-capacidades-del-producto"><strong>Capacidades</strong></a>
   ·
-  <a href="#-stack-tecnológico"><strong>Stack</strong></a>
+  <a href="#-integración-auth-v2"><strong>Auth v2</strong></a>
   ·
-  <a href="#-arquitectura-del-código"><strong>Código</strong></a>
+  <a href="#️-stack-tecnológico"><strong>Stack</strong></a>
+  ·
+  <a href="#-calidad"><strong>Calidad</strong></a>
   ·
   <a href="#-diseño"><strong>Figma</strong></a>
 </p>
@@ -51,12 +59,11 @@
 
 ## ✨ Descripción
 
-**Mesa de Ayuda 2.0** es el frontend operativo de atención y seguimiento dentro del
-**Ecosistema Integral DGCP**.
+**Mesa de Ayuda 2.0** es el frontend operativo de atención y seguimiento dentro del **Ecosistema Integral DGCP**.
 
-Su función es concentrar los flujos de registro, consulta y seguimiento de atenciones
-en una experiencia modular, consistente y preparada para integrarse con los servicios
-institucionales del ecosistema.
+Su función es concentrar los flujos de registro, consulta y seguimiento de atenciones en una experiencia modular, consistente y preparada para integrarse con los servicios institucionales del ecosistema.
+
+El acceso se realiza mediante la autenticación centralizada de **Login Access**, manteniendo a Mesa como un frontend de negocio independiente.
 
 <table>
 <tr>
@@ -133,7 +140,7 @@ Filtros, detalle, historial y continuidad operativa.
 
 <br /><br />
 
-El usuario se autentica en Login Universal.
+El usuario se autentica mediante Login Access.
 
 </td>
 <td width="25%" align="center" valign="top">
@@ -142,7 +149,7 @@ El usuario se autentica en Login Universal.
 
 <br /><br />
 
-Mesa recibe un <code>redirect-code</code> de un solo uso.
+Mesa recibe un <code>redirect-code</code> temporal de un solo uso.
 
 </td>
 <td width="25%" align="center" valign="top">
@@ -151,7 +158,7 @@ Mesa recibe un <code>redirect-code</code> de un solo uso.
 
 <br /><br />
 
-Se intercambia el código y el access token vive en memoria.
+El código se intercambia y el access token permanece únicamente en memoria.
 
 </td>
 <td width="25%" align="center" valign="top">
@@ -160,7 +167,7 @@ Se intercambia el código y el access token vive en memoria.
 
 <br /><br />
 
-Mesa consume su API para atender el dominio operativo.
+Mesa consume su API mediante solicitudes autenticadas con Bearer.
 
 </td>
 </tr>
@@ -170,6 +177,7 @@ Mesa consume su API para atender el dominio operativo.
   <img src="https://img.shields.io/badge/Login-independiente-2563EB?style=flat-square" alt="Login independiente" />
   <img src="https://img.shields.io/badge/Redirect--code-7C3AED?style=flat-square" alt="Redirect code" />
   <img src="https://img.shields.io/badge/Access_token-en_memoria-059669?style=flat-square" alt="Access token en memoria" />
+  <img src="https://img.shields.io/badge/Refresh-HttpOnly-F59E0B?style=flat-square" alt="Refresh mediante cookie HttpOnly" />
   <img src="https://img.shields.io/badge/API-operativa-C2410C?style=flat-square" alt="API operativa" />
 </p>
 
@@ -252,7 +260,7 @@ Información administrativa del usuario y estado de seguridad.
 
 <br /><br />
 
-Entrada mediante redirect-code, guards e inactividad.
+Entrada mediante redirect-code, intercambio de sesión, guards e inactividad.
 
 <br /><br />
 
@@ -261,6 +269,127 @@ Entrada mediante redirect-code, guards e inactividad.
 </td>
 </tr>
 </table>
+
+---
+
+## 🔐 Integración Auth v2
+
+Mesa de Ayuda utiliza la sesión emitida por `auth_service` sin persistir tokens sensibles en Web Storage.
+
+<table>
+<tr>
+<td width="33%" valign="top">
+
+<strong>↗️ Exchange</strong>
+
+<br /><br />
+
+El <code>redirect-code</code> recibido desde Login Access se intercambia mediante el servicio de autenticación.
+
+<br /><br />
+
+<code>exchange-code</code>
+
+</td>
+<td width="33%" valign="top">
+
+<strong>🧠 Access token</strong>
+
+<br /><br />
+
+El token de acceso permanece únicamente en memoria.
+
+<br /><br />
+
+<code>memory-only</code>
+
+</td>
+<td width="33%" valign="top">
+
+<strong>🍪 Refresh</strong>
+
+<br /><br />
+
+La renovación utiliza la cookie <code>HttpOnly</code> administrada por backend.
+
+<br /><br />
+
+<code>cookie-first</code>
+
+</td>
+</tr>
+<tr>
+<td width="33%" valign="top">
+
+<strong>🔄 F5</strong>
+
+<br /><br />
+
+Si la memoria se pierde al recargar, la sesión se restaura mediante <code>/auth/refresh</code>.
+
+<br /><br />
+
+<code>bootstrap</code> · <code>refresh</code>
+
+</td>
+<td width="33%" valign="top">
+
+<strong>🔑 Bearer</strong>
+
+<br /><br />
+
+Las operaciones protegidas envían el access token mediante <code>Authorization: Bearer</code>.
+
+<br /><br />
+
+<code>authenticated API</code>
+
+</td>
+<td width="33%" valign="top">
+
+<strong>🚪 Logout</strong>
+
+<br /><br />
+
+La salida revoca la sesión y limpia el estado local de autenticación.
+
+<br /><br />
+
+<code>logout</code> · <code>clear</code>
+
+</td>
+</tr>
+</table>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Access-memory_only-059669?style=flat-square" alt="Access token solo en memoria" />
+  <img src="https://img.shields.io/badge/Refresh-HttpOnly_cookie-2563EB?style=flat-square" alt="Refresh mediante cookie HttpOnly" />
+  <img src="https://img.shields.io/badge/Web_Storage-zero_tokens-7C3AED?style=flat-square" alt="Cero tokens en Web Storage" />
+  <img src="https://img.shields.io/badge/Bearer-API_auth-F59E0B?style=flat-square" alt="Bearer para API" />
+</p>
+
+### Flujo
+
+```text
+Login Access
+     │
+     ▼
+redirect-code
+     │
+     ▼
+Mesa de Ayuda
+     │
+     ▼
+exchange-code
+     │
+     ├── access token → memoria
+     └── refresh → cookie HttpOnly
+     │
+     ▼
+API Mesa
+     │
+     └── Authorization: Bearer
+```
 
 ---
 
@@ -278,7 +407,7 @@ Entrada mediante redirect-code, guards e inactividad.
 <br />
 <br />
 
-<img src="https://img.shields.io/badge/React-19.2-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React 19.2" />
+<img src="https://img.shields.io/badge/React-19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React 19" />
 <img src="https://img.shields.io/badge/TypeScript-6-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 6" />
 <img src="https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 8" />
 <img src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS 4" />
@@ -325,7 +454,7 @@ Entrada mediante redirect-code, guards e inactividad.
 
 <img src="https://img.shields.io/badge/Vitest-unit_tests-6E9F18?style=flat-square&logo=vitest&logoColor=white" alt="Vitest" />
 <img src="https://img.shields.io/badge/Testing_Library-components-E33332?style=flat-square&logo=testinglibrary&logoColor=white" alt="Testing Library" />
-<img src="https://img.shields.io/badge/Playwright-E2E-2EAD33?style=flat-square&logo=playwright&logoColor=white" alt="Playwright" />
+<img src="https://img.shields.io/badge/Playwright-integration_E2E-2EAD33?style=flat-square&logo=playwright&logoColor=white" alt="Playwright E2E" />
 <img src="https://img.shields.io/badge/ESLint-quality-4B32C3?style=flat-square&logo=eslint&logoColor=white" alt="ESLint" />
 <img src="https://img.shields.io/badge/Prettier-format-F7B93E?style=flat-square&logo=prettier&logoColor=111827" alt="Prettier" />
 <img src="https://img.shields.io/badge/React_Doctor-100%2F100-22C55E?style=flat-square&logo=react&logoColor=white" alt="React Doctor 100 de 100" />
@@ -399,6 +528,104 @@ src/
   <img src="https://img.shields.io/badge/Strict-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="Strict TypeScript" />
   <img src="https://img.shields.io/badge/Component--driven-UI-06B6D4?style=flat-square&logo=react&logoColor=white" alt="Component driven UI" />
   <img src="https://img.shields.io/badge/Typed-contracts-059669?style=flat-square" alt="Typed contracts" />
+</p>
+
+---
+
+## 🧪 Calidad
+
+Mesa de Ayuda 2.0 mantiene un quality gate orientado a asegurar consistencia estructural, tipado, comportamiento, encoding y calidad React.
+
+<table>
+<tr>
+<td width="25%" align="center" valign="top">
+
+<strong>Encoding</strong>
+
+<br /><br />
+
+UTF-8 sin BOM y cero mojibake.
+
+<br /><br />
+
+<code>PASS</code>
+
+</td>
+<td width="25%" align="center" valign="top">
+
+<strong>Static analysis</strong>
+
+<br /><br />
+
+TypeScript, ESLint y Prettier.
+
+<br /><br />
+
+<code>PASS</code>
+
+</td>
+<td width="25%" align="center" valign="top">
+
+<strong>Testing</strong>
+
+<br /><br />
+
+Suite unitaria del frontend.
+
+<br /><br />
+
+<code>29 / 29</code>
+
+</td>
+<td width="25%" align="center" valign="top">
+
+<strong>React</strong>
+
+<br /><br />
+
+Auditoría estructural con React Doctor.
+
+<br /><br />
+
+<code>100 / 100</code>
+
+</td>
+</tr>
+</table>
+
+Estado de certificación:
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Encoding-PASS-22C55E?style=flat-square" alt="Encoding PASS" />
+  <img src="https://img.shields.io/badge/Prettier-PASS-22C55E?style=flat-square" alt="Prettier PASS" />
+  <img src="https://img.shields.io/badge/Structure-PASS-22C55E?style=flat-square" alt="Structure PASS" />
+  <img src="https://img.shields.io/badge/TypeScript-PASS-22C55E?style=flat-square" alt="TypeScript PASS" />
+  <img src="https://img.shields.io/badge/ESLint-PASS-22C55E?style=flat-square" alt="ESLint PASS" />
+  <img src="https://img.shields.io/badge/Vitest-29%2F29-22C55E?style=flat-square&logo=vitest&logoColor=white" alt="29 de 29 pruebas" />
+  <img src="https://img.shields.io/badge/Build-PASS-22C55E?style=flat-square&logo=vite&logoColor=white" alt="Build PASS" />
+  <img src="https://img.shields.io/badge/React_Doctor-100%2F100-22C55E?style=flat-square&logo=react&logoColor=white" alt="React Doctor 100 de 100" />
+  <img src="https://img.shields.io/badge/npm_audit_prod-0-22C55E?style=flat-square&logo=npm&logoColor=white" alt="npm audit producción cero vulnerabilidades" />
+</p>
+
+### Integración real
+
+El flujo integrado **Login Access → Mesa de Ayuda** también fue validado mediante Playwright con autenticación real:
+
+```text
+Login
+→ MFA
+→ redirect-code
+→ exchange-code
+→ Mesa de Ayuda
+→ API autenticada
+→ refresh
+→ F5
+→ restauración de sesión
+→ logout
+```
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Login→Mesa_E2E-PASS-22C55E?style=for-the-badge&logo=playwright&logoColor=white" alt="Integración Login a Mesa aprobada" />
 </p>
 
 ---
