@@ -121,8 +121,12 @@ export function getVisibleNavigationChildren(
   return visible;
 }
 
-const formatoNnaPublicUrl =
-  import.meta.env.VITE_FORMATO_NNA_PUBLIC_URL?.trim() || "http://127.0.0.1:5176";
+import { optionalRuntimeUrl } from "@/shared/config/runtime-url";
+
+const formatoNnaPublicUrl = optionalRuntimeUrl(
+  import.meta.env.VITE_FORMATO_NNA_PUBLIC_URL,
+  "http://127.0.0.1:5176",
+);
 
 export const topNavigation = [
   {
@@ -141,9 +145,13 @@ export const topNavigation = [
     label: "Agenda",
     to: "/app/organizador",
   },
-  {
-    label: "Formato de Atenciones NNA",
-    to: formatoNnaPublicUrl,
-    external: true,
-  },
+  ...(formatoNnaPublicUrl
+    ? [
+        {
+          label: "Formato de Atenciones NNA",
+          to: formatoNnaPublicUrl,
+          external: true,
+        } as const,
+      ]
+    : []),
 ] as const;

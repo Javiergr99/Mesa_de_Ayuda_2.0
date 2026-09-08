@@ -1,4 +1,10 @@
-const AUTH_APP_URL = import.meta.env.VITE_AUTH_APP_URL ?? "http://127.0.0.1:5174/login";
+import { requiredRuntimeUrl } from "@/shared/config/runtime-url";
+
+const AUTH_APP_URL = requiredRuntimeUrl(
+  import.meta.env.VITE_AUTH_APP_URL,
+  "VITE_AUTH_APP_URL",
+  "http://127.0.0.1:5174/login",
+);
 
 function authAppUrl(pathname: string): URL {
   const configured = new URL(AUTH_APP_URL, window.location.origin);

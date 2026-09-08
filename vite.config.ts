@@ -6,7 +6,8 @@ import { defineConfig, loadEnv } from "vite";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
-  const mesaAyudaProxyTarget = env.VITE_MESA_AYUDA_API_PROXY_TARGET ?? "http://127.0.0.1:8001";
+  const mesaAyudaProxyTarget =
+    env.VITE_MESA_AYUDA_API_PROXY_TARGET?.trim() || "http://127.0.0.1:8000";
 
   const mesaApiProxy = {
     target: mesaAyudaProxyTarget,

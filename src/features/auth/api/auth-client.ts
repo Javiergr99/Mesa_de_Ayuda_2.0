@@ -1,7 +1,13 @@
 import type { ApiErrorPayload, TokenResponse } from "@/features/auth/api/auth.contracts";
 import { authTokenStorage } from "@/features/auth/services/token-storage";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8001";
+import { requiredRuntimeUrl } from "@/shared/config/runtime-url";
+
+const API_URL = requiredRuntimeUrl(
+  import.meta.env.VITE_API_URL,
+  "VITE_API_URL",
+  "http://127.0.0.1:8001",
+);
 
 export const AUTH_SESSION_EXPIRED_EVENT = "mesa-ayuda:session-expired";
 

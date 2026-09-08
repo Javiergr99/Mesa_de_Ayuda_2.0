@@ -6,7 +6,13 @@ import {
 import { authTokenStorage } from "@/features/auth/services/token-storage";
 import { MesaAyudaApiError, type MesaAyudaErrorPayload } from "@/shared/api/mesa-ayuda-api-error";
 
-const MESA_AYUDA_API_URL = import.meta.env.VITE_MESA_AYUDA_API_URL ?? "/mesa-api";
+import { requiredRuntimeUrl } from "@/shared/config/runtime-url";
+
+const MESA_AYUDA_API_URL = requiredRuntimeUrl(
+  import.meta.env.VITE_MESA_AYUDA_API_URL,
+  "VITE_MESA_AYUDA_API_URL",
+  "/mesa-api",
+);
 
 type RequestOptions = {
   retryOnUnauthorized?: boolean;

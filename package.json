@@ -22,7 +22,11 @@
     "doctor:verbose": "npx react-doctor@latest . --verbose",
     "validate:structure": "node scripts/validate-structure.mjs",
     "quality": "npm run validate:encoding && npm run format:check && npm run validate:structure && npm run typecheck && npm run lint && npm run test && npm run build && npm run doctor",
-    "validate:encoding": "node scripts/validate-encoding.mjs"
+    "validate:encoding": "node scripts/validate-encoding.mjs",
+    "validate:env:production": "node scripts/validate-production-env.mjs",
+    "test:env:production": "node --test tests/production-env-validator.node-check.mjs",
+    "build:production": "npm run validate:env:production && tsc -b && vite build --mode production",
+    "preview:server": "vite preview --host 0.0.0.0 --port 5173 --strictPort"
   },
   "dependencies": {
     "@daypicker/react": "^10.0.1",
