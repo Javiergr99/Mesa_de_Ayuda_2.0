@@ -13,6 +13,7 @@ describe("bitácora mapper", () => {
       tipo_caso_id: 6,
       tipo_registro_id: 5,
       entidad_federativa_id: 33,
+      creado_por: "usuario-creador-uuid",
       created_at: "2026-08-06T20:00:00Z",
     });
 
@@ -21,6 +22,7 @@ describe("bitácora mapper", () => {
     expect(result.caseType).toBe("Soporte técnico");
     expect(result.registry).toBe("GENERAL");
     expect(result.entity).toBe("PFPNNA");
+    expect(result.createdBy).toBe("usuario-creador-uuid");
     expect(result.reference).toContain("12345678");
   });
 });

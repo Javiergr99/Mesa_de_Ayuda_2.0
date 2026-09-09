@@ -144,8 +144,7 @@ export function AttentionAdminSection({
           <ReadonlyValue label="Referencia" value={attention.reference} />
           <ReadonlyValue label="Fecha de creación" value={attention.createdAt} />
           <ReadonlyValue label="Última modificación" value={attention.updatedAt} />
-
-          {registeredBy ? <ReadonlyValue label="Registrado por" value={registeredBy} /> : null}
+          <ReadonlyValue label="Creado por" value={registeredBy?.trim() || attention.createdBy} />
         </div>
       </SectionCard>
 

@@ -34,6 +34,7 @@ function exportAttention(attention: Attention, files: AttentionFile[]) {
     phone: attention.phone,
     instance: attention.instance,
     observations: attention.description,
+    createdBy: attention.createdBy,
     entity: attention.entity,
     status: attention.status,
     caseType: attention.caseType,
