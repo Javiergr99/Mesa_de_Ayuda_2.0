@@ -1,5 +1,5 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { Activity, Bell, ChevronDown, LogOut, ShieldCheck, UserRound } from "lucide-react";
+import { Activity, Bell, ChevronDown, LogOut, Menu, ShieldCheck, UserRound } from "lucide-react";
 import { Link } from "react-router";
 
 import { AccessHubButton } from "@/components/layout/access-hub-button";
@@ -11,7 +11,7 @@ import {
 } from "@/features/auth/model/auth.selectors";
 import { logoutCurrentSession } from "@/features/auth/services/auth-session-actions";
 
-export function AppHeader() {
+export function AppHeader({ onOpenNavigation }: { onOpenNavigation: () => void }) {
   const user = useAuthStore((state) => state.user);
   const displayName = getUserDisplayName(user);
   const roleLabel = getUserRoleLabel(user);
@@ -43,7 +43,17 @@ export function AppHeader() {
 
         <button
           type="button"
-          className="focus-ring grid h-9 w-9 shrink-0 place-items-center rounded-full bg-slate-50 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
+          onClick={onOpenNavigation}
+          className="focus-ring grid h-10 w-10 shrink-0 place-items-center rounded-lg text-[var(--ui-text-secondary)] hover:bg-slate-100 lg:hidden"
+          aria-label="Abrir menú de navegación"
+          aria-haspopup="dialog"
+        >
+          <Menu className="h-5 w-5" aria-hidden="true" />
+        </button>
+
+        <button
+          type="button"
+          className="focus-ring hidden h-9 w-9 shrink-0 place-items-center rounded-full bg-slate-50 sm:grid text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
           aria-label="Notificaciones"
         >
           <Bell className="h-4.5 w-4.5" aria-hidden="true" />
