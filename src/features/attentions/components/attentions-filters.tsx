@@ -4,19 +4,12 @@ import { DatePickerField } from "@/components/ui/date-picker-field";
 import { FilterPanel, type ActiveFilterChip } from "@/components/ui/filter-panel";
 import { Input } from "@/components/ui/input";
 import { SelectField } from "@/components/ui/select-field";
-import {
-  ATTENTION_CASE_CATALOG,
-  ATTENTION_REGISTRY_CATALOG,
-  ATTENTION_STATUS_CATALOG,
-} from "@/features/attentions/model/attention.catalogs";
+import { operationalOptions, useCaseCatalog, useEntityCatalog, useStatusCatalog } from "@/features/attentions/api/operational-catalogs";
+import { registryOptions, useRegistryCatalog } from "@/features/attentions/api/registry-catalog";
 import type {
   AttentionsFilterKey,
   AttentionsFilterState,
 } from "@/features/attentions/lib/attentions-filter.utils";
-import { catalogToSelectOptions } from "@/shared/catalogs/catalog.types";
-import { FEDERAL_ENTITY_CATALOG } from "@/shared/catalogs/federal-entities";
-
-const ENTITY_OPTIONS = catalogToSelectOptions(FEDERAL_ENTITY_CATALOG);
 
 export function AttentionsFilters({
   filters,
@@ -33,6 +26,11 @@ export function AttentionsFilters({
   onApply: () => void;
   onClear: () => void;
 }) {
+  const registryCatalog = useRegistryCatalog();
+  const casesQuery = useCaseCatalog();
+  const statusesQuery = useStatusCatalog();
+  const entitiesQuery = useEntityCatalog();
+
   return (
     <FilterPanel activeFilters={activeFilters} onApply={onApply} onClear={onClear}>
       <Input
@@ -43,16 +41,17 @@ export function AttentionsFilters({
         icon={<Search className="h-4 w-4" />}
       />
 
+      {registryCatalog.isError || casesQuery.isError || statusesQuery.isError || entitiesQuery.isError ? (
+        <p role="alert" className="mt-2 text-xs text-red-600">No fue posible cargar alguno de los catálogos de filtros.</p>
+      ) : null}
+
       <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <SelectField
           label="Tipo de registro"
           value={filters.registryId}
           onValueChange={(value) => onChange("registryId", value)}
           placeholder="Seleccionar registro"
-          options={ATTENTION_REGISTRY_CATALOG.map((item) => ({
-            label: item.label,
-            value: String(item.id),
-          }))}
+          options={registryOptions(registryCatalog.data ?? [], true)}
         />
 
         <SelectField
@@ -60,10 +59,7 @@ export function AttentionsFilters({
           value={filters.statusId}
           onValueChange={(value) => onChange("statusId", value)}
           placeholder="Seleccionar estatus"
-          options={ATTENTION_STATUS_CATALOG.map((item) => ({
-            label: item.label,
-            value: String(item.id),
-          }))}
+          options={operationalOptions(statusesQuery.data ?? [], true)}
         />
 
         <SelectField
@@ -71,7 +67,8 @@ export function AttentionsFilters({
           value={filters.entityId}
           onValueChange={(value) => onChange("entityId", value)}
           placeholder="Seleccionar estado"
-          options={ENTITY_OPTIONS}
+          options={operationalOptions(entitiesQuery.data ?? [], true)}
+          disabled={entitiesQuery.isPending || entitiesQuery.isError}
         />
 
         <SelectField
@@ -79,10 +76,7 @@ export function AttentionsFilters({
           value={filters.caseTypeId}
           onValueChange={(value) => onChange("caseTypeId", value)}
           placeholder="Seleccionar atención"
-          options={ATTENTION_CASE_CATALOG.map((item) => ({
-            label: item.label,
-            value: String(item.id),
-          }))}
+          options={operationalOptions(casesQuery.data ?? [], true)}
         />
 
         <DatePickerField

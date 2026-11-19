@@ -6,6 +6,8 @@ import type {
   BitacoraUpdatePayload,
 } from "@/features/attentions/api/attentions.contracts";
 import { attentionsService } from "@/features/attentions/api/attentions.service";
+import { operationalLabel, useCaseCatalog, useEntityCatalog, useStatusCatalog } from "@/features/attentions/api/operational-catalogs";
+import { registryLabel, useRegistryCatalog } from "@/features/attentions/api/registry-catalog";
 
 export const attentionKeys = {
   all: ["attentions"] as const,
@@ -14,10 +16,34 @@ export const attentionKeys = {
 };
 
 export function useAttentions(params: BitacoraListParams = {}) {
-  return useQuery({
+  const catalog = useRegistryCatalog();
+  const cases = useCaseCatalog();
+  const statuses = useStatusCatalog();
+  const entities = useEntityCatalog();
+  const query = useQuery({
     queryKey: attentionKeys.list(params),
     queryFn: () => attentionsService.list(params),
   });
+
+  return {
+    ...query,
+    data: query.data
+      ? {
+          ...query.data,
+          items: query.data.items.map((attention) => ({
+            ...attention,
+            registry:
+              registryLabel(catalog.data ?? [], attention.registryTypeId) ?? attention.registry,
+            caseType:
+              operationalLabel(cases.data ?? [], attention.caseTypeId) ?? attention.caseType,
+            status:
+              operationalLabel(statuses.data ?? [], attention.statusId) ?? attention.status,
+            entity:
+              operationalLabel(entities.data ?? [], attention.entityId) ?? attention.entity,
+          })),
+        }
+      : undefined,
+  };
 }
 
 export function useAttentionFiles(id?: string | null) {

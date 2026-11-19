@@ -27,6 +27,7 @@ import {
   formatDashboardPercent,
 } from "@/features/dashboard/lib/dashboard-display.utils";
 import { filtersForPeriod } from "@/features/dashboard/model/dashboard-filters";
+import { buildDashboardStatusSlices } from "@/features/dashboard/lib/dashboard-status.utils";
 
 type DashboardPeriod = "30" | "90" | "year";
 
@@ -64,6 +65,7 @@ export function DashboardPage() {
   });
 
   const summary = summaryQuery.data;
+  const statusSlices = buildDashboardStatusSlices(summary);
   const error = firstDashboardError([
     summaryQuery.error,
     temporalQuery.error,
@@ -208,11 +210,9 @@ export function DashboardPage() {
           </div>
 
           <DashboardStatusDistribution
-            pending={summary?.pendientes ?? 0}
-            inProgress={summary?.en_proceso ?? 0}
-            attended={summary?.atendidas ?? 0}
-            cancelled={summary?.canceladas ?? 0}
+            statuses={statusSlices}
             loading={summaryQuery.isPending}
+            unavailable={Boolean(summary && !summary.distribucion_estatus)}
           />
         </Card>
       </section>

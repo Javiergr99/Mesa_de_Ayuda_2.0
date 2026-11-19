@@ -16,6 +16,8 @@ export function useDashboardSummary(params: DashboardFilterParams) {
   return useQuery({
     queryKey: dashboardKeys.summary(params),
     queryFn: () => httpDashboardRepository.getSummary(params),
+    refetchOnWindowFocus: true,
+    refetchInterval: 60_000,
   });
 }
 

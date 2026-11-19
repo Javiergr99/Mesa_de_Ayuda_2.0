@@ -1,6 +1,6 @@
 import type { BitacoraApiRecord } from "@/features/attentions/api/attentions.contracts";
 
-export type AttentionStatus = "Pendiente" | "En proceso" | "Atendida" | "Cancelada" | "Sin estatus";
+export type AttentionStatus = string;
 
 export type AttentionFile = {
   id: string;

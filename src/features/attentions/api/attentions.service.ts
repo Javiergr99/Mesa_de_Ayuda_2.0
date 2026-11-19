@@ -4,6 +4,8 @@ import type {
   BitacoraUpdatePayload,
 } from "@/features/attentions/api/attentions.contracts";
 import { httpAttentionsRepository } from "@/features/attentions/api/http-attentions.repository";
+import { loadRegistryCatalog, type RegistryCatalogItem } from "@/features/attentions/api/registry-catalog";
+import { loadOperationalCatalogs } from "@/features/attentions/api/operational-catalogs";
 import {
   mapArchivoToAttentionFile,
   mapBitacoraToAttention,
@@ -11,23 +13,40 @@ import {
 
 const repository = httpAttentionsRepository;
 
+// Si el catálogo no responde, la consulta de bitácoras sigue disponible.
+async function catalogForLabels(): Promise<RegistryCatalogItem[]> {
+  try {
+    return await loadRegistryCatalog();
+  } catch {
+    return [];
+  }
+}
+
 export const attentionsService = {
   async list(params: BitacoraListParams = {}) {
-    const response = await repository.list(params);
+    const [response, registryCatalog, operational] = await Promise.all([
+      repository.list(params),
+      catalogForLabels(),
+      loadOperationalCatalogs(),
+    ]);
     return {
       ...response,
-      items: response.items.map(mapBitacoraToAttention),
+      items: response.items.map((record) =>
+        mapBitacoraToAttention(record, registryCatalog, operational.cases, operational.statuses, operational.entities),
+      ),
     };
   },
 
   async create(payload: BitacoraCreatePayload) {
     const created = await repository.create(payload);
-    return mapBitacoraToAttention(created);
+    const [registry, operational] = await Promise.all([catalogForLabels(), loadOperationalCatalogs()]);
+    return mapBitacoraToAttention(created, registry, operational.cases, operational.statuses, operational.entities);
   },
 
   async update(id: string, payload: BitacoraUpdatePayload) {
     const updated = await repository.update(id, payload);
-    return mapBitacoraToAttention(updated);
+    const [registry, operational] = await Promise.all([catalogForLabels(), loadOperationalCatalogs()]);
+    return mapBitacoraToAttention(updated, registry, operational.cases, operational.statuses, operational.entities);
   },
 
   remove(id: string) {

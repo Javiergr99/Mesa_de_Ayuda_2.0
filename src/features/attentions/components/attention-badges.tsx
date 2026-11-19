@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import type { AttentionStatus } from "@/features/attentions/model/attention.types";
 
 const statusConfig: Record<
-  AttentionStatus,
+  string,
   {
     tone: "amber" | "violet" | "slate" | "emerald" | "red";
     icon: typeof Clock3;
@@ -18,7 +18,7 @@ const statusConfig: Record<
 };
 
 export function StatusBadge({ status }: { status: AttentionStatus }) {
-  const config = statusConfig[status];
+  const config = statusConfig[status] ?? { tone: "slate" as const, icon: CircleHelp };
   const Icon = config.icon;
   return (
     <Badge tone={config.tone}>

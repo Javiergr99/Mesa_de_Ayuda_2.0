@@ -18,25 +18,10 @@ import { SelectField } from "@/components/ui/select-field";
 import { StatCard } from "@/components/ui/stat-card";
 import { Tooltip } from "@/components/ui/tooltip";
 import { StatusBadge } from "@/features/attentions/components/attention-badges";
-import {
-  ATTENTION_CASE_CATALOG,
-  ATTENTION_REGISTRY_CATALOG,
-  ATTENTION_STATUS_CATALOG,
-} from "@/features/attentions/model/attention.catalogs";
+import { operationalOptions, useCaseCatalog, useEntityCatalog, useStatusCatalog } from "@/features/attentions/api/operational-catalogs";
+import { registryOptions, useRegistryCatalog } from "@/features/attentions/api/registry-catalog";
 import type { Attention } from "@/features/attentions/model/attention.types";
 import type { DashboardSummaryResponse } from "@/features/dashboard/api/dashboard.contracts";
-import { catalogToSelectOptions } from "@/shared/catalogs/catalog.types";
-import { FEDERAL_ENTITY_CATALOG } from "@/shared/catalogs/federal-entities";
-
-const ENTITY_OPTIONS = catalogToSelectOptions(FEDERAL_ENTITY_CATALOG);
-
-const STATUS_TABS = [
-  { value: "", label: "Todos" },
-  { value: "1", label: "Pendientes" },
-  { value: "2", label: "En proceso" },
-  { value: "3", label: "Atendidas" },
-  { value: "4", label: "Canceladas" },
-] as const;
 
 export type TrackingFilterValues = {
   query: string;
@@ -111,17 +96,26 @@ export function TrackingStatusTabs({
   summary?: DashboardSummaryResponse;
   onChange: (value: string) => void;
 }) {
-  const counts: Record<string, number> = {
-    "": summary?.total_atenciones ?? 0,
-    "1": summary?.pendientes ?? 0,
-    "2": summary?.en_proceso ?? 0,
-    "3": summary?.atendidas ?? 0,
-    "4": summary?.canceladas ?? 0,
+  const statusesQuery = useStatusCatalog();
+  // Solo los estatus operativos conocidos cuentan con agregados propios en el dashboard.
+  const counts: Record<string, number | undefined> = {
+    PENDIENTE: summary?.pendientes,
+    EN_PROCESO: summary?.en_proceso,
+    ATENDIDA: summary?.atendidas,
+    CANCELADA: summary?.canceladas,
   };
+  const tabs = [
+    { value: "", label: "Todos", count: summary?.total_atenciones },
+    ...(statusesQuery.data ?? []).map((item) => ({
+      value: String(item.id),
+      label: item.activo ? item.nombre : `${item.nombre} (inactivo)`,
+      count: counts[item.clave.toUpperCase()],
+    })),
+  ];
 
   return (
     <div className="flex overflow-x-auto border-b border-slate-200 app-scrollbar">
-      {STATUS_TABS.map((tab) => {
+      {tabs.map((tab) => {
         const active = statusId === tab.value;
 
         return (
@@ -135,9 +129,9 @@ export function TrackingStatusTabs({
             ].join(" ")}
           >
             <span>{tab.label}</span>
-            <span className="ml-2 text-xs font-bold">
-              {(counts[tab.value] ?? 0).toLocaleString("es-MX")}
-            </span>
+            {tab.count !== undefined ? (
+              <span className="ml-2 text-xs font-bold">{tab.count.toLocaleString("es-MX")}</span>
+            ) : null}
             {active ? (
               <span className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-blue-600" />
             ) : null}
@@ -159,6 +153,11 @@ export function TrackingFilters({
   activeFilterCount: number;
   maxDate: string;
 }) {
+  const registryCatalog = useRegistryCatalog();
+  const casesQuery = useCaseCatalog();
+  const statusesQuery = useStatusCatalog();
+  const entitiesQuery = useEntityCatalog();
+
   return (
     <Card className="p-5 sm:p-6">
       <Input
@@ -169,16 +168,17 @@ export function TrackingFilters({
         icon={<Search className="h-4 w-4" />}
       />
 
+      {registryCatalog.isError || casesQuery.isError || statusesQuery.isError || entitiesQuery.isError ? (
+        <p role="alert" className="mt-2 text-xs text-red-600">No fue posible cargar alguno de los catálogos de filtros.</p>
+      ) : null}
+
       <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <SelectField
           label="Tipo de registro"
           value={filters.registryId}
           onValueChange={actions.onRegistryChange}
           placeholder="Seleccionar registro"
-          options={ATTENTION_REGISTRY_CATALOG.map((item) => ({
-            label: item.label,
-            value: String(item.id),
-          }))}
+          options={registryOptions(registryCatalog.data ?? [], true)}
         />
 
         <SelectField
@@ -186,10 +186,7 @@ export function TrackingFilters({
           value={filters.caseTypeId}
           onValueChange={actions.onCaseTypeChange}
           placeholder="Seleccionar tipo de caso"
-          options={ATTENTION_CASE_CATALOG.map((item) => ({
-            label: item.label,
-            value: String(item.id),
-          }))}
+          options={operationalOptions(casesQuery.data ?? [], true)}
         />
 
         <SelectField
@@ -197,7 +194,8 @@ export function TrackingFilters({
           value={filters.entityId}
           onValueChange={actions.onEntityChange}
           placeholder="Seleccionar entidad"
-          options={ENTITY_OPTIONS}
+          options={operationalOptions(entitiesQuery.data ?? [], true)}
+          disabled={entitiesQuery.isPending || entitiesQuery.isError}
         />
 
         <SelectField
@@ -205,10 +203,7 @@ export function TrackingFilters({
           value={filters.statusId}
           onValueChange={actions.onStatusChange}
           placeholder="Seleccionar estatus"
-          options={ATTENTION_STATUS_CATALOG.map((item) => ({
-            label: item.label,
-            value: String(item.id),
-          }))}
+          options={operationalOptions(statusesQuery.data ?? [], true)}
         />
 
         <DatePickerField

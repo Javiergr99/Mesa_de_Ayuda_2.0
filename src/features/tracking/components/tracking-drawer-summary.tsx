@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { SelectField } from "@/components/ui/select-field";
 import { Textarea } from "@/components/ui/textarea";
-import { ATTENTION_STATUS_CATALOG } from "@/features/attentions/model/attention.catalogs";
+import { operationalOptions, useStatusCatalog } from "@/features/attentions/api/operational-catalogs";
 import type { Attention } from "@/features/attentions/model/attention.types";
 import { ClipboardList, FileText, ShieldAlert, UserRound } from "lucide-react";
 
@@ -35,6 +35,8 @@ export function TrackingDrawerSummary({
   description,
   onDescriptionChange,
 }: TrackingDrawerSummaryProps) {
+  const statusesQuery = useStatusCatalog();
+
   return (
     <div className="space-y-4 p-5 sm:p-6">
       {!canUpdate ? (
@@ -57,10 +59,7 @@ export function TrackingDrawerSummary({
             onValueChange={onStatusIdChange}
             disabled={!canUpdate}
             placeholder="Sin estatus"
-            options={ATTENTION_STATUS_CATALOG.map((item) => ({
-              label: item.label,
-              value: String(item.id),
-            }))}
+            options={operationalOptions(statusesQuery.data ?? [], true)}
           />
 
           <Input

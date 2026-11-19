@@ -8,7 +8,7 @@ import { Drawer } from "@/components/ui/drawer";
 import { Tabs } from "@/components/ui/tabs";
 import { useUpdateAttention } from "@/features/attentions/api/attentions.queries";
 import { StatusBadge } from "@/features/attentions/components/attention-badges";
-import { ATTENTION_STATUS_CATALOG } from "@/features/attentions/model/attention.catalogs";
+import { operationalLabel, useStatusCatalog } from "@/features/attentions/api/operational-catalogs";
 import type { Attention } from "@/features/attentions/model/attention.types";
 import { useAuthStore } from "@/features/auth/model/auth.store";
 import { sessionHasExactAction } from "@/features/auth/services/jwt-actions";
@@ -51,6 +51,7 @@ function TrackingDrawerEditor({
   const canUpdate = sessionHasExactAction(user, MESA_AYUDA_ACTIONS.updateLog);
   const canManageFiles = sessionHasExactAction(user, MESA_AYUDA_ACTIONS.uploadLogFile);
   const updateMutation = useUpdateAttention();
+  const statusesQuery = useStatusCatalog();
 
   const [statusId, setStatusId] = useState(attention.statusId ? String(attention.statusId) : "");
   const [instance, setInstance] = useState(attention.instance === "—" ? "" : attention.instance);
@@ -61,7 +62,7 @@ function TrackingDrawerEditor({
   );
 
   const selectedStatus =
-    ATTENTION_STATUS_CATALOG.find((item) => String(item.id) === statusId)?.label ??
+    operationalLabel(statusesQuery.data ?? [], statusId ? Number(statusId) : null) ??
     attention.status;
 
   async function handleSave() {
@@ -184,7 +185,7 @@ function TrackingDrawerEditor({
 
           <div className="flex shrink-0 flex-wrap gap-2">
             <Badge tone="blue">{attention.registry}</Badge>
-            <StatusBadge status={selectedStatus as Attention["status"]} />
+            <StatusBadge status={selectedStatus} />
           </div>
         </div>
       </div>

@@ -23,6 +23,8 @@ import {
   type AttentionsFilterState,
 } from "@/features/attentions/lib/attentions-filter.utils";
 import { useAttentions } from "@/features/attentions/api/attentions.queries";
+import { useRegistryCatalog } from "@/features/attentions/api/registry-catalog";
+import { useCaseCatalog, useEntityCatalog, useStatusCatalog } from "@/features/attentions/api/operational-catalogs";
 import type { Attention } from "@/features/attentions/model/attention.types";
 import { useDashboardSummary } from "@/features/dashboard/api/dashboard.queries";
 
@@ -229,6 +231,10 @@ export function AttentionsPage() {
   const params = useMemo(() => buildAttentionsParams(appliedFilters, page), [appliedFilters, page]);
 
   const attentionsQuery = useAttentions(params);
+  const registryCatalog = useRegistryCatalog();
+  const casesQuery = useCaseCatalog();
+  const statusesQuery = useStatusCatalog();
+  const entitiesQuery = useEntityCatalog();
   const summaryQuery = useDashboardSummary({});
   const data = attentionsQuery.data;
   const attentions = data?.items ?? [];
@@ -271,7 +277,14 @@ export function AttentionsPage() {
     setPage(1);
   }
 
-  const activeFilterChips = buildAttentionFilterChips(appliedFilters, removeFilter);
+  const activeFilterChips = buildAttentionFilterChips(
+    appliedFilters,
+    removeFilter,
+    registryCatalog.data ?? [],
+    casesQuery.data ?? [],
+    statusesQuery.data ?? [],
+    entitiesQuery.data ?? [],
+  );
 
   const heading = (
     <PageHeading

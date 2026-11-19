@@ -47,7 +47,7 @@ export function getTopDashboardEntities(
   response?: DashboardByEntityResponse,
   limit = 4,
 ): DashboardEntityDisplayItem[] {
-  const items = response?.items ?? response?.entidades ?? [];
+  const items = response?.estados ?? response?.items ?? response?.entidades ?? [];
   const ordered = [...items]
     .filter((item) => Number.isFinite(item.total) && item.total >= 0)
     .sort((first, second) => second.total - first.total)

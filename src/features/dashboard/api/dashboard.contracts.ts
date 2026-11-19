@@ -17,12 +17,21 @@ export type DashboardRankItem = {
   porcentaje?: number | null;
 };
 
+export type DashboardStatusItem = {
+  id: number;
+  clave: string;
+  nombre: string;
+  total: number;
+  porcentaje: number;
+};
+
 export type DashboardSummaryResponse = {
   total_atenciones: number;
   pendientes: number;
   en_proceso: number;
   atendidas: number;
   canceladas: number;
+  distribucion_estatus?: DashboardStatusItem[];
   porcentaje_finalizacion: number;
   promedio_atenciones_por_dia: number;
   registro_mas_activo?: DashboardRankItem | string | null;
@@ -46,6 +55,7 @@ export type DashboardEntityItem = {
 };
 
 export type DashboardByEntityResponse = {
+  estados?: DashboardEntityItem[];
   items?: DashboardEntityItem[];
   entidades?: DashboardEntityItem[];
   sin_entidad?: number;

@@ -2,18 +2,13 @@ import type {
   BitacoraApiRecord,
   BitacoraArchivoApi,
 } from "@/features/attentions/api/attentions.contracts";
-import {
-  ATTENTION_CASE_CATALOG,
-  ATTENTION_REGISTRY_CATALOG,
-  ATTENTION_STATUS_CATALOG,
-  findCatalogLabel,
-} from "@/features/attentions/model/attention.catalogs";
+import { registryLabel, type RegistryCatalogItem } from "@/features/attentions/model/registry-catalog.model";
+import { operationalLabel, type OperationalCatalogItem } from "@/features/attentions/model/operational-catalog.model";
 import type {
   Attention,
   AttentionFile,
   AttentionStatus,
 } from "@/features/attentions/model/attention.types";
-import { getFederalEntityName } from "@/shared/catalogs/federal-entities";
 
 const ATTENTION_DATE_TIME_FORMATTER = new Intl.DateTimeFormat("es-MX", {
   dateStyle: "medium",
@@ -35,22 +30,13 @@ function formatDateTime(value?: string | null): string {
   return ATTENTION_DATE_TIME_FORMATTER.format(date);
 }
 
-function statusFrom(record: BitacoraApiRecord): AttentionStatus {
-  const raw = (
-    record.estatus?.nombre ??
-    record.estatus?.clave ??
-    findCatalogLabel(ATTENTION_STATUS_CATALOG, record.estatus_id) ??
-    ""
-  )
-    .trim()
-    .toUpperCase()
-    .replaceAll("_", " ");
-
-  if (raw === "PENDIENTE") return "Pendiente";
-  if (raw === "EN PROCESO") return "En proceso";
-  if (raw === "ATENDIDA") return "Atendida";
-  if (raw === "CANCELADA") return "Cancelada";
-  return "Sin estatus";
+function statusFrom(record: BitacoraApiRecord, catalog: readonly OperationalCatalogItem[]): AttentionStatus {
+  return (
+    record.estatus?.nombre?.trim() ||
+    operationalLabel(catalog, record.estatus_id) ||
+    record.estatus?.clave?.trim()?.replaceAll("_", " ") ||
+    (record.estatus_id ? `Estatus #${record.estatus_id}` : "Sin estatus")
+  );
 }
 
 function labelFromCatalog(
@@ -78,7 +64,13 @@ function formatBytes(value?: number | null): string {
   return `${(value / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-export function mapBitacoraToAttention(record: BitacoraApiRecord): Attention {
+export function mapBitacoraToAttention(
+  record: BitacoraApiRecord,
+  registryCatalog: readonly RegistryCatalogItem[] = [],
+  casesCatalog: readonly OperationalCatalogItem[] = [],
+  statusesCatalog: readonly OperationalCatalogItem[] = [],
+  entitiesCatalog: readonly OperationalCatalogItem[] = [],
+): Attention {
   return {
     id: record.id,
     reference: shortReference(record.id),
@@ -96,23 +88,23 @@ export function mapBitacoraToAttention(record: BitacoraApiRecord): Attention {
     entityId: record.entidad_federativa_id ?? null,
     entity: labelFromCatalog(
       record.entidad_federativa,
-      record.entidad_federativa_id ? getFederalEntityName(record.entidad_federativa_id) : null,
+      operationalLabel(entitiesCatalog, record.entidad_federativa_id),
       record.entidad_federativa_id,
       "Entidad",
     ),
     statusId: record.estatus_id ?? null,
-    status: statusFrom(record),
+    status: statusFrom(record, statusesCatalog),
     caseTypeId: record.tipo_caso_id ?? null,
     caseType: labelFromCatalog(
       record.tipo_caso,
-      findCatalogLabel(ATTENTION_CASE_CATALOG, record.tipo_caso_id),
+      operationalLabel(casesCatalog, record.tipo_caso_id),
       record.tipo_caso_id,
       "Tipo de caso",
     ),
     registryTypeId: record.tipo_registro_id ?? null,
     registry: labelFromCatalog(
       record.tipo_registro,
-      findCatalogLabel(ATTENTION_REGISTRY_CATALOG, record.tipo_registro_id),
+      registryLabel(registryCatalog, record.tipo_registro_id),
       record.tipo_registro_id,
       "Registro",
     ),

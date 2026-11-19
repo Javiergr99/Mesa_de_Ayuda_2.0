@@ -1,11 +1,6 @@
 import type { ActiveFilterChip } from "@/components/ui/filter-panel";
-import {
-  ATTENTION_CASE_CATALOG,
-  ATTENTION_REGISTRY_CATALOG,
-  ATTENTION_STATUS_CATALOG,
-} from "@/features/attentions/model/attention.catalogs";
-import { catalogToSelectOptions } from "@/shared/catalogs/catalog.types";
-import { FEDERAL_ENTITY_CATALOG } from "@/shared/catalogs/federal-entities";
+import type { OperationalCatalogItem } from "@/features/attentions/model/operational-catalog.model";
+import type { RegistryCatalogItem } from "@/features/attentions/api/registry-catalog";
 
 export type AttentionsFilterState = {
   query: string;
@@ -29,7 +24,6 @@ export const EMPTY_ATTENTIONS_FILTERS: AttentionsFilterState = {
   endDate: "",
 };
 
-const ENTITY_OPTIONS = catalogToSelectOptions(FEDERAL_ENTITY_CATALOG);
 
 function catalogLabel(
   value: string,
@@ -43,6 +37,10 @@ function catalogLabel(
 export function buildAttentionFilterChips(
   filters: AttentionsFilterState,
   onRemove: (key: AttentionsFilterKey) => void,
+  registryCatalog: readonly RegistryCatalogItem[] = [],
+  casesCatalog: readonly OperationalCatalogItem[] = [],
+  statusesCatalog: readonly OperationalCatalogItem[] = [],
+  entitiesCatalog: readonly OperationalCatalogItem[] = [],
 ): ActiveFilterChip[] {
   const chips: ActiveFilterChip[] = [];
 
@@ -54,7 +52,10 @@ export function buildAttentionFilterChips(
     });
   }
 
-  const registry = catalogLabel(filters.registryId, ATTENTION_REGISTRY_CATALOG);
+  const registry = catalogLabel(
+    filters.registryId,
+    registryCatalog.map((item) => ({ id: item.id, label: item.clave || item.nombre })),
+  );
 
   if (registry) {
     chips.push({
@@ -64,7 +65,10 @@ export function buildAttentionFilterChips(
     });
   }
 
-  const status = catalogLabel(filters.statusId, ATTENTION_STATUS_CATALOG);
+  const status = catalogLabel(
+    filters.statusId,
+    statusesCatalog.map((item) => ({ id: item.id, label: item.nombre })),
+  );
 
   if (status) {
     chips.push({
@@ -74,7 +78,10 @@ export function buildAttentionFilterChips(
     });
   }
 
-  const entity = ENTITY_OPTIONS.find((item) => item.value === filters.entityId)?.label ?? null;
+  const entity = catalogLabel(
+    filters.entityId,
+    entitiesCatalog.map((item) => ({ id: item.id, label: item.nombre })),
+  );
 
   if (entity) {
     chips.push({
@@ -84,7 +91,10 @@ export function buildAttentionFilterChips(
     });
   }
 
-  const caseType = catalogLabel(filters.caseTypeId, ATTENTION_CASE_CATALOG);
+  const caseType = catalogLabel(
+    filters.caseTypeId,
+    casesCatalog.map((item) => ({ id: item.id, label: item.nombre })),
+  );
 
   if (caseType) {
     chips.push({

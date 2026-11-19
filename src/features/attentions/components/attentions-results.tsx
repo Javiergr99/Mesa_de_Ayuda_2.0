@@ -7,6 +7,8 @@ import { Card } from "@/components/ui/card";
 import { Tooltip } from "@/components/ui/tooltip";
 import { ViewModeToggle, type ViewModeOption } from "@/components/ui/view-mode-toggle";
 import { StatusBadge } from "@/features/attentions/components/attention-badges";
+import { useStatusCatalog } from "@/features/attentions/api/operational-catalogs";
+import { buildAttentionBoardColumns, matchesAttentionBoardColumn } from "@/features/attentions/lib/attention-board.columns";
 import type { Attention } from "@/features/attentions/model/attention.types";
 import type { DashboardSummaryResponse } from "@/features/dashboard/api/dashboard.contracts";
 import { StatCard } from "@/components/ui/stat-card";
@@ -17,38 +19,6 @@ export type AttentionsViewMode = "table" | "board";
 const VIEW_OPTIONS: readonly ViewModeOption<AttentionsViewMode>[] = [
   { value: "table", label: "Tabla", icon: List },
   { value: "board", label: "Tablero", icon: Grid2X2 },
-];
-
-const BOARD_COLUMNS: readonly {
-  status: Attention["status"];
-  label: string;
-  markerClassName: string;
-  cardClassName: string;
-}[] = [
-  {
-    status: "Pendiente",
-    label: "Pendientes",
-    markerClassName: "bg-amber-500",
-    cardClassName: "border-amber-300",
-  },
-  {
-    status: "En proceso",
-    label: "En proceso",
-    markerClassName: "bg-violet-500",
-    cardClassName: "border-violet-300",
-  },
-  {
-    status: "Atendida",
-    label: "Finalizadas",
-    markerClassName: "bg-emerald-500",
-    cardClassName: "border-emerald-300",
-  },
-  {
-    status: "Cancelada",
-    label: "Canceladas",
-    markerClassName: "bg-red-500",
-    cardClassName: "border-red-300",
-  },
 ];
 
 export function AttentionsSummaryCards({
@@ -210,14 +180,17 @@ export function AttentionBoard({
   attentions: Attention[];
   onView: (attention: Attention) => void;
 }) {
+  const statusesQuery = useStatusCatalog();
+  const columns = buildAttentionBoardColumns(statusesQuery.data ?? [], attentions);
+
   return (
     <LazyMotion features={domAnimation}>
       <div className="grid gap-3 xl:grid-cols-4">
-        {BOARD_COLUMNS.map((column) => {
-          const items = attentions.filter((attention) => attention.status === column.status);
+        {columns.map((column) => {
+          const items = attentions.filter((attention) => matchesAttentionBoardColumn(column, attention));
 
           return (
-            <Card key={column.status} className="min-h-[460px] bg-slate-50/60 p-3">
+            <Card key={column.key} className="min-h-[460px] bg-slate-50/60 p-3">
               <div className="mb-3 flex items-center justify-between gap-2 px-1">
                 <div className="flex items-center gap-2">
                   <span className={`h-2 w-2 rounded-full ${column.markerClassName}`} />

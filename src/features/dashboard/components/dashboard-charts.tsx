@@ -1,12 +1,26 @@
 import type { DashboardTemporalPoint } from "@/features/dashboard/api/dashboard.contracts";
+import type { DashboardStatusItem } from "@/features/dashboard/api/dashboard.contracts";
 import { cn } from "@/shared/lib/cn";
 
-const STATUS_COLORS = {
-  pending: "#F59E0B",
-  inProgress: "#8B5CF6",
-  attended: "#10B981",
-  cancelled: "#EF4444",
-} as const;
+const STATUS_COLORS: Record<string, string> = {
+  PENDIENTE: "#F59E0B",
+  EN_PROCESO: "#8B5CF6",
+  ATENDIDA: "#10B981",
+  CANCELADA: "#EF4444",
+  SIN_ESTATUS: "#94A3B8",
+};
+
+const ADDITIONAL_STATUS_COLORS = [
+  "#0284C7", "#D946EF", "#0D9488", "#EA580C", "#4F46E5", "#65A30D", "#DB2777",
+];
+
+function statusColor(code: string): string {
+  const known = STATUS_COLORS[code.toUpperCase()];
+  if (known) return known;
+  // Stable color for each code, even when the catalog changes its ordering.
+  const hash = [...code].reduce((value, char) => value * 31 + char.charCodeAt(0), 0) >>> 0;
+  return ADDITIONAL_STATUS_COLORS[hash % ADDITIONAL_STATUS_COLORS.length]!;
+}
 
 const MONTH_LABEL_FORMATTER = new Intl.DateTimeFormat("es-MX", {
   month: "short",
@@ -115,46 +129,40 @@ export function DashboardActivityChart({
 }
 
 type StatusDistributionProps = {
-  pending: number;
-  inProgress: number;
-  attended: number;
-  cancelled: number;
+  statuses: readonly DashboardStatusItem[];
   loading: boolean;
+  unavailable?: boolean;
 };
 
 export function DashboardStatusDistribution({
-  pending,
-  inProgress,
-  attended,
-  cancelled,
+  statuses,
   loading,
+  unavailable = false,
 }: StatusDistributionProps) {
   if (loading) return <ChartSkeleton height="h-[254px]" />;
+  if (unavailable) {
+    return (
+      <p className="mt-5 rounded-lg bg-slate-50 p-4 text-sm text-slate-600" role="status">
+        La distribución por estatus no está disponible en la respuesta del servidor.
+      </p>
+    );
+  }
 
-  const total = pending + inProgress + attended + cancelled;
-  const safeTotal = total || 1;
-  const pendingEnd = (pending / safeTotal) * 100;
-  const inProgressEnd = pendingEnd + (inProgress / safeTotal) * 100;
-  const attendedEnd = inProgressEnd + (attended / safeTotal) * 100;
-  const gradient = `conic-gradient(
-    ${STATUS_COLORS.pending} 0 ${pendingEnd}%,
-    ${STATUS_COLORS.inProgress} ${pendingEnd}% ${inProgressEnd}%,
-    ${STATUS_COLORS.attended} ${inProgressEnd}% ${attendedEnd}%,
-    ${STATUS_COLORS.cancelled} ${attendedEnd}% 100%
-  )`;
-
-  const entries = [
-    { label: "Pendiente", value: pending, color: STATUS_COLORS.pending },
-    { label: "En proceso", value: inProgress, color: STATUS_COLORS.inProgress },
-    { label: "Atendida", value: attended, color: STATUS_COLORS.attended },
-    { label: "Cancelada", value: cancelled, color: STATUS_COLORS.cancelled },
-  ];
+  const total = statuses.reduce((sum, status) => sum + status.total, 0);
+  const populated = statuses.filter((status) => status.total > 0);
+  let currentPercent = 0;
+  const segments = populated.map((status) => {
+    const start = currentPercent;
+    currentPercent += (status.total / total) * 100;
+    return `${statusColor(status.clave)} ${start}% ${currentPercent}%`;
+  });
+  const gradient = total ? `conic-gradient(${segments.join(", ")})` : "#E2E8F0";
 
   return (
     <div className="mt-5 flex flex-col items-center">
       <div
         className="relative grid h-[142px] w-[142px] place-items-center rounded-full"
-        style={{ background: total ? gradient : "#E2E8F0" }}
+        style={{ background: gradient }}
         role="img"
         aria-label={`Distribución de ${total.toLocaleString("es-MX")} atenciones por estatus`}
       >
@@ -168,25 +176,32 @@ export function DashboardStatusDistribution({
         </div>
       </div>
 
-      <div className="mt-5 w-full space-y-2">
-        {entries.map((entry) => {
-          const percentage = total ? Math.round((entry.value / total) * 100) : 0;
-
-          return (
-            <div key={entry.label} className="flex items-center justify-between gap-3 text-[11px]">
-              <span className="flex min-w-0 items-center gap-2 text-slate-700">
-                <span
-                  className="h-2 w-2 shrink-0 rounded-full"
-                  style={{ backgroundColor: entry.color }}
-                  aria-hidden="true"
-                />
-                <span className="truncate">{entry.label}</span>
-              </span>
-              <span className="font-bold text-slate-900">{percentage}%</span>
-            </div>
-          );
-        })}
-      </div>
+      {statuses.length ? (
+        <div className="app-scrollbar mt-5 max-h-[230px] w-full space-y-2 overflow-y-auto pr-1">
+          {statuses.map((status) => {
+            const percentage = total ? Math.round((status.total / total) * 100) : 0;
+            return (
+              <div key={status.id} className="flex items-center justify-between gap-3 text-[11px]">
+                <span className="flex min-w-0 items-center gap-2 text-slate-700">
+                  <span
+                    className="h-2 w-2 shrink-0 rounded-full"
+                    style={{ backgroundColor: statusColor(status.clave) }}
+                    aria-hidden="true"
+                  />
+                  <span className="truncate" title={status.nombre}>
+                    {status.nombre}
+                  </span>
+                </span>
+                <span className="shrink-0 font-bold text-slate-900">
+                  {status.total.toLocaleString("es-MX")} · {percentage}%
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <p className="mt-5 text-xs text-slate-500">Sin estatus disponibles.</p>
+      )}
     </div>
   );
 }

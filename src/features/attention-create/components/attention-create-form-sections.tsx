@@ -7,13 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { TimePickerField } from "@/components/ui/time-picker-field";
 import { SystemAssignmentSummary } from "@/features/attention-create/components/system-assignment-summary";
 import type { AttentionFormValues } from "@/features/attention-create/model/attention-form.schema";
-import {
-  ATTENTION_CASE_CATALOG,
-  ATTENTION_REGISTRY_CATALOG,
-  ATTENTION_STATUS_CATALOG,
-} from "@/features/attentions/model/attention.catalogs";
-import { catalogToSelectOptions } from "@/shared/catalogs/catalog.types";
-import { FEDERAL_ENTITY_CATALOG } from "@/shared/catalogs/federal-entities";
+import { operationalOptions, useCaseCatalog, useEntityCatalog, useStatusCatalog } from "@/features/attentions/api/operational-catalogs";
+import { registryOptions, useRegistryCatalog } from "@/features/attentions/api/registry-catalog";
 import {
   ATTENTION_ATTACHMENT_ACCEPT,
   validateAttentionAttachment,
@@ -23,10 +18,6 @@ import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import { toast } from "sonner";
 
-const ENTITY_OPTIONS = catalogToSelectOptions(FEDERAL_ENTITY_CATALOG);
-const STATUS_OPTIONS = catalogToSelectOptions(ATTENTION_STATUS_CATALOG);
-const CASE_TYPE_OPTIONS = catalogToSelectOptions(ATTENTION_CASE_CATALOG);
-const REGISTRY_TYPE_OPTIONS = catalogToSelectOptions(ATTENTION_REGISTRY_CATALOG);
 
 type FormFieldsProps = {
   register: UseFormRegister<AttentionFormValues>;
@@ -90,6 +81,8 @@ export function AttentionDetailsSection({
 }: FormFieldsProps & {
   control: Control<AttentionFormValues>;
 }) {
+  const entitiesQuery = useEntityCatalog();
+
   return (
     <SectionCard title="Datos de la atención" icon={<MapPin className="h-4 w-4" />}>
       <div className="grid gap-x-3.5 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
@@ -129,11 +122,18 @@ export function AttentionDetailsSection({
               value={field.value}
               onValueChange={field.onChange}
               placeholder="Sin entidad asociada"
-              options={ENTITY_OPTIONS}
+              options={operationalOptions(entitiesQuery.data ?? [])}
+              disabled={entitiesQuery.isPending || entitiesQuery.isError}
               error={errors.entityId?.message}
             />
           )}
         />
+
+        {entitiesQuery.isError ? (
+          <p role="alert" className="text-xs text-red-600 md:col-span-2 xl:col-span-3">
+            No fue posible cargar las entidades federativas. Actualice la página para reintentar.
+          </p>
+        ) : null}
 
         <div className="md:col-span-2 xl:col-span-3">
           <Input
@@ -157,6 +157,9 @@ export function AttentionClassificationSection({
   errors: FieldErrors<AttentionFormValues>;
   userName: string;
 }) {
+  const casesQuery = useCaseCatalog();
+  const statusesQuery = useStatusCatalog();
+
   return (
     <SectionCard title="Clasificación y asignación" icon={<ClipboardCheck className="h-4 w-4" />}>
       <div className="grid gap-x-3.5 gap-y-4 md:grid-cols-2">
@@ -169,7 +172,7 @@ export function AttentionClassificationSection({
               value={field.value}
               onValueChange={field.onChange}
               placeholder="Sin clasificación"
-              options={CASE_TYPE_OPTIONS}
+              options={operationalOptions(casesQuery.data ?? [])}
               error={errors.caseTypeId?.message}
             />
           )}
@@ -184,13 +187,18 @@ export function AttentionClassificationSection({
               value={field.value}
               onValueChange={field.onChange}
               placeholder="Sin clasificación"
-              options={STATUS_OPTIONS}
+              options={operationalOptions(statusesQuery.data ?? [])}
               error={errors.statusId?.message}
             />
           )}
         />
       </div>
 
+      {casesQuery.isError || statusesQuery.isError ? (
+        <p role="alert" className="mt-2 text-xs text-red-600">
+          No fue posible cargar las clasificaciones. Actualice la página para reintentar.
+        </p>
+      ) : null}
       <div className="mt-4 border-t border-[var(--ui-border)] pt-4">
         <SystemAssignmentSummary userName={userName} />
       </div>
@@ -205,6 +213,9 @@ function RegistryTypeSelector({
   control: Control<AttentionFormValues>;
   errors: FieldErrors<AttentionFormValues>;
 }) {
+  const catalogQuery = useRegistryCatalog();
+  const options = registryOptions(catalogQuery.data ?? []);
+
   return (
     <Controller
       control={control}
@@ -214,7 +225,7 @@ function RegistryTypeSelector({
           <p className="mb-2 text-xs font-semibold text-slate-700">Tipo de registro</p>
 
           <div role="radiogroup" aria-label="Tipo de registro" className="flex flex-wrap gap-2">
-            {REGISTRY_TYPE_OPTIONS.map((option) => {
+            {options.map((option) => {
               const selected = field.value === option.value;
 
               return (
@@ -245,6 +256,19 @@ function RegistryTypeSelector({
               );
             })}
           </div>
+
+          {catalogQuery.isPending ? (
+            <p role="status" className="mt-2 text-xs text-slate-500">Cargando tipos de registro...</p>
+          ) : catalogQuery.isError ? (
+            <div role="alert" className="mt-2 flex items-center gap-2 text-xs text-red-600">
+              No se pudieron cargar los tipos de registro.
+              <button type="button" className="font-semibold underline" onClick={() => void catalogQuery.refetch()}>
+                Reintentar
+              </button>
+            </div>
+          ) : options.length === 0 ? (
+            <p className="mt-2 text-xs text-slate-500">No hay tipos de registro activos.</p>
+          ) : null}
 
           {errors.registryTypeId?.message ? (
             <p className="mt-1.5 text-xs text-red-600">{errors.registryTypeId.message}</p>
